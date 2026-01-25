@@ -95,6 +95,7 @@ function About() {
                     title: "SSB Background",
                     content: [
                         `Coord Officer, 12 SSB (Bangalore)`,
+                         ` Ex Coord Officer, 12 SSB (Bangalore)`,
                     ],
                 },
                 {
@@ -102,7 +103,7 @@ function About() {
                     title: "Army Background",
                     content: [
                         `21+ years of experience in strategic operations across broad theaters`,
-                        ` Ex Coord Officer, 12 SSB (Bangalore)`,
+                       
 
                     ],
                 },
