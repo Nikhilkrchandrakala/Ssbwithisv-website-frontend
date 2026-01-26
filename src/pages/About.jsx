@@ -94,7 +94,7 @@ function About() {
                     id: "SSB",
                     title: "SSB Background",
                     content: [
-                        `Coord Officer, 12 SSB (Bangalore)`,
+                        // `Coord Officer, 12 SSB (Bangalore)`,
                          ` Ex Coord Officer, 12 SSB (Bangalore)`,
                     ],
                 },
