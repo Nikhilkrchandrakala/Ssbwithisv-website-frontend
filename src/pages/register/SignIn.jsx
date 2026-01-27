@@ -169,7 +169,7 @@ function SignIn() {
 
             // Redirect based on user role or default dashboard
             if (response.data) {
-                navigate(-1)
+                navigate('/')
                 toast.success('Logged in successfully!')
             }
 
