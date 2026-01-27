@@ -339,13 +339,13 @@ function SignIn() {
                         </div>
                     </div>
 
-                    <div className="col-12 text-center mt-3 mb-3">
+                    {/* <div className="col-12 text-center mt-3 mb-3">
                         <div className="thm-divider">
                             <span>or</span>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div className="col-12 d-flex justify-content-center">
+                    {/* <div className="col-12 d-flex justify-content-center">
                         <button
                             type="button"
                             className="thm-google-btn"
@@ -358,7 +358,7 @@ function SignIn() {
                             </span>
                             Sign in with Google
                         </button>
-                    </div>
+                    </div> */}
                 </form>
 
                 <span className="thm-glow"></span>

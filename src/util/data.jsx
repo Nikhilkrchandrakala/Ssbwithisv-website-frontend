@@ -49,7 +49,7 @@ export const coursesData = [
         white2: "Hackathon",
         sessions: "10",
         hours: "60",
-        description: `Full SSB Course that covers intricate details of the 05 day assessment procedure`,
+        description: `${""}`,
         image: "/assets/website/course5.png",
     },
 
@@ -63,7 +63,7 @@ export const coursesData = [
         sessions: "01",
         hours: "05",
         description:
-            "A comprehensive introduction to SSB including PPDT and complete Stage 1 screening process",
+            "Break your myths about SSB",
         image: "/assets/website/PPDTcoursethumbnail.png",
     },
 
@@ -77,7 +77,7 @@ export const coursesData = [
         sessions: "03",
         hours: "15",
         description:
-            "Focused preparation for psychological tests - TAT, WAT, SRT and SD",
+            "Focused preparation for Psych Tests",
         // image: "/assets/course-3.jpg",
         image: "/assets/website/psychcoursethumbnail.png",
 
@@ -92,8 +92,7 @@ export const coursesData = [
         white2: "Interview",
         sessions: "02",
         hours: "04",
-        description:
-            "In-depth interview theory covering key aspects of filling Personal Information Questionaire form along with one-on-one mock interview practice and expert feedback",
+        description: "Learn how to present yourself",
         image: "/assets/website/Interviewcoursethumbnail.png",
     },
 

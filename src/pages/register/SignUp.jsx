@@ -397,12 +397,12 @@ function SignUp() {
                             </div>
                         </div>
 
-                        <div className="col-12 d-flex justify-content-center mt-5">
+                        {/* <div className="col-12 d-flex justify-content-center mt-5">
                             <button className="thm-google-btn">
                                 <span className="thm-google-icon"><img src="/assets/g-icon.png" alt="Google Icon" /></span>
                                 Sign up with Google account
                             </button>
-                        </div>
+                        </div> */}
                     </div>
 
                     <span className="thm-glow"></span>
