@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 function Blogs() {
     const data = {
         heading: 'Blogs',
-        text: 'Our monthly magazine Roger That is your go-to resource for in-depth insights, real-world perspectives, and expert analysis tailored to the Services Selection Board (SSB) process. Curated with a strong focus on current affairs, the magazine features probable Group Discussion and Lecturette topics, helping aspirants stay informed, articulate, and assessment-ready.',
+        text: 'SSB with ISV blogs bring you practical tips, real insights, and current topics to help you prepare smarter for the SSB.',
 
         banner: '/assets/website/blogs_banner.png',
     }

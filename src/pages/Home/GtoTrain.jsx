@@ -176,7 +176,7 @@ function GtoTrain() {
 
                             >
                                 {/* <source src="/assets/BannerVideo.mp4" type="video/mp4" /> */}
-                                <source src="/assets/0125(6).mp4" type="video/mp4" />
+                                <source src="/assets/video/0125(6).mp4" type="video/mp4" />
 
                             </video>
 

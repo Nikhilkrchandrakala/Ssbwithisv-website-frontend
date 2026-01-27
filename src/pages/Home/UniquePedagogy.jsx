@@ -72,7 +72,7 @@ const UniquePedagogy = () => {
 
             >
                 {/* <source src="/assets/BannerVideo.mp4" type="video/mp4" /> */}
-                <source src="/assets/vtx.mp4" type="video/mp4" />
+                <source src="/assets/video/vtx.mp4" type="video/mp4" />
 
             </video>
 

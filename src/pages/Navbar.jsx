@@ -18,7 +18,7 @@ function Navbar() {
                 loop
                 playsInline
             >
-                <source src="/assets/BannerVideo.mp4" type="video/mp4" />
+                <source src="/assets/video/BannerVideo.mp4" type="video/mp4" />
             </video>
 
             {/* CONTENT ABOVE VIDEO */}
