@@ -3,6 +3,7 @@ import styles from "../style/Navbar.module.css";
 import { IoMenu } from "react-icons/io5";
 
 import Sidebar from "../components/Sidebar";
+// import VisitorCounter from "../components/VisitorCounter";
 
 function Navbar() {
     const [open, setOpen] = useState(false);
@@ -55,6 +56,7 @@ function Navbar() {
 
                 <Sidebar open={open} onClose={() => setOpen(false)} />
             </div>
+           
         </div>
     );
 }

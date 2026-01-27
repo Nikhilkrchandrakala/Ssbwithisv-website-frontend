@@ -21,7 +21,6 @@ function Home() {
             <Philosophy />
             <OurCourses />
             <UniquePedagogy />
-
             {/* Resources for SSB preparation */}
             <Resources />
             <RogerThat />

@@ -1,22 +1,38 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CustomHeader from '../components/CustomHeader'
 import From from './From'
 import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
-import { candidates } from '../util/data'
 
 function HalfOfFame() {
 
     const data = {
         heading: 'Hall of Fame',
-        text: `At SSB with ISV, we celebrate candidates who didn’t just prepare, they evolved. With a recommendation rate well over 50%, our Hall of Fame highlights achievers from NDA, Army, Navy, Air Force, Coast Guard, AFCAT, UPSC/Non-UPSC and direct entries who have truly lived the ISV pedagogy.`,
-        // banner: '',
+        text: `At SSB with ISV, we celebrate candidates who didn’t just prepare, they evolved...`,
         banner: '/assets/website/halloffame_banner.png'
-
     }
 
-    /* ================= HELPERS ================= */
+    
 
+    /* ================= STATE ================= */
+    const [candidates, setCandidates] = useState([])
+    const [loading, setLoading] = useState(true)
+
+    /* ================= API CALL ================= */
+    useEffect(() => {
+        fetch("https://api.ssbwithisv.in/api/allCandidates")
+            .then(res => res.json())
+            .then(data => {
+                setCandidates(data)   // API returns array
+                setLoading(false)
+            })
+            .catch(err => {
+                console.error("API Error:", err)
+                setLoading(false)
+            })
+    }, [])
+
+    /* ================= HELPERS ================= */
     const splitIntoColumns = (data, columns = 3) => {
         const result = Array.from({ length: columns }, () => [])
         data.forEach((item, index) => {
@@ -32,7 +48,6 @@ function HalfOfFame() {
     }
 
     /* ================= PAGINATION ================= */
-
     const ITEMS_PER_PAGE = 6
     const [page, setPage] = useState(1)
 
@@ -46,6 +61,10 @@ function HalfOfFame() {
     }
 
     /* ================= RENDER ================= */
+
+    if (loading) {
+        return <h2 style={{ textAlign: "center", marginTop: "50px" }}>Loading...</h2>
+    }
 
     return (
         <>
@@ -61,9 +80,8 @@ function HalfOfFame() {
 
                                     {column.map((candidate, index) => (
                                         <div
-                                            key={candidate.id}
-                                            className={`Hall-of-fame-card ${patterns[colIndex][index % patterns[colIndex].length]
-                                                }`}
+                                            key={candidate._id}
+                                            className={`Hall-of-fame-card ${patterns[colIndex][index % patterns[colIndex].length]}`}
                                         >
                                             <img
                                                 src={candidate.img}

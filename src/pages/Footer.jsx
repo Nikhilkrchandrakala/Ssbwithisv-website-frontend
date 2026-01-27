@@ -2,6 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/Footer.module.css";
+import VisitorCounter from "../components/VisitorCounter";
 
 function Footer() {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ function Footer() {
                 </div>
 
                 <div class="bottom-contact-box-wrapper">
-                    
+
 
                     <a
                         href="https://wa.me/918420422821"
@@ -30,7 +31,7 @@ function Footer() {
                         rel="noopener noreferrer"
                         className='bottom-contact-box'
                     >
-                        <i className="fa fa-whatsapp"></i> 
+                        <i className="fa fa-whatsapp"></i>
                     </a>
 
                     {/* Phone Call */}
@@ -38,7 +39,7 @@ function Footer() {
                         href="tel:+919024667319"
                         className='bottom-contact-box'
                     >
-                        <i className="fa fa-phone"></i> 
+                        <i className="fa fa-phone"></i>
                     </a>
                 </div>
 
@@ -136,6 +137,9 @@ function Footer() {
 
                             <p>
                                 <i className="fa fa-envelope"></i> info@ssbwithisv.in
+                            </p>
+                            <p>
+                                <VisitorCounter />
                             </p>
                         </div>
 
