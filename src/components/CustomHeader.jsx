@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 
 
-function CustomHeader({ heading, text, textTwo, span, textThree, color, banner }) {
+function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, color2 }) {
 
     const navigate = useNavigate()
 
@@ -42,11 +42,13 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner }
                 <div className="breed-content container">
                     <div className="col-12 row mx-auto">
                         {color && <img src='/assets/logo/VTXlogo.png' style={{ width: '250px' }} />}
+
                         <div className='col-xl-12'>
                             {color && heading && <h1 style={{ color: 'var(--secondary-color)' }} className="breed-big-title">{heading}{span && <span className="sup-text">{span}</span>}</h1>}
                             {!color && heading && <h1 className="breed-big-title">{heading}{span && <sup>{span}</sup>}</h1>}
 
                         </div>
+
                         <div className="col-xl-7">
                             {textThree && <h1 className="breed-title">{textThree}</h1>}
 
@@ -59,6 +61,12 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner }
                                 </p>
                             </div>}
                         </div>
+
+                        {color2 && <div className="col-xl-7">
+                            <img src='/assets/karam.jpeg' style={{ width: '200px' }} />
+                        </div>}
+
+
                     </div>
                 </div>
                 <div className="decor-shape1">

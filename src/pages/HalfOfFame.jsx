@@ -9,10 +9,11 @@ function HalfOfFame() {
     const data = {
         heading: 'Hall of Fame',
         text: `At SSB with ISV, we celebrate candidates who didn’t just prepare, they evolved...`,
-        banner: '/assets/website/halloffame_banner.png'
+        banner: '/assets/website/halloffame_banner.png',
+        color2: true
     }
 
-    
+
 
     /* ================= STATE ================= */
     const [candidates, setCandidates] = useState([])
@@ -68,9 +69,45 @@ function HalfOfFame() {
 
     return (
         <>
-            <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
+            <CustomHeader heading={data.heading} text={data.text} banner={data.banner} color2={data.color2} />
 
-            <section className="container sectionspace80">
+            <section className="GTO-what-is-not-section sectionspace80">
+                <div className="container what-is-not-text-box px-0">
+                    <div className="row g-0">
+
+                        <div className="col-lg-12 px-0">
+                            <div style={{ padding: '0' }} className="what-is-not-text">
+                                <div className="sct-title-section-gtx ">
+                                    {/* <h1 className='sct-title-gtx' >
+                                        <span>
+                                            VTX™ is a preparatory bridge —
+                                        </span>
+                                        <span>designed to support authentic performance.</span>
+                                    </h1> */}
+                                    <h1 className="sct-title-gtx ">
+                                        {/* <span className="highlight first-part">
+
+                                        </span>
+                                        <span className="highlight second-part">
+                                            designed to support authentic performance.
+                                        </span> */}
+
+                                        <span className='title-gtx shimmerText'>
+                                            करम वही करो जो करना ही फल लगे, क्युकी करम ही धर्म ।
+                                        </span>
+                                    </h1>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section >
+
+            <section style={{paddingTop:'0'}} className="container sectionspace80">
                 <div className="hall-of-fame-section">
                     <div className="row g-4 col-12 mx-auto">
 
