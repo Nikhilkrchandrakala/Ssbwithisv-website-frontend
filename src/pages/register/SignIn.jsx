@@ -246,31 +246,32 @@ function SignIn() {
                 <h1 className="thm-big-title">Sign In</h1>
 
                 {/* Display error message */}
+                <div className="position-relative" style={{ zIndex: '55555' }}>
 
 
-                <form
-                    className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
-                    onSubmit={handleSubmit}
-                    onKeyPress={handleKeyPress}
-                >
-                    <div className="col-lg-12">
-                        <input
-                            type="text"
-                            name="loginId"
-                            className="form-control thm-input"
-                            placeholder="Enter Your Email or Phone Number"
-                            value={formData.loginId}
-                            onChange={handleInputChange}
-                            disabled={isLoading}
-                            autoComplete="username"
-                            maxLength={30} // Set a reasonable max length for email
-                        />
-                        {/* <small className="form-text text-muted mt-1">
+                    <div
+                        className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
+                    // onSubmit={handleSubmit}
+                    // onKeyPress={handleKeyPress}
+                    >
+                        <div className="col-lg-12">
+                            <input
+                                type="text"
+                                name="loginId"
+                                className="form-control thm-input"
+                                placeholder="Enter Your Email or Phone Number"
+                                value={formData.loginId}
+                                onChange={handleInputChange}
+                                disabled={isLoading}
+                                autoComplete="username"
+                                maxLength={30} // Set a reasonable max length for email
+                            />
+                            {/* <small className="form-text text-muted mt-1">
                             Enter your email address or 10-digit phone number
                         </small> */}
-                    </div>
+                        </div>
 
-                    {/* <div className="col-lg-12 mt-3">
+                        {/* <div className="col-lg-12 mt-3">
                         <input
                             type="password"
                             name="password"
@@ -284,97 +285,98 @@ function SignIn() {
                     </div> */}
 
 
-                    <div className="col-lg-12 password-wrapper mt-3">
-                        <input
-                            // type="password"
-                            type={showPassword ? "text" : "password"}
-
-                            name="password"
-                            className="form-control thm-input"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            disabled={isLoading}
-                            autoComplete="current-password"
-                        />
-
-                        {console.log(showPassword)}
-
-                        <span
-                            className="password-toggle"
-                            onClick={() => setShowPassword(!showPassword)}
-                        >
-                            {showPassword ? <AiOutlineEyeInvisible
-                            /> : <AiOutlineEye />}
-                        </span>
-                    </div>
-
-                    <div className="col-6 mt-4">
-                        <label className="thm-checkbox">
+                        <div className="col-lg-12 password-wrapper mt-3">
                             <input
-                                type="checkbox"
-                                name="rememberMe"
-                                checked={formData.rememberMe}
+                                // type="password"
+                                type={showPassword ? "text" : "password"}
+
+                                name="password"
+                                className="form-control thm-input"
+                                placeholder="Password"
+                                value={formData.password}
                                 onChange={handleInputChange}
                                 disabled={isLoading}
+                                autoComplete="current-password"
                             />
-                            <span className="thm-checkmark"></span>
-                            Remember me
-                        </label>
-                    </div>
 
-                    <div
-                        style={{ zIndex: '999999' }}
-                        onClick={() => !isLoading && navigate('/AccountRecovery')}
-                        className="col-6 mt-4 text-end"
-                    >
-                        <div
-                            className="thm-account-link"
-                            style={{
-                                cursor: isLoading ? 'not-allowed' : 'pointer',
-                                opacity: isLoading ? 0.6 : 1
-                            }}
-                        >
-                            Forgot Password?
+                            {console.log(showPassword)}
+
+                            <span
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <AiOutlineEyeInvisible
+                                /> : <AiOutlineEye />}
+                            </span>
                         </div>
-                    </div>
 
-                    {error && (
-
-                        <p className="text-danger text-center">
-                            {error}
-                        </p>
-                    )}
-
-                    <div className="col-12 d-flex justify-content-center mt-5">
-                        <CustomButton
-                            text={isLoading ? "SIGNING IN..." : "SIGN IN"}
-                            type="submit"
-                            disabled={isLoading}
-                            loading={isLoading}
-                        />
-                    </div>
-
-                    <div className="col-12 text-center mt-5">
-                        <div
-                            onClick={() => !isLoading && navigate('/SignUp')}
-                            className="thm-account-link"
-                            style={{
-                                cursor: isLoading ? 'not-allowed' : 'pointer',
-                                opacity: isLoading ? 0.6 : 1
-                            }}
-                        >
-                            Create a new account.
+                        <div className="col-6 mt-4">
+                            <label className="thm-checkbox">
+                                <input
+                                    type="checkbox"
+                                    name="rememberMe"
+                                    checked={formData.rememberMe}
+                                    onChange={handleInputChange}
+                                    disabled={isLoading}
+                                />
+                                <span className="thm-checkmark"></span>
+                                Remember me
+                            </label>
                         </div>
-                    </div>
 
-                    {/* <div className="col-12 text-center mt-3 mb-3">
+                        <div
+                            style={{ zIndex: '999999' }}
+                            onClick={() => !isLoading && navigate('/AccountRecovery')}
+                            className="col-6 mt-4 text-end"
+                        >
+                            <div
+                                className="thm-account-link"
+                                style={{
+                                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                                    opacity: isLoading ? 0.6 : 1
+                                }}
+                            >
+                                Forgot Password?
+                            </div>
+                        </div>
+
+                        {error && (
+
+                            <p className="text-danger text-center">
+                                {error}
+                            </p>
+                        )}
+
+                        <div className="col-12 d-flex justify-content-center mt-5">
+                            <CustomButton
+                                text={isLoading ? "SIGNING IN..." : "SIGN IN"}
+                                onClick={handleSubmit}
+                                // type="submit"
+                                disabled={isLoading}
+                                loading={isLoading}
+                            />
+                        </div>
+
+                        <div className="col-12 text-center mt-5">
+                            <div
+                                onClick={() => !isLoading && navigate('/SignUp')}
+                                className="thm-account-link"
+                                style={{
+                                    cursor: isLoading ? 'not-allowed' : 'pointer',
+                                    opacity: isLoading ? 0.6 : 1
+                                }}
+                            >
+                                Create a new account.
+                            </div>
+                        </div>
+
+                        {/* <div className="col-12 text-center mt-3 mb-3">
                         <div className="thm-divider">
                             <span>or</span>
                         </div>
                     </div> */}
 
-                    {/* <div className="col-12 d-flex justify-content-center">
+                        {/* <div className="col-12 d-flex justify-content-center">
                         <button
                             type="button"
                             className="thm-google-btn"
@@ -388,9 +390,10 @@ function SignIn() {
                             Sign in with Google
                         </button>
                     </div> */}
-                </form>
+                    </div>
+                </div>
 
-                <span className="thm-glow"></span>
+                <span style={{ zIndex: '567' }} className="thm-glow"></span>
             </div>
         </div>
     )

@@ -502,39 +502,42 @@ function AccountRecovery() {
 
                 {/* Step 1: Enter Email/Phone */}
                 {step === 1 && (
-                    <div
-                        className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
-                        // onKeyPress={(e) => handleKeyPress(e, 'sendOtp')}
-                    >
-                        <div className="col-lg-12">
-                            <input
-                                type={inputType}
-                                name="identifier"
-                                className="form-control thm-input"
-                                placeholder={getPlaceholderText()}
-                                value={formData.identifier}
-                                onChange={handleInputChange}
-                                disabled={isLoading}
-                                autoComplete="username"
-                                inputMode={inputType === 'tel' ? 'numeric' : 'text'}
-                                maxLength={inputType === 'tel' ? 10 : undefined}
-                            />
-                            <small className="form-text text-muted mt-1">
-                                {inputType === 'tel'
-                                    ? 'Enter 10-digit phone number'
-                                    : 'Enter email address or start typing phone number'
-                                }
-                            </small>
-                        </div>
+                    <div className="position-relative" style={{ zIndex: '55555' }}>
 
-                        <div className="col-12 text-center mt-4">
-                            <div className='d-flex justify-content-center'>
-                                <CustomButton
-                                    text={isLoading ? "SENDING..." : "SEND OTP"}
-                                    onClick={handleSendOtp}
+                        <div
+                            className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
+                        // onKeyPress={(e) => handleKeyPress(e, 'sendOtp')}
+                        >
+                            <div className="col-lg-12">
+                                <input
+                                    type={inputType}
+                                    name="identifier"
+                                    className="form-control thm-input"
+                                    placeholder={getPlaceholderText()}
+                                    value={formData.identifier}
+                                    onChange={handleInputChange}
                                     disabled={isLoading}
-                                    loading={isLoading}
+                                    autoComplete="username"
+                                    inputMode={inputType === 'tel' ? 'numeric' : 'text'}
+                                    maxLength={inputType === 'tel' ? 10 : undefined}
                                 />
+                                <small className="form-text text-muted mt-1">
+                                    {inputType === 'tel'
+                                        ? 'Enter 10-digit phone number'
+                                        : 'Enter email address or start typing phone number'
+                                    }
+                                </small>
+                            </div>
+
+                            <div className="col-12 text-center mt-4">
+                                <div className='d-flex justify-content-center'>
+                                    <CustomButton
+                                        text={isLoading ? "SENDING..." : "SEND OTP"}
+                                        onClick={handleSendOtp}
+                                        disabled={isLoading}
+                                        loading={isLoading}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -542,59 +545,62 @@ function AccountRecovery() {
 
                 {/* Step 2: Enter OTP */}
                 {step === 2 && (
-                    <div
-                        className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
+                    <div className="position-relative" style={{ zIndex: '55555' }}>
+
+                        <div
+                            className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
                         // onKeyPress={(e) => handleKeyPress(e, 'verifyOtp')}
-                    >
-                        <div className="col-lg-12">
-                            <input
-                                ref={otpInputRef}
-                                type="text"
-                                name="otp"
-                                className="form-control thm-input"
-                                placeholder="Enter 6-digit OTP"
-                                value={formData.otp}
-                                onChange={handleInputChange}
-                                disabled={isLoading}
-                                inputMode="numeric"
-                                maxLength={6}
-                            />
-                        </div>
-
-                        <div className="col-lg-12 text-end mt-2">
-                            {timer > 0 ? (
-                                <div className="thm-account-link">
-                                    OTP expires in: {formatTime(timer)}
-                                </div>
-                            ) : (
-                                <div
-                                    className="thm-account-link"
-                                    onClick={handleResendOtp}
-                                    style={{ cursor: 'pointer', color: '#007bff' }}
-                                >
-                                    Resend OTP
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="col-12 text-center mt-4">
-                            <div className='d-flex justify-content-center'>
-                                <CustomButton
-                                    text={isLoading ? "VERIFYING..." : "VERIFY OTP"}
-                                    onClick={handleVerifyOtp}
+                        >
+                            <div className="col-lg-12">
+                                <input
+                                    ref={otpInputRef}
+                                    type="text"
+                                    name="otp"
+                                    className="form-control thm-input"
+                                    placeholder="Enter 6-digit OTP"
+                                    value={formData.otp}
+                                    onChange={handleInputChange}
                                     disabled={isLoading}
-                                    loading={isLoading}
+                                    inputMode="numeric"
+                                    maxLength={6}
                                 />
                             </div>
-                        </div>
 
-                        <div className="col-12 text-center mt-3">
-                            <div
-                                className="thm-account-link"
-                                onClick={() => setStep(1)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                ← Back to change email/phone
+                            <div className="col-lg-12 text-end mt-2">
+                                {timer > 0 ? (
+                                    <div className="thm-account-link">
+                                        OTP expires in: {formatTime(timer)}
+                                    </div>
+                                ) : (
+                                    <div
+                                        className="thm-account-link"
+                                        onClick={handleResendOtp}
+                                        style={{ cursor: 'pointer', color: '#007bff' }}
+                                    >
+                                        Resend OTP
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="col-12 text-center mt-4">
+                                <div className='d-flex justify-content-center'>
+                                    <CustomButton
+                                        text={isLoading ? "VERIFYING..." : "VERIFY OTP"}
+                                        onClick={handleVerifyOtp}
+                                        disabled={isLoading}
+                                        loading={isLoading}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-12 text-center mt-3">
+                                <div
+                                    className="thm-account-link"
+                                    onClick={() => setStep(1)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    ← Back to change email/phone
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -602,66 +608,70 @@ function AccountRecovery() {
 
                 {/* Step 3: Set New Password */}
                 {step === 3 && (
-                    <div
-                        className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
-                        onKeyPress={(e) => handleKeyPress(e, 'resetPassword')}
-                    >
-                        <div className="col-lg-12">
-                            <input
-                                type="password"
-                                name="newPassword"
-                                className="form-control thm-input"
-                                placeholder="Enter New Password"
-                                value={formData.newPassword}
-                                onChange={handleInputChange}
-                                disabled={isLoading}
-                                autoComplete="new-password"
-                            />
-                        </div>
+                    <div className="position-relative" style={{ zIndex: '55555' }}>
 
-                        <div className="col-lg-12 mt-3">
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                className="form-control thm-input"
-                                placeholder="Confirm New Password"
-                                value={formData.confirmPassword}
-                                onChange={handleInputChange}
-                                disabled={isLoading}
-                                autoComplete="new-password"
-                            />
-                        </div>
-
-                        <div className="col-lg-12 mt-2">
-                            <small className="form-text text-muted">
-                                Password must be at least 6 characters long
-                            </small>
-                        </div>
-
-                        <div className="col-12 text-center mt-4">
-                            <div className='d-flex justify-content-center'>
-                                <CustomButton
-                                    text={isLoading ? "RESETTING..." : "RESET PASSWORD"}
-                                    onClick={(e) => handleResetPassword(e)}
+                        <div
+                            className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
+                            onKeyPress={(e) => handleKeyPress(e, 'resetPassword')}
+                        >
+                            <div className="col-lg-12">
+                                <input
+                                    type="password"
+                                    name="newPassword"
+                                    className="form-control thm-input"
+                                    placeholder="Enter New Password"
+                                    value={formData.newPassword}
+                                    onChange={handleInputChange}
                                     disabled={isLoading}
-                                    loading={isLoading}
+                                    autoComplete="new-password"
                                 />
                             </div>
-                        </div>
 
-                        <div className="col-12 text-center mt-3">
-                            <div
-                                className="thm-account-link"
-                                onClick={() => setStep(2)}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                ← Back to OTP verification
+                            <div className="col-lg-12 mt-3">
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    className="form-control thm-input"
+                                    placeholder="Confirm New Password"
+                                    value={formData.confirmPassword}
+                                    onChange={handleInputChange}
+                                    disabled={isLoading}
+                                    autoComplete="new-password"
+                                />
+                            </div>
+
+                            <div className="col-lg-12 mt-2">
+                                <small className="form-text text-muted">
+                                    Password must be at least 6 characters long
+                                </small>
+                            </div>
+
+                            <div className="col-12 text-center mt-4">
+                                <div className='d-flex justify-content-center'>
+                                    <CustomButton
+                                        text={isLoading ? "RESETTING..." : "RESET PASSWORD"}
+                                        onClick={(e) => handleResetPassword(e)}
+                                        disabled={isLoading}
+                                        loading={isLoading}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-12 text-center mt-3">
+                                <div
+                                    className="thm-account-link"
+                                    onClick={() => setStep(2)}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    ← Back to OTP verification
+                                </div>
                             </div>
                         </div>
                     </div>
                 )}
 
-                <span className="thm-glow"></span>
+                <span style={{ zIndex: '567' }} className="thm-glow"></span>
+
             </div>
         </div>
     )

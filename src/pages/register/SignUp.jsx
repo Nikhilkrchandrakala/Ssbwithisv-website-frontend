@@ -257,7 +257,8 @@ function SignUp() {
                 <div className="container position-relative">
                     <h1 className="thm-big-title">Sign Up</h1>
 
-                    <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
+                    <div className="position-relative" style={{zIndex:'55555'}}>
+                        <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
                         <div className="col-lg-12">
                             <input
                                 type="text"
@@ -423,11 +424,10 @@ function SignUp() {
                                 I already have an account.
                             </div>
                         </div>
-
-
+                    </div>
                     </div>
 
-                    <span className="thm-glow"></span>
+                    <span style={{zIndex:'654'}} className="thm-glow"></span>
                 </div>
             </div >
         </>
