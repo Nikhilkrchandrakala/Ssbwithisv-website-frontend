@@ -81,7 +81,7 @@ function HalfOfFame() {
                                     {column.map((candidate, index) => (
                                         <div
                                             key={candidate._id}
-                                            className={`Hall-of-fame-card ${patterns[colIndex][index % patterns[colIndex].length]}`}
+                                            className={`Hall-of-fame-card `}
                                         >
                                             <img
                                                 src={candidate.img}
