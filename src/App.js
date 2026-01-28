@@ -30,6 +30,7 @@ import SignUp from './pages/register/SignUp';
 import AccountRecovery from './pages/register/AccountRecovery';
 import Successful from './pages/register/Successful';
 import AuthRoute from './components/AuthRoute';
+import NotFound from './components/NotFound';
 
 function App() {
 
@@ -73,8 +74,9 @@ function App() {
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />
           <Route path="/AccountRecovery" element={<AccountRecovery />} />
+          <Route path="/Successful" element={<Successful />} />
         </Route>
-        <Route path="/Successful" element={<Successful />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
