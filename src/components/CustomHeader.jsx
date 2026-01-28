@@ -63,7 +63,7 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
                         </div>
 
                         {color2 && <div className="col-xl-7">
-                            <img src='/assets/karam.jpeg' style={{ width: '200px' }} />
+                            <img src='/assets/karam.jpeg' style={{ width: '250px' }} />
                         </div>}
 
 

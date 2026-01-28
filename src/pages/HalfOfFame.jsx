@@ -84,7 +84,7 @@ function HalfOfFame() {
                                         </span>
                                         <span>designed to support authentic performance.</span>
                                     </h1> */}
-                                    <h1 className="sct-title-gtx ">
+                                    <h1 className="sct-title_Sec_gtx ">
                                         {/* <span className="highlight first-part">
 
                                         </span>
@@ -92,7 +92,7 @@ function HalfOfFame() {
                                             designed to support authentic performance.
                                         </span> */}
 
-                                        <span className='title-gtx shimmerText'>
+                                        <span className='title-gtx shimmerText_sec'>
                                             करम वही करो जो करना ही फल लगे, क्युकी करम ही धर्म ।
                                         </span>
                                     </h1>
@@ -107,7 +107,7 @@ function HalfOfFame() {
                 </div>
             </section >
 
-            <section style={{paddingTop:'0'}} className="container sectionspace80">
+            <section style={{ paddingTop: '0' }} className="container sectionspace80">
                 <div className="hall-of-fame-section">
                     <div className="row g-4 col-12 mx-auto">
 
