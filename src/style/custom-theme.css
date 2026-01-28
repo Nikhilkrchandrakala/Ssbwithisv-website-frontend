@@ -286,3 +286,26 @@ input[type=number] {
         transform: translateY(-50%) scale(1);
     }
 }
+
+.password-wrapper {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 40px;
+    /* icon ke liye space */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 36%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #aaa;
+}
+
+.password-toggle:hover {
+    color: #fff;
+}

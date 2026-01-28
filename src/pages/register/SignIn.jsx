@@ -5,6 +5,7 @@ import CustomButton from '../../components/CustomButton'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { BiArrowBack } from 'react-icons/bi'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 function SignIn() {
     const navigate = useNavigate()
@@ -19,6 +20,8 @@ function SignIn() {
     // State to manage loading and error states
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
+    const [showPassword, setShowPassword] = useState(false);
+
 
     // Handle input changes
 
@@ -236,7 +239,7 @@ function SignIn() {
             <div className="thm-content-bg"></div>
             <div onClick={() => navigate(-1)} className='arrow_button'>
                 <BiArrowBack />
-                
+
             </div>
 
             <div className="container position-relative">
@@ -267,7 +270,7 @@ function SignIn() {
                         </small> */}
                     </div>
 
-                    <div className="col-lg-12 mt-3">
+                    {/* <div className="col-lg-12 mt-3">
                         <input
                             type="password"
                             name="password"
@@ -278,6 +281,32 @@ function SignIn() {
                             disabled={isLoading}
                             autoComplete="current-password"
                         />
+                    </div> */}
+
+
+                    <div className="col-lg-12 password-wrapper mt-3">
+                        <input
+                            // type="password"
+                            type={showPassword ? "text" : "password"}
+
+                            name="password"
+                            className="form-control thm-input"
+                            placeholder="Password"
+                            value={formData.password}
+                            onChange={handleInputChange}
+                            disabled={isLoading}
+                            autoComplete="current-password"
+                        />
+
+                        {console.log(showPassword)}
+
+                        <span
+                            className="password-toggle"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <AiOutlineEyeInvisible
+                            /> : <AiOutlineEye />}
+                        </span>
                     </div>
 
                     <div className="col-6 mt-4">

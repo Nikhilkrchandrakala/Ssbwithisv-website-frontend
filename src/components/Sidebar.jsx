@@ -135,7 +135,7 @@ const Sidebar = ({ open, onClose }) => {
                         </NavLink>
 
                         <NavLink
-                            to="/GtoTrain"
+                            to="/ssbVirtualTrainingXperience"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 isActive ? styles.active : ""
@@ -166,7 +166,7 @@ const Sidebar = ({ open, onClose }) => {
 
 
                         <NavLink
-                            to="/SsbPage"
+                            to="/aboutSSB"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 isActive ? styles.active : ""
@@ -177,7 +177,7 @@ const Sidebar = ({ open, onClose }) => {
 
 
                         <NavLink
-                            to="/about"
+                            to="/aboutssbwithisv"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 isActive ? styles.active : ""
@@ -204,7 +204,7 @@ const Sidebar = ({ open, onClose }) => {
 
 
                         <NavLink
-                            to="/ContactUS"
+                            to="/Contactus"
                             onClick={onClose}
                             className={({ isActive }) =>
                                 isActive ? styles.active : ""

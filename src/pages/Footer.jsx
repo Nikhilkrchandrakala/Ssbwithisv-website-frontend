@@ -50,7 +50,7 @@ function Footer() {
                     <h4>Useful Links</h4>
                     <ul>
                         <li onClick={() => navigate("/")}>Home</li>
-                        <li onClick={() => navigate('/SsbPage')}>What is SSB?</li>
+                        <li onClick={() => navigate('/aboutSSB')}>What is SSB?</li>
                         {/* <li onClick={() => window.open('/magazine')}>Podcast</li> */}
 
                         <li onClick={() => navigate('/ContactUS')}>Enquire with us</li>

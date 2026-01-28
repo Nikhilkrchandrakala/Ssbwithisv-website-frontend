@@ -29,6 +29,7 @@ import SignIn from './pages/register/SignIn';
 import SignUp from './pages/register/SignUp';
 import AccountRecovery from './pages/register/AccountRecovery';
 import Successful from './pages/register/Successful';
+import AuthRoute from './components/AuthRoute';
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 3000); // ⏳ splash screen duration (2 sec)
+    }, 2000); // ⏳ splash screen duration (2 sec)
 
     return () => clearTimeout(timer);
   }, []);
@@ -55,22 +56,24 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/About" element={<About />} />
+        <Route path="/aboutssbwithisv" element={<About />} />
         <Route path="/Magazine" element={<Magnize />} />
         <Route path="/HalfOfFame" element={<HalfOfFame />} />
         <Route path="/Courses" element={<Courses />} />
-        <Route path="/GtoTrain" element={<GtoTrain />} />
-        <Route path="/SsbPage" element={<SsbPage />} />
-        <Route path="/ContactUS" element={<Contact />} />
+        <Route path="/ssbVirtualTrainingXperience" element={<GtoTrain />} />
+        <Route path="/aboutSSB" element={<SsbPage />} />
+        <Route path="/Contactus" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         <Route path="/TermsConditions" element={<TermsConditions />} />
         <Route path="/RefundCancellation" element={<RefundCancellation />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogsDetails" element={<BlogsDetails />} />
-        <Route path="/SignIn" element={<SignIn />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/AccountRecovery" element={<AccountRecovery />} />
+        <Route element={<AuthRoute />}>
+          <Route path="/SignIn" element={<SignIn />} />
+          <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/AccountRecovery" element={<AccountRecovery />} />
+        </Route>
         <Route path="/Successful" element={<Successful />} />
       </Routes>
     </BrowserRouter>

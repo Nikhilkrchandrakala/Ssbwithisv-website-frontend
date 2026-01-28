@@ -8,7 +8,7 @@ const AllYouNeed = () => {
 
     const navigate = useNavigate()
     const handelClick = () => {
-        navigate('/SsbPage')
+        navigate('/aboutSSB')
     }
 
     return (

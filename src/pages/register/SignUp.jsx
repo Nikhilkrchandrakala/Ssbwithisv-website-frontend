@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import CustomButton from '../../components/CustomButton'
 import { BiArrowBack } from "react-icons/bi";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 function SignUp() {
     const navigate = useNavigate()
@@ -23,6 +24,12 @@ function SignUp() {
     const [timer, setTimer] = useState(0);
     const [otpSent, setOtpSent] = useState(false);
 
+
+    // const [seePassword, setSeePassword] = useState("");
+    // const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
     useEffect(() => {
         let interval;
 
@@ -36,12 +43,7 @@ function SignUp() {
     }, [timer]);
 
 
-    useEffect(() => {
-        const token = localStorage.getItem("authToken")
-        if (token) {
-            navigate('/')
-        }
-    }, [])
+   
 
     const isValidEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -316,28 +318,53 @@ function SignUp() {
                             />
                         </div>
 
-                        <div className="col-lg-12">
+                        <div className="col-lg-12 password-wrapper">
                             <input
-                                type="password"
-                                className="form-control thm-input"
-                                placeholder="Password (min. 4 characters)"
+                                type={showPassword ? "text" : "password"}
+                                className="form-control thm-input password-input"
+                                placeholder="Password (min. 6 characters)"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
                                 minLength="6"
                             />
+
+                            <span
+                                className="password-toggle"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                            </span>
                         </div>
 
-                        <div className="col-lg-12">
+
+
+                        {/* Confirm Password */}
+                        <div className="col-lg-12  password-wrapper mt-3">
                             <input
-                                type="password"
+                                type={showConfirmPassword ? "text" : "password"}
                                 className="form-control thm-input"
                                 placeholder="Repeat Password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
                             />
+
+                            <span
+                                className="password-toggle"
+
+                                onClick={() =>
+                                    setShowConfirmPassword(!showConfirmPassword)
+                                }
+                            >
+                                {showConfirmPassword ? (
+                                    <AiOutlineEyeInvisible />
+                                ) : (
+                                    <AiOutlineEye />
+                                )}
+                            </span>
                         </div>
+                        {/* </> */}
 
                         {errorMsg && (
                             <p className="text-danger text-center">
@@ -397,17 +424,12 @@ function SignUp() {
                             </div>
                         </div>
 
-                        {/* <div className="col-12 d-flex justify-content-center mt-5">
-                            <button className="thm-google-btn">
-                                <span className="thm-google-icon"><img src="/assets/g-icon.png" alt="Google Icon" /></span>
-                                Sign up with Google account
-                            </button>
-                        </div> */}
+
                     </div>
 
                     <span className="thm-glow"></span>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

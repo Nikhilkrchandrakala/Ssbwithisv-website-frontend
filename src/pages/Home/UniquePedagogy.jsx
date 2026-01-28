@@ -86,7 +86,7 @@ const UniquePedagogy = () => {
             </div>
 
             <div className={styles.KnowMoreBtn}>
-                <CustomButton text='KNOW MORE' onClick={() => navigate('/GtoTrain')} />
+                <CustomButton text='KNOW MORE' onClick={() => navigate('/ssbVirtualTrainingXperience')} />
             </div>
         </section >
     );

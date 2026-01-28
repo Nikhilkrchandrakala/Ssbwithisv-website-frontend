@@ -141,6 +141,10 @@ function AccountRecovery() {
             setError('Passwords do not match')
             return false
         }
+        if (!formData.identifier) {
+            setError('please fill phone or email')
+            return false
+        }
 
         return true
     }
@@ -151,6 +155,14 @@ function AccountRecovery() {
 
     // Step 1: Send OTP
     const handleSendOtp = async () => {
+
+        if (!formData.identifier) {
+            setError('please fill phone or email')
+
+            return
+        }
+
+        console.log(formData.identifier)
         if (!validateIdentifier()) {
             return;
         }
