@@ -121,12 +121,14 @@ function HalfOfFame() {
                                             className={`Hall-of-fame-card `}
                                         >
                                             <img
-                                                src={candidate.img}
-                                                alt={candidate.name}
+                                                src={candidate?.img}
+                                                alt={candidate?.name}
                                             />
                                             <div className="hof-content">
                                                 <h5>{candidate.name}</h5>
-                                                <span>{candidate.board}</span>
+                                                <span>{candidate?.board}</span>
+                                                <br/>
+                                                <span>{candidate?.entry}</span>
                                             </div>
                                         </div>
                                     ))}
