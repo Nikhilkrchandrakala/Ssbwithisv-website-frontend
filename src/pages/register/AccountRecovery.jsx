@@ -502,9 +502,9 @@ function AccountRecovery() {
 
                 {/* Step 1: Enter Email/Phone */}
                 {step === 1 && (
-                    <form
+                    <div
                         className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
-                        onKeyPress={(e) => handleKeyPress(e, 'sendOtp')}
+                        // onKeyPress={(e) => handleKeyPress(e, 'sendOtp')}
                     >
                         <div className="col-lg-12">
                             <input
@@ -537,14 +537,14 @@ function AccountRecovery() {
                                 />
                             </div>
                         </div>
-                    </form>
+                    </div>
                 )}
 
                 {/* Step 2: Enter OTP */}
                 {step === 2 && (
-                    <form
+                    <div
                         className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
-                        onKeyPress={(e) => handleKeyPress(e, 'verifyOtp')}
+                        // onKeyPress={(e) => handleKeyPress(e, 'verifyOtp')}
                     >
                         <div className="col-lg-12">
                             <input
@@ -597,12 +597,12 @@ function AccountRecovery() {
                                 ← Back to change email/phone
                             </div>
                         </div>
-                    </form>
+                    </div>
                 )}
 
                 {/* Step 3: Set New Password */}
                 {step === 3 && (
-                    <form
+                    <div
                         className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
                         onKeyPress={(e) => handleKeyPress(e, 'resetPassword')}
                     >
@@ -658,7 +658,7 @@ function AccountRecovery() {
                                 ← Back to OTP verification
                             </div>
                         </div>
-                    </form>
+                    </div>
                 )}
 
                 <span className="thm-glow"></span>
