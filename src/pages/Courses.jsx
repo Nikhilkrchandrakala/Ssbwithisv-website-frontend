@@ -34,27 +34,54 @@ function Courses() {
                     {/* ================= MOBILE SELECT ================= */}
                     <div className="course-mobile-select d-md-none mb-3">
                         <div className="form-group">
-                            <label
-                                htmlFor="courseTabSelect"
-                                className="form-label mb-1"
-                                style={{ color: "var(--theme-white)" }}
-                            >
-                                Select Course:-
-                            </label>
 
-                            <select
-                                className="form-select"
-                                id="courseTabSelect"
-                                value={activeTab}
-                                onChange={(e) => setActiveTab(e.target.value)}
-                            >
-                                {tabs.map((tab) => (
-                                    <option key={tab.id} value={tab.id}>
-                                        {tab.label}
-                                    </option>
-                                ))}
-                            </select>
+
+
                         </div>
+                    </div>
+
+                    <div className="col-12 col-md-4 text-md-end d-md-none">
+                        <form>
+                            <div className="form-group">
+
+                                <label
+                                    htmlFor="courseTabSelect"
+                                    className="form-label mb-1"
+                                    style={{ color: "var(--theme-white)" }}
+                                >
+                                    Select Course:-
+                                </label>
+
+
+                                {/* <select
+                                    className="form-select thm-select w-100 w-md-auto"
+                                    value={selectedTag}
+                                    onChange={(e) => setSelectedTag(e.target.value)}
+                                >
+                                    <option value="all">All Resources</option>
+                                    <option value="Magazine">Current Affairs Magazine</option>
+                                    <option value="Books">Books</option>
+                                    <option value="SSBPrep">SSB Prep Material</option>
+                                </select> */}
+
+                                <select
+                                    className="form-select thm-select w-100 w-md-auto"
+
+                                    id="courseTabSelect"
+                                    value={activeTab}
+                                    onChange={(e) => setActiveTab(e.target.value)}
+                                // onChange={(e) => setSelectedTag(e.target.value)}
+
+                                >
+                                    {tabs.map((tab) => (
+                                        <option key={tab.id} value={tab.id}>
+                                            {tab.label}
+                                        </option>
+                                    ))}
+                                </select>
+
+                            </div>
+                        </form>
                     </div>
 
                     {/* ================= DESKTOP TABS ================= */}

@@ -297,7 +297,11 @@ function AccountRecovery() {
                     }
                 );
 
-                if (response.status === 200) {
+                console.log(response?.data?.message !== "invalid otp")
+
+
+
+                if (response?.data?.message !== "invalid otp") {
                     setSuccess('OTP verified successfully!');
                     setStep(3);
                 } else {

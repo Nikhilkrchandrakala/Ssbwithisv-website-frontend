@@ -43,7 +43,7 @@ function SignUp() {
     }, [timer]);
 
 
-   
+
 
     const isValidEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -257,177 +257,213 @@ function SignUp() {
                 <div className="container position-relative">
                     <h1 className="thm-big-title">Sign Up</h1>
 
-                    <div className="position-relative" style={{zIndex:'55555'}}>
+                    <div className="position-relative" style={{ zIndex: '55555' }}>
                         <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
-                        <div className="col-lg-12">
-                            <input
-                                type="text"
-                                className="form-control thm-input"
-                                placeholder="Your Name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="col-lg-12">
-                            <input
-                                type="email"
-                                className="form-control thm-input"
-                                placeholder="Your Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="col-lg-9 col-md-9">
-                            <input
-                                type="text"
-                                className="form-control thm-input"
-                                placeholder="Your Contact Number"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="col-lg-3 col-md-3">
-                            <div style={{ zIndex: '9999999' }} className="d-flex justify-content-end align-items-center gap-2">
-                                <CustomButton
-                                    text={
-                                        timer > 0
-                                            ? `Resend ${timer}s`
-                                            : loading
-                                                ? "Sending..."
-                                                : "Send OTP"
-                                    }
-                                    onClick={handleSendOtp}
-                                    disabled={timer > 0 || loading}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-lg-12">
-                            <input
-                                type="text"
-                                className="form-control thm-input"
-                                placeholder="Enter OTP"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                                required
-                            />
-                        </div>
-
-                        <div className="col-lg-12 password-wrapper">
-                            <input
-                                type={showPassword ? "text" : "password"}
-                                className="form-control thm-input password-input"
-                                placeholder="Password (min. 6 characters)"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                minLength="6"
-                            />
-
-                            <span
-                                className="password-toggle"
-                                onClick={() => setShowPassword(!showPassword)}
-                            >
-                                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                            </span>
-                        </div>
-
-
-
-                        {/* Confirm Password */}
-                        <div className="col-lg-12  password-wrapper mt-3">
-                            <input
-                                type={showConfirmPassword ? "text" : "password"}
-                                className="form-control thm-input"
-                                placeholder="Repeat Password"
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-
-                            <span
-                                className="password-toggle"
-
-                                onClick={() =>
-                                    setShowConfirmPassword(!showConfirmPassword)
-                                }
-                            >
-                                {showConfirmPassword ? (
-                                    <AiOutlineEyeInvisible />
-                                ) : (
-                                    <AiOutlineEye />
-                                )}
-                            </span>
-                        </div>
-                        {/* </> */}
-
-                        {errorMsg && (
-                            <p className="text-danger text-center">
-                                {errorMsg}
-                            </p>
-                        )}
-
-                        <div className="col-lg-12 mt-4 consent-wrapper">
-                            <label className="consent-item">
-                                <span style={{ textAlign: 'center' }}>
-                                    By submitting this from I agree to receive calls, WhatsApp messages, emails, and updates
-                                    related to courses, mentoring programs, events, and relevant
-                                    information from <strong>SSB with ISV</strong>. I understand that I
-                                    may opt out of promotional communication at any time.
-                                </span>
-                            </label>
-
-                            <label className="consent-item">
+                            <div className="col-lg-12">
                                 <input
-                                    type="checkbox"
-                                    checked={serviceConsent}
-                                    onChange={(e) => setServiceConsent(e.target.checked)}
+                                    type="text"
+                                    className="form-control thm-input"
+                                    placeholder="Your Name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
                                     required
                                 />
-                                <span>
-                                    I hereby consent to <strong>SSB with ISV</strong> collecting, storing,
-                                    processing, and using my personal data in accordance with the{" "}
-                                    <span
-                                        className="policy-link"
-                                        onClick={() => navigate("/PrivacyPolicy")}
-                                        style={{ cursor: 'pointer', color: '#007bff' }}
-                                    >
-                                        Privacy Policy
-                                    </span>,
-                                    for the purpose of counselling, mentoring, admissions,
-                                    communication, and related services. I understand that I may
-                                    withdraw my consent at any time by contacting the Grievance Officer.
+                            </div>
+
+                            <div className="col-lg-12">
+                                <input
+                                    type="email"
+                                    className="form-control thm-input"
+                                    placeholder="Your Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="col-lg-12 password-wrapper">
+                                <input
+                                    type="text"
+                                    className="form-control thm-input"
+                                    placeholder="Your Contact Number"
+                                    value={phone}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/\D/g, ""); // only numbers
+
+                                        if (value.length <= 10) {
+                                            setPhone(value);
+                                        }
+                                    }}
+                                    maxLength={10}
+                                    required
+                                />
+
+
+                                <div className="password-toggle-btn">
+                                    {/* <div style={{ zIndex: '9999999' }} className="d-flex justify-content-end align-items-center gap-2"> */}
+                                    {/* <CustomButton
+                                        text={
+                                            timer > 0
+                                                ? `Resend ${timer}s`
+                                                : loading
+                                                    ? "Sending..."
+                                                    : "Send OTP"
+                                        }
+
+                                    /> */}
+
+                                    <button
+                                        className='SendOtpBtn'
+                                        onClick={handleSendOtp}
+                                        disabled={timer > 0 || loading}>
+                                        {
+                                            timer > 0
+                                                ? `Resend ${timer}s`
+                                                : loading
+                                                    ? "Sending..."
+                                                    : "Send OTP"
+                                        }
+
+                                    </button>
+                                    {/* </div> */}
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div className="col-lg-12">
+                                <input
+                                    type="tel"
+                                    className="form-control thm-input"
+                                    placeholder="Enter 6 digit OTP"
+                                    value={otp}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/\D/g, ""); // only numbers
+                                        if (value.length <= 6) {
+                                            setOtp(value);
+                                        }
+                                    }}
+                                    maxLength={6}
+                                    minLength={6}
+                                    inputMode="numeric"
+                                    pattern="[0-9]{6}"
+                                    title="OTP must be exactly 6 digits"
+                                    required
+                                />
+                            </div>
+
+
+                            <div className="col-lg-12 password-wrapper">
+                                <input
+                                    type={showPassword ? "text" : "password"}
+                                    className="form-control thm-input password-input"
+                                    placeholder="Password (min. 6 characters)"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    minLength="6"
+                                />
+
+                                <span
+                                    className="password-toggle"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                 </span>
-                            </label>
-                        </div>
+                            </div>
 
-                        <div className="col-12 d-flex justify-content-center mt-5">
-                            <CustomButton
-                                text={loading ? "Please wait..." : "SIGN UP"}
-                                onClick={handleSubmit}
-                                disabled={loading || !otpSent}
-                            />
-                        </div>
 
-                        <div className="col-12 text-center mt-5">
-                            <div
-                                onClick={() => navigate('/SignIn')}
-                                className="thm-account-link"
-                                style={{ cursor: 'pointer' }}
-                            >
-                                I already have an account.
+
+                            {/* Confirm Password */}
+                            <div className="col-lg-12  password-wrapper mt-3">
+                                <input
+                                    type={showConfirmPassword ? "text" : "password"}
+                                    className="form-control thm-input"
+                                    placeholder="Repeat Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+
+                                <span
+                                    className="password-toggle"
+
+                                    onClick={() =>
+                                        setShowConfirmPassword(!showConfirmPassword)
+                                    }
+                                >
+                                    {showConfirmPassword ? (
+                                        <AiOutlineEyeInvisible />
+                                    ) : (
+                                        <AiOutlineEye />
+                                    )}
+                                </span>
+                            </div>
+                            {/* </> */}
+
+                            {errorMsg && (
+                                <p className="text-danger text-center">
+                                    {errorMsg}
+                                </p>
+                            )}
+
+                            <div className="col-lg-12 mt-4 consent-wrapper">
+                                <label className="consent-item">
+                                    <span style={{ textAlign: 'center' }}>
+                                        By submitting this from I agree to receive calls, WhatsApp messages, emails, and updates
+                                        related to courses, mentoring programs, events, and relevant
+                                        information from <strong>SSB with ISV</strong>. I understand that I
+                                        may opt out of promotional communication at any time.
+                                    </span>
+                                </label>
+
+                                <label className="consent-item">
+                                    <input
+                                        type="checkbox"
+                                        checked={serviceConsent}
+                                        onChange={(e) => setServiceConsent(e.target.checked)}
+                                        required
+                                    />
+                                    <span>
+                                        I hereby consent to <strong>SSB with ISV</strong> collecting, storing,
+                                        processing, and using my personal data in accordance with the{" "}
+                                        <span
+                                            className="policy-link"
+                                            onClick={() => navigate("/PrivacyPolicy")}
+                                            style={{ cursor: 'pointer', color: 'var(--secondary-color)' }}
+                                        >
+                                            Privacy Policy
+                                        </span>,
+                                        for the purpose of counselling, mentoring, admissions,
+                                        communication, and related services. I understand that I may
+                                        withdraw my consent at any time by contacting the Grievance Officer.
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div className="col-12 d-flex justify-content-center mt-5">
+                                <CustomButton
+                                    text={loading ? "Please wait..." : "SIGN UP"}
+                                    onClick={handleSubmit}
+                                    disabled={loading || !otpSent}
+                                />
+                            </div>
+
+                            <div className="col-12 text-center mt-5">
+                                <div
+                                    onClick={() => navigate('/SignIn')}
+                                    className="thm-account-link"
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    I already have an account.
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
 
-                    <span style={{zIndex:'654'}} className="thm-glow"></span>
+                    <span style={{ zIndex: '654' }} className="thm-glow"></span>
                 </div>
             </div >
         </>

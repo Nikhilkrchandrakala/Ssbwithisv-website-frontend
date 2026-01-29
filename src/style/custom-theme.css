@@ -300,13 +300,182 @@ input[type=number] {
 .password-toggle {
     position: absolute;
     right: 12px;
-    top: 36%;
+    top: 32%;
     transform: translate(-50%, -50%);
     cursor: pointer;
     font-size: 20px;
-    color: #aaa;
+    color: var(--secondary-color);
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 1.5%;
+    top: 6%;
+    /* transform: translate(-50%); */
+    cursor: pointer;
+    /* max-height: 20px; */
+    /* font-size: 20px; */
+    /* color: var(--secondary-color); */
+}
+
+.SendOtpBtn {
+    background: rgba(17, 16, 21, 0.4);
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+
+
+    cursor: pointer;
+    overflow: hidden;
+    padding: 5px 24px 4px 24px;
+    border: 2px solid rgba(210, 161, 0, 0.45);
+    font-family: var(--cta);
+    color: var(--secondary-color);
+    font-size: 18px;
+    margin-top: 1px;
+    text-transform: uppercase;
+}
+
+.SendOtpBtn:hover {
+    background-color: var(--secondary-color);
+    color: black;
+}
+
+.SendOtpBtn {
+
+    padding: 3px 12px;
+    border: 2px solid rgba(210, 161, 0, 0.45);
+
 }
 
 .password-toggle:hover {
     color: #fff;
+}
+
+
+
+
+/* =========================
+   Responsive Styles
+========================= */
+
+/* Tablet (max-width: 992px) */
+@media (max-width: 992px) {
+    .thm-big-title {
+        font-size: 60px;
+        line-height: 75px;
+    }
+
+    .thm-content-layer {
+        padding: 60px 15px 120px 15px;
+    }
+
+    .thm-btn1,
+    .thm-input,
+    .thm-google-btn,
+    .thm-account-link {
+        font-size: 18px;
+    }
+
+    .thm-glow {
+        width: 300px;
+        height: 300px;
+        right: 40px;
+        top: 200px;
+    }
+}
+
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .thm-big-title {
+        font-size: 40px;
+        line-height: 55px;
+        margin-bottom: 25px;
+    }
+
+    .thm-content-layer {
+        padding: 40px 15px 80px 15px;
+    }
+
+    .arrow_button {
+        font-size: 22px;
+        top: 3%;
+        left: 5%;
+    }
+
+    .thm-input {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
+
+    .thm-btn1 {
+        font-size: 16px;
+        padding: 6px 18px;
+    }
+
+    .thm-google-btn {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .success-check-text {
+        font-size: 24px;
+    }
+
+    .success-check-icon {
+        width: 70px;
+    }
+
+    .thm-glow {
+        width: 220px;
+        height: 220px;
+        right: 10px;
+        top: 150px;
+        filter: blur(25px);
+    }
+}
+
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .thm-big-title {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .thm-checkbox,
+    .thm-account-link {
+        font-size: 16px;
+    }
+
+    .password-toggle {
+        font-size: 16px;
+        top: 40%;
+        /* right: 8px; */
+    }
+    .password-toggle-btn {
+        font-size: 16px;
+        top: 8%;
+        right: 5%;
+        /* right: 8px; */
+    }
+
+    .thm-google-btn {
+        gap: 10px;
+    }
+
+    .thm-google-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .thm-input {
+        margin-bottom: 5px;
+    }
 }

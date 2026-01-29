@@ -124,15 +124,10 @@ function Magnize() {
                     </div>
 
                     {/* RIGHT SELECT */}
-                    <div className="col-8 col-md-4 text-md-end">
+                    <div className="col-12 col-md-4 text-md-end">
                         <form>
                             <div className="form-group">
-                                {/* <select className="form-select thm-select w-100 w-md-auto">
-                                    <option value="all">All Resources</option>
-                                    <option value="1">Current Affairs Magazine</option>
-                                    <option value="2">Books</option>
-                                    <option value="3">SSB Prep Material</option>
-                                </select> */}
+                               
 
                                 <select
                                     className="form-select thm-select w-100 w-md-auto"
