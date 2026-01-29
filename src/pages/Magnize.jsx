@@ -118,7 +118,7 @@ function Magnize() {
                     {/* LEFT TEXT */}
                     <div className="col-12 col-md-8">
                         <p className="d-flex justify-content-start m-0 downloadYourRes">
-                            <span onClick={() => navigate('/login')}> Sign up</span> to download your free magazine.
+                            <span onClick={() => navigate('/SignUp')}> Sign up</span> to download your free magazine.
 
                         </p>
                     </div>

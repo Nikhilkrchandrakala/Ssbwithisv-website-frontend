@@ -75,7 +75,7 @@
 
 .logo {
     width: 100px;
-    height: 100px;
+    /* height: 100px; */
     cursor: pointer;
 }
 
@@ -500,7 +500,7 @@
 
     .logo {
         width: 36px;
-        height: 36px;
+        /* height: 36px; */
     }
 
     .titleOfSecondSection {
@@ -578,7 +578,7 @@
 
     .logo {
         width: 80px;
-        height: 80px;
+        /* height: 80px; */
     }
 
     .menuIcon {
