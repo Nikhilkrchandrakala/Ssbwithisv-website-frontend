@@ -8,7 +8,7 @@
   align-items: center;
 
 
-  
+
 
   cursor: pointer;
   overflow: hidden;
@@ -65,7 +65,7 @@
   margin: 0px;
 }
 
-.downloadYour span ,
+.downloadYour span,
 .downloadYourRes span {
   color: var(--secondary-color);
   cursor: pointer;
@@ -272,3 +272,5 @@
   border-radius: 50%;
   pointer-events: none;
 }
+
+

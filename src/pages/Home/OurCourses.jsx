@@ -6,9 +6,22 @@ import Heading from '../../components/Heading';
 import { useNavigate } from 'react-router-dom';
 
 const Courses = () => {
-    const [activeCard, setActiveCard] = useState(0); // First card active by default
+    const [activeCard, setActiveCard] = useState(0);
     const courseListRef = useRef(null);
     const cardRefs = useRef([]);
+    const [isMobile, setIsMobile] = useState(false);
+
+    // Check if mobile
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Set up refs for each card
     useEffect(() => {
@@ -19,22 +32,36 @@ const Courses = () => {
     const handleScroll = () => {
         if (!courseListRef.current) return;
 
-        const scrollTop = courseListRef.current.scrollTop;
-        const containerHeight = courseListRef.current.clientHeight;
-        const scrollPosition = scrollTop + (containerHeight / 2); // Middle of viewport
+        if (isMobile) {
+            // Horizontal scroll detection for mobile
+            const scrollLeft = courseListRef.current.scrollLeft;
+            const containerWidth = courseListRef.current.clientWidth;
+            const cardWidth = cardRefs.current[0]?.clientWidth || 0;
+            const scrollPosition = scrollLeft + (containerWidth / 2);
 
-        // Find which card is in the middle
-        for (let i = 0; i < cardRefs.current.length; i++) {
-            const card = cardRefs.current[i];
-            if (!card) continue;
+            // Calculate which card is in the middle
+            const activeIndex = Math.floor(scrollPosition / (cardWidth + 20));
+            if (activeIndex >= 0 && activeIndex < coursesData.length) {
+                setActiveCard(activeIndex);
+            }
+        } else {
+            // Vertical scroll detection for desktop
+            const scrollTop = courseListRef.current.scrollTop;
+            const containerHeight = courseListRef.current.clientHeight;
+            const scrollPosition = scrollTop + (containerHeight / 2);
 
-            const cardTop = card.offsetTop;
-            const cardHeight = card.clientHeight;
-            const cardBottom = cardTop + cardHeight;
+            for (let i = 0; i < cardRefs.current.length; i++) {
+                const card = cardRefs.current[i];
+                if (!card) continue;
 
-            if (scrollPosition >= cardTop && scrollPosition <= cardBottom) {
-                setActiveCard(i);
-                break;
+                const cardTop = card.offsetTop;
+                const cardHeight = card.clientHeight;
+                const cardBottom = cardTop + cardHeight;
+
+                if (scrollPosition >= cardTop && scrollPosition <= cardBottom) {
+                    setActiveCard(i);
+                    break;
+                }
             }
         }
     };
@@ -42,39 +69,55 @@ const Courses = () => {
     // Click on card to make it active
     const handleCardClick = (index) => {
         setActiveCard(index);
-        // Scroll to center the clicked card
-        if (cardRefs.current[index]) {
-            cardRefs.current[index].scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+        if (isMobile) {
+            // Horizontal scroll for mobile
+            if (cardRefs.current[index]) {
+                const card = cardRefs.current[index];
+                const container = courseListRef.current;
+                const cardLeft = card.offsetLeft;
+                const containerWidth = container.clientWidth;
+                const cardWidth = card.clientWidth;
+                const scrollTo = cardLeft - (containerWidth / 2) + (cardWidth / 2);
+
+                container.scrollTo({
+                    left: scrollTo,
+                    behavior: 'smooth'
+                });
+            }
+        } else {
+            // Vertical scroll for desktop
+            if (cardRefs.current[index]) {
+                cardRefs.current[index].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }
         }
     };
-
-    const navigate = useNavigate()
 
     // Click on indicator dot
     const handleIndicatorClick = (index) => {
         handleCardClick(index);
     };
 
+    const navigate = useNavigate();
+
     return (
         <section className={styles.coursesSection}>
             {/* Header */}
-
             <div className={styles.header}>
-                {/* <h2 className='headingOfSSb'>
-                    Our courses
-                </h2> */}
                 <Heading h1='Our Courses' />
-                <CustomButton text='Know More' onClick={() => navigate('/Courses')} />
+                <CustomButton
+                    text='Know More'
+                    onClick={() => navigate('/Courses')}
+                />
             </div>
 
             {/* Content */}
             <div className={styles.content}>
-                {/* LEFT LIST */}
+                {/* LEFT LIST - Desktop / Horizontal Cards - Mobile */}
                 <div
-                    className={styles.courseList}
+                    className={`${styles.courseList} ${isMobile ? styles.mobileList : ''}`}
                     ref={courseListRef}
                     onScroll={handleScroll}
                 >
@@ -82,12 +125,10 @@ const Courses = () => {
                         <div
                             key={course.id}
                             ref={el => cardRefs.current[index] = el}
-                            className={`${styles.courseCardHud} ${activeCard === index ? styles.active : styles.inactive
-                                }`}
+                            className={`${styles.courseCard} ${activeCard === index ? styles.active : styles.inactive}`}
                             onClick={() => handleCardClick(index)}
                         >
-                            {/* <div className={styles.sectionGlow}></div> */}
-                            <div className={styles.courseCardHudCon}>
+                            <div className={styles.cardContent}>
                                 {/* Corner Brackets */}
                                 <div className={`${styles.corner} ${styles.tl}`}></div>
                                 <div className={`${styles.corner} ${styles.tr}`}></div>
@@ -95,8 +136,7 @@ const Courses = () => {
                                 <div className={`${styles.corner} ${styles.br}`}></div>
 
                                 {/* Card Content */}
-                                <div style={{ padding: '20px' }} className={styles.courseCardHudConCen}>
-
+                                <div className={styles.cardInner}>
                                     <h1 className={styles.number}>{course.number}</h1>
                                     <h3>{course.title}</h3>
                                     <p>Total Sessions - {course.sessions}</p>
@@ -112,8 +152,7 @@ const Courses = () => {
                     {coursesData.map((_, index) => (
                         <div
                             key={index}
-                            className={`${styles.indicatorDot} ${activeCard === index ? styles.active : ''
-                                }`}
+                            className={`${styles.indicatorDot} ${activeCard === index ? styles.active : ''}`}
                             onClick={() => handleIndicatorClick(index)}
                             title={`Course ${index + 1}`}
                         />
@@ -121,28 +160,19 @@ const Courses = () => {
                 </div>
 
                 {/* RIGHT IMAGE PANEL */}
-                {/* <div className={styles.preview}> */}
-
                 <div
                     className={styles.preview}
                     style={{
                         backgroundImage: `url(${coursesData[activeCard]?.image || '/assets/img/courses/default.webp'})`
                     }}
                 >
-
-
                     <div className={styles.previewOverlay}>
-
                         <h1 className={styles.courseTitle}>
                             <span className={styles.white}>{coursesData[activeCard]?.description}</span>
-
                         </h1>
-
                     </div>
                 </div>
             </div>
-            {/* <div className={styles.sectionGlowTwo}></div> */}
-
         </section>
     );
 };
