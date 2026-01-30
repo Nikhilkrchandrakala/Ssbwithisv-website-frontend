@@ -151,7 +151,7 @@ function Magnize() {
                         // <div className="col-lg-4 col-md-6 col-sm-6" key={item._id || index}>
                         <div className="col-lg-4 col-md-6 col-6" key={item._id || index}>
 
-                            <div className="card magazine-card">
+                            <div className="card magazine-card mt-4">
 
                                 {/* HOVER DOWNLOAD BUTTON */}
                                 <div className="magazine-hover">

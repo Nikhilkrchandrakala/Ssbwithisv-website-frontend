@@ -1,31 +1,34 @@
-import React from "react";
-import styles from "../../style/Home.module.css";
-import OurMentor from "./OurMentor";
-import Philosophy from "./Philosophy";
-import OurCourses from "./OurCourses";
-import UniquePedagogy from "./UniquePedagogy";
-import Resources from "./Resources";
-import RogerThat from "./RogerThat";
-import AllYouNeed from "./AllYouNeed";
-import Footer from "../Footer";
-import From from "../From";
+import React, { lazy, Suspense } from "react";
 import Navbar from "../Navbar";
+import Footer from "../Footer";
 import CircleBox from "./CircleBox";
+
+const OurMentor = lazy(() => import("./OurMentor"));
+const Philosophy = lazy(() => import("./Philosophy"));
+const OurCourses = lazy(() => import("./OurCourses"));
+const UniquePedagogy = lazy(() => import("./UniquePedagogy"));
+const Resources = lazy(() => import("./Resources"));
+const RogerThat = lazy(() => import("./RogerThat"));
+const AllYouNeed = lazy(() => import("./AllYouNeed"));
+const From = lazy(() => import("../From"));
 
 function Home() {
     return (
         <>
             <Navbar />
             <CircleBox />
-            <OurMentor />
-            <Philosophy />
-            <OurCourses />
-            <UniquePedagogy />
-            {/* Resources for SSB preparation */}
-            <Resources />
-            <RogerThat />
-            <AllYouNeed />
-            <From />
+
+            <Suspense fallback={<div>Loading...</div>}>
+                <OurMentor />
+                <Philosophy />
+                <OurCourses />
+                <UniquePedagogy />
+                <Resources />
+                <RogerThat />
+                <AllYouNeed />
+                <From />
+            </Suspense>
+
             <Footer />
         </>
     );

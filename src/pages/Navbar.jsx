@@ -18,9 +18,21 @@ function Navbar() {
                 muted
                 loop
                 playsInline
+                preload="auto"
+                fetchpriority="high"
             >
                 <source src="/assets/video/BannerVideo.mp4" type="video/mp4" />
             </video>
+
+
+            {/* <video
+                src={item.video}
+                controls
+                preload="none"
+                loading="lazy"
+                poster="/assets/images/video-thumb.jpg"
+            /> */}
+
 
             {/* CONTENT ABOVE VIDEO */}
             <div className={styles.pageWrapperMain}>
@@ -56,7 +68,7 @@ function Navbar() {
 
                 <Sidebar open={open} onClose={() => setOpen(false)} />
             </div>
-           
+
         </div>
     );
 }

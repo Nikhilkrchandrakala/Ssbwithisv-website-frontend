@@ -58,23 +58,16 @@ const UniquePedagogy = () => {
 
             <video
                 className={styles.imageSection}
-                autoPlay
-                // muted/
-                loop
+                controls
+                preload="none"
+                loading="lazy"
                 playsInline
-
-                ref={videoRef}
-                // className={styles.imageSection}
-                // autoPlay
-                // loop
-                // playsInline
                 muted={isMuted}
-
+                ref={videoRef}
             >
-                {/* <source src="/assets/BannerVideo.mp4" type="video/mp4" /> */}
                 <source src="/assets/video/vtx.mp4" type="video/mp4" />
-
             </video>
+
 
             <div className='d-flex justify-content-end  '>
                 <button className={styles.MuteBtn} onClick={() => {

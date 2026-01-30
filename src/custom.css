@@ -1033,26 +1033,46 @@ p {
     border-radius: 0 !important;
     padding: 18px;
     text-align: center;
+    height: 60px;
+    /* min-height: ; */
 }
 
 .magazine-card-title {
-    font-family: "Inter", sans-serif;
+    /* font-family: "Inter", sans-serif; */
     font-size: 16px;
     font-weight: 500;
     color: var(--theme-white);
     margin: 0;
+
+
+    /* font-family: "Inter", sans-serif; */
+    /* font-size: 12px; */
+    font-weight: 500;
+    /* color: var(--theme-white);
+    margin: 0; */
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    /* sirf 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    line-height: 1.4;
+    max-height: calc(1.4em * 2);
 }
 
 .magazine-card-body {
     padding: 0;
-    height: auto;
+    height: 500px;
+    width: 100%;
     overflow: hidden;
 }
 
 .magazine-card-img {
-    /* height: 100%; */
+    height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: fill;
     display: block;
     transition: all ease-in 0.3s;
 }
@@ -1857,6 +1877,21 @@ p {
         margin-bottom: 30px;
     }
 
+    .magazine-card-body {
+        padding: 0;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+    }
+
+    .magazine-card-img {
+        height: 100%;
+        width: 100%;
+        object-fit: fill;
+        display: block;
+        transition: all ease-in 0.3s;
+    }
+
 }
 
 /* ==========================================
@@ -1934,9 +1969,9 @@ p {
         line-height: 25px;
     }
 
-    /* .magazine-card-body {
-        height: 22rem;
-    } */
+    .magazine-card-body {
+        height: 14rem;
+    }
 
     .journey-title {
         font-size: 30px;
@@ -1979,6 +2014,16 @@ p {
         /* 2 lines height fix */
     }
 
+    .magazine-card-head {
+        padding: 10px;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* min-height: ; */
+    }
+
+
 }
 
 
@@ -2017,7 +2062,7 @@ p {
 @media (max-width: 580px) {
     .bottom-contact-box-wrapper {
         right: 20px;
-        bottom: 20px;
+        bottom: 50px;
 
     }
 
