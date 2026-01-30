@@ -1959,6 +1959,26 @@ p {
     .footer-widget-title {
         font-size: 20px;
     }
+
+    .magazine-card-title {
+        font-family: "Inter", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--theme-white);
+        margin: 0;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* sirf 2 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        line-height: 1.4;
+        max-height: calc(1.4em * 2);
+        /* 2 lines height fix */
+    }
+
 }
 
 

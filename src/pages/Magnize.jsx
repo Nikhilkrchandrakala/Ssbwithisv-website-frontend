@@ -127,7 +127,7 @@ function Magnize() {
                     <div className="col-12 col-md-4 text-md-end">
                         <form>
                             <div className="form-group">
-                               
+
 
                                 <select
                                     className="form-select thm-select w-100 w-md-auto"
@@ -146,9 +146,11 @@ function Magnize() {
 
                 </div>
 
-                <div className="col-12 mx-auto row g-4">
+                <div style={{marginTop:'0'}} className="col-12 mx-auto row g-4">
                     {filteredMagazines?.map((item, index) => (
-                        <div className="col-lg-4 col-md-6 col-sm-6" key={item._id || index}>
+                        // <div className="col-lg-4 col-md-6 col-sm-6" key={item._id || index}>
+                        <div className="col-lg-4 col-md-6 col-6" key={item._id || index}>
+
                             <div className="card magazine-card">
 
                                 {/* HOVER DOWNLOAD BUTTON */}
