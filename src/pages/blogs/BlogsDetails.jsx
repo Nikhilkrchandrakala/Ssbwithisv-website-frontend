@@ -49,7 +49,7 @@ function BlogsDetails() {
                 heading="Blog Details"
                 text="Detailed view of the selected blog post."
                 banner={'/assets/website/blogs_banner.png'}
-                
+
             />
 
             <section className={styles.blogDetail}>
@@ -66,11 +66,16 @@ function BlogsDetails() {
                     </h1>
 
                     {/* TAG */}
-                    <span className={styles.tag}>TOPIC CRITERIA</span>
+
 
                     {/* INTRO / SHORT DESC */}
                     <p className={styles.intro}>
                         {blog.shortDescription}
+                    </p>
+
+                    {/*TIME DURATION */}
+                    <p className={styles.intro}>
+                    Times: {blog?.timeDuration}
                     </p>
 
                     {/* IMAGE SLIDER */}
@@ -82,6 +87,7 @@ function BlogsDetails() {
                                         <div className={styles.BlogImageWrapper}>
                                             <img src={img} alt={blog.title} />
                                             <div className={styles.imageOverlay}></div>
+                                            <p className={styles.TextImage}>{blog?.imageText}</p>
                                         </div>
                                     </SwiperSlide>
                                 ))}
