@@ -6,10 +6,12 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import CustomHeader from '../../components/CustomHeader'
 import styles from '../../style/BlogDetails.module.css'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import Footer from '../Footer'
+import { BiArrowBack } from "react-icons/bi";
+
 
 function BlogsDetails() {
     const { id } = useParams()
@@ -38,6 +40,8 @@ function BlogsDetails() {
     const location = useLocation()
     const { path } = location.state
     const blog = path
+
+    const navigate = useNavigate()
     // console.log(blog)
 
     // if (loading) return <p className="text-center mt-5">Loading...</p>
@@ -53,6 +57,7 @@ function BlogsDetails() {
             />
 
             <section className={styles.blogDetail}>
+
                 <div className={styles.container}>
 
                     {/* META */}
@@ -61,9 +66,18 @@ function BlogsDetails() {
                     </p>
 
                     {/* TITLE */}
-                    <h1 className={styles.title}>
-                        {blog.title}
-                    </h1>
+
+                    <div className={styles.arrowBackBtn}>
+
+                        <div className={styles.arrowBackBtn}>
+                            <BiArrowBack style={{ cursor: 'pointer' }} onClick={() => navigate(-1)} />
+                        </div>
+                        <h1 className={styles.title}>
+                            {blog.title}
+                        </h1>
+                    </div>
+
+
 
                     {/* TAG */}
 
@@ -75,7 +89,7 @@ function BlogsDetails() {
 
                     {/*TIME DURATION */}
                     <p className={styles.intro}>
-                    Time: {blog?.timeDuration}
+                        Time: {blog?.timeDuration}
                     </p>
 
                     {/* IMAGE SLIDER */}
