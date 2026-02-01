@@ -75,7 +75,7 @@ function BlogsDetails() {
 
                     {/*TIME DURATION */}
                     <p className={styles.intro}>
-                    Times: {blog?.timeDuration}
+                    Time: {blog?.timeDuration}
                     </p>
 
                     {/* IMAGE SLIDER */}
