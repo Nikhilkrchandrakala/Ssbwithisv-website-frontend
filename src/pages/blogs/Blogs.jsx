@@ -68,8 +68,7 @@ function Blogs() {
                             <div className={styles.imageWrapper}>
                                 <img
                                     src={
-                                        blog.images?.[0] ||
-                                        'https://via.placeholder.com/400x250?text=No+Image'
+                                        blog.images?.[0]?.imageUrl
                                     }
                                     alt={blog.title}
                                 />
@@ -79,7 +78,7 @@ function Blogs() {
                             <div className={styles.contentWrapper}>
 
 
-                                <span className={styles.topicTag}>TOPIC CRITERIA</span>
+                               
 
 
                                 <h3 className={styles.blogTitle}>
