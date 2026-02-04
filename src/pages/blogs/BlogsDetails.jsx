@@ -8,13 +8,18 @@ import 'swiper/css'
 import Footer from '../Footer'
 import { BiArrowBack } from "react-icons/bi";
 
+// import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+
+// import "swiper/css";
+
 function BlogsDetails() {
     const { id } = useParams()
     const location = useLocation()
     const { path } = location.state
     const blog = path
     const navigate = useNavigate()
-    
+
     // State for controlling arrow visibility
     const [showBackArrow, setShowBackArrow] = useState(false)
 
@@ -31,7 +36,7 @@ function BlogsDetails() {
 
         // Add scroll event listener
         window.addEventListener('scroll', handleScroll)
-        
+
         // Cleanup
         return () => {
             window.removeEventListener('scroll', handleScroll)
@@ -65,9 +70,9 @@ function BlogsDetails() {
             {/* Back Arrow - Only shows after scrolling */}
             <div className={`${styles.arrowBackContainer} ${showBackArrow ? styles.visible : styles.hidden}`}>
                 <div className={styles.arrowBackBtn}>
-                    <BiArrowBack 
-                        style={{ cursor: 'pointer' }} 
-                        onClick={() => navigate(-1)} 
+                    <BiArrowBack
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(-1)}
                         title="Go back"
                     />
                 </div>
@@ -100,7 +105,16 @@ function BlogsDetails() {
                     {/* IMAGE SLIDER */}
                     {blog.images?.length > 0 && (
                         <div className={styles.sliderWrapper}>
-                            <Swiper spaceBetween={20}>
+                            <Swiper
+                                spaceBetween={20}
+                                slidesPerView={1}
+                                loop={true}
+                                autoplay={{
+                                    delay: 2000,       // 2 seconds
+                                    disableOnInteraction: false
+                                }}
+                                modules={[Autoplay]}
+                            >
                                 {blog.images.map((img, i) => (
                                     <SwiperSlide key={i}>
                                         <div className={styles.BlogImageWrapper}>
