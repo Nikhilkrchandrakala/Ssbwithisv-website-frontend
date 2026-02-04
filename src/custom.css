@@ -2081,3 +2081,8 @@ p {
         color: var(--theme-white);
     }
 }
+
+.error-message {
+    color: var(--secondary-color);
+    margin-top: 4px;
+}

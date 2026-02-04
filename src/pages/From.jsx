@@ -315,9 +315,9 @@ function Form() {
                                 {hasError('message') && (
                                     <div className="error-message">{errors.message}</div>
                                 )}
-                                <div className="character-count">
+                                {/* <div className="character-count">
                                     {formData.message.length}/1000 characters
-                                </div>
+                                </div> */}
                             </div>
                         </div>
 
@@ -329,7 +329,7 @@ function Form() {
                             />
                         </div>
 
-                        {Object.keys(errors).length > 0 && (
+                        {/* {Object.keys(errors).length > 0 && (
                             <div className="col-12">
                                 <div className="form-errors-summary">
                                     <p>Please fix the following errors:</p>
@@ -340,7 +340,7 @@ function Form() {
                                     </ul>
                                 </div>
                             </div>
-                        )}
+                        )} */}
 
                     </div>
                 </form>
