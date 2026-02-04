@@ -1,15 +1,95 @@
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import styles from "../style/SelectionMap.module.css";
 import { STATES } from "../util/data";
 
 export default function IndiaSVG({ activeTab, hoveredRegion, setHoveredRegion }) {
+    // const svgRef = useRef(null);
+    // const [hasAnimated, setHasAnimated] = useState(false);
 
-    console.log(hoveredRegion)
+    const svgRef = useRef(null);
+    const [hasAnimated, setHasAnimated] = useState(false);
+    const [isInView, setIsInView] = useState(false);
+
+    useEffect(() => {
+        const svgElement = svgRef.current;
+        if (!svgElement) return;
+
+        const states = svgElement.querySelectorAll("path");
+
+        const animateStates = () => {
+            gsap.fromTo(
+                states,
+                {
+                    x: () => gsap.utils.random(-800, 800),
+                    y: () => gsap.utils.random(-800, 800),
+                    opacity: 0,
+                    scale: 0.5,
+                },
+                {
+                    x: 0,
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    ease: "power3.out",
+                    stagger: {
+                        each: 0.05,
+                        from: "random",
+                    },
+                }
+            );
+        };
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+
+                if (entry.isIntersecting) {
+                    setIsInView(true);
+
+                    // first time when comes into view
+                    if (!hasAnimated) {
+                        animateStates();
+                        setHasAnimated(true);
+                    }
+                }
+            },
+            { threshold: 0.3 }
+        );
+
+        observer.observe(svgElement);
+
+        return () => observer.disconnect();
+    }, [hasAnimated]);
+
+
+    // 🔁 Re-run animation when tab changes BUT only if already in view
+    useEffect(() => {
+        if (!isInView) return;
+
+        const states = svgRef.current.querySelectorAll("path");
+
+        gsap.fromTo(
+            states,
+            {
+                opacity: 0,
+                scale: 0.7,
+            },
+            {
+                opacity: 1,
+                scale: 1,
+                duration: 1,
+                ease: "power2.out",
+                stagger: 0.03,
+            }
+        );
+    }, [activeTab, isInView]);
+
 
     return (
         <>
-
-            {/* // <div className={styles.svgWrapper}> */}
-            <svg viewBox="0 0 1000 1100" className={styles.svg}>
+            <svg ref={svgRef} viewBox="0 0 1000 1100" className={styles.svg}>
                 {STATES.map((state) => {
                     const isActive = state[activeTab];
 
@@ -21,15 +101,12 @@ export default function IndiaSVG({ activeTab, hoveredRegion, setHoveredRegion })
                             onMouseEnter={(e) =>
                                 setHoveredRegion({
                                     name: state.name,
-                                   
                                     label:
                                         activeTab === "army"
                                             ? state.label || state.name
                                             : activeTab === "navy"
                                                 ? state.label2 || state.name
                                                 : state.label3 || state.name,
-
-
                                     x: e.clientX,
                                     y: e.clientY,
                                 })
@@ -40,7 +117,6 @@ export default function IndiaSVG({ activeTab, hoveredRegion, setHoveredRegion })
                 })}
             </svg>
 
-            {/* Tooltip box */}
             {hoveredRegion && (
                 <div
                     className={styles.tooltip}
@@ -51,9 +127,8 @@ export default function IndiaSVG({ activeTab, hoveredRegion, setHoveredRegion })
                 >
                     {hoveredRegion.label}
                 </div>
-            )}
-            {/* // </div> */}
+            )
+            }
         </>
     );
 }
-
