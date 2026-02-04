@@ -102,7 +102,7 @@
 
   background: rgba(0, 0, 0, 0.2); /* transparent white */
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  /* -webkit-backdrop-filter: blur(10px); Safari support */
 
   padding: 10px 20px;
   /* border-radius: 10px; */
@@ -246,7 +246,7 @@
   }
 
   .container {
-    padding: 0 15px;
+    padding: 0 26px;
   }
 
   .title {
@@ -302,7 +302,7 @@
 /* Small Mobile */
 @media (max-width: 480px) {
   .title {
-    font-size: 22px;
+    font-size: 16px;
   }
 
   .intro {

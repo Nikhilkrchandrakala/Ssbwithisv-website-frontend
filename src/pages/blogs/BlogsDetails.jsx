@@ -76,6 +76,8 @@ function BlogsDetails() {
                         title="Go back"
                     />
                 </div>
+
+                
             </div>
 
             <section className={styles.blogDetail}>
