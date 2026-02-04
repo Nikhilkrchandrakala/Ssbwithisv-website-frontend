@@ -56,7 +56,7 @@ const UniquePedagogy = () => {
             {/* IMAGE SECTION */}
             {/* <div className={styles.imageSection}></div> */}
 
-            <video
+            {/* <video
                 className={styles.imageSection}
                 controls
                 preload="none"
@@ -66,6 +66,23 @@ const UniquePedagogy = () => {
                 ref={videoRef}
             >
                 <source src="/assets/video/vtx.mp4" type="video/mp4" />
+            </video> */}
+
+            <video
+                className={styles.imageSection}
+                autoPlay
+                // controls
+                // muted
+                loop
+                playsInline
+                preload="auto"
+                fetchpriority="high"
+                muted={isMuted}
+                ref={videoRef}
+            >
+                {/* <source src="/assets/video/BannerVideo.mp4" type="video/mp4" /> */}
+                <source src="/assets/video/vtx.mp4" type="video/mp4" />
+
             </video>
 
 
