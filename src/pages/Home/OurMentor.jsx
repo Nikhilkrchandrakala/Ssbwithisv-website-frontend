@@ -29,7 +29,7 @@ const Mentors = () => {
                             </div>
 
                             <p className={styles.role}>{mentor.role}</p>
-                            <h3 className={styles.name}>{mentor.name}</h3>
+                            <h2 className={styles.name}>{mentor.name}</h2>
 
                             <p className={styles.description}>
                                 {mentor.description.map((line, i) => (

@@ -47,7 +47,7 @@ function Footer() {
 
                 {/* USEFUL LINKS WITH SOCIAL MEDIA */}
                 <div className={styles.links}>
-                    <h4>Useful Links</h4>
+                    <h3 className="fs- fw-bold">Useful Links</h3>
                     <ul>
                         <li onClick={() => navigate("/")}>Home</li>
                         <li onClick={() => navigate('/aboutSSB')}>What is SSB?</li>
@@ -101,7 +101,7 @@ function Footer() {
 
 
                 <div className={styles.links}>
-                    <h4>Our Services</h4>
+                    <h3>Our Services</h3>
                     <ul>
                         <li onClick={() => navigate("/Courses")}>Courses</li>
                         <li onClick={() => navigate("/Magazine")}>Magazine</li>
@@ -112,7 +112,7 @@ function Footer() {
                 {/* CONTACT US WITH COPYRIGHT */}
                 <div className={styles.contact}>
                     <div>
-                        <h4>Contact Us</h4>
+                        <h3>Contact Us</h3>
 
                         <div className={styles.contactRow}>
                             <a

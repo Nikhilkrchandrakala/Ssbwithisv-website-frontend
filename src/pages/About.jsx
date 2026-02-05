@@ -221,7 +221,7 @@ function About() {
                                                 <img src={member.image} alt={member.name} />
                                             </div>
                                             <span className="team-designation">{member.designation}</span>
-                                            <h4>{member.name}</h4>
+                                            <h3>{member.name}</h3>
                                         </div>
                                     </div>
 

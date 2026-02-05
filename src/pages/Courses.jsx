@@ -103,16 +103,16 @@ function Courses() {
 
                         {activeTab === "c1" && (
                             <div className="course-tab-card">
-                                <h3 className="course-tab-card-title">
+                                <h2 className="course-tab-card-title">
                                     10 days Services Selection Board Hackathon
-                                </h3>
+                                </h2>
                                 {/* <p>INR 11000/- · 18% GST</p> */}
                                 <h3 className="course-tab-card-hours">
                                     <strong>Total Sessions:</strong> 10 |{" "}
                                     <strong>Total Learning Hours:</strong> 60
                                 </h3>
 
-                                <h5 className="mb-2">Topics Covered:</h5>
+                                <h3 className="m-0 fs-4 ">Topics Covered:</h3>
                                 <ul>
 
                                     <li>

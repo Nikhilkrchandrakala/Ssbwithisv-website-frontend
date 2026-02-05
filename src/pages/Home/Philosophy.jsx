@@ -127,7 +127,7 @@ const PhilosophySection = () => {
                                     }`}
                                 onMouseEnter={() => setActiveCircle(c.id)}
                             >
-                                <h3>{c.title}</h3>
+                                <h2>{c.title}</h2>
                                 <p style={{ fontStyle: 'italic' }}>{c.desc}</p>
                                 <div>{c.desc2}</div>
                             </div>

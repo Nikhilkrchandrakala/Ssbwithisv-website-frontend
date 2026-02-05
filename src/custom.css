@@ -747,7 +747,7 @@ p {
 }
 
 
-.team-image h4 {
+.team-image h3 {
     margin-top: 5px;
     font-size: 20px;
     text-align: center;
@@ -1149,12 +1149,13 @@ p {
     z-index: 2;
 }
 
-.hof-content h5 {
+.hof-content h2 {
     margin: 0 0 4px;
     font-family: "Inter", sans-serif;
-    font-size: 15px;
+    font-size: 20px;
     font-weight: 500;
     color: #ffffff;
+    line-height: 20px;
 }
 
 .hof-content span {

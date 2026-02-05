@@ -81,9 +81,9 @@ function Blogs() {
                                
 
 
-                                <h3 className={styles.blogTitle}>
+                                <h2 className={styles.blogTitle}>
                                     {blog.title}
-                                </h3>
+                                </h2>
 
                                 <p className={styles.blogDescription}>
                                     {blog.shortDescription}

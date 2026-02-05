@@ -43,9 +43,9 @@ const TipsToExcel = () => {
                     tips to help you excel.
                 </p>
 
-                <h3>
+                <h2>
                     Understand the Officer Like Qualities (OLQs)
-                </h3>
+                </h2>
 
                 <p style={{ marginTop: '20px' }}>
                     The Services Selection Board looks for shades of Officer Like Qualities (OLQs) in candidates. Officer Like Qualities are nothing but a method to interpret one’s personality. There are 15 OLQs as enumerated below:
@@ -57,8 +57,8 @@ const TipsToExcel = () => {
                 {/* LEFT : FACTORS */}
                 <div className={styles.factors}>
                     <div className={styles.factorCard}>
-                        <h4>Factor 1</h4>
-                        <h4>Planning and Organising</h4>
+                        <h3 className={styles.factorCard_heading_OfH4}>Factor 1</h3>
+                        <h3 className={styles.factorCard_heading_OfH4}>Planning and Organising</h3>
                         <ul>
                             <li>Effective Intelligence</li>
                             <li>Reasoning Ability</li>
@@ -68,8 +68,8 @@ const TipsToExcel = () => {
                     </div>
 
                     <div className={styles.factorCard}>
-                        <h4>Factor 2</h4>
-                        <h4>Social Adjustment</h4>
+                        <h3 className={styles.factorCard_heading_OfH4}>Factor 2</h3>
+                        <h3 className={styles.factorCard_heading_OfH4}>Social Adjustment</h3>
                         <ul>
                             <li>Social Adaptability</li>
                             <li>Cooperation</li>
@@ -78,8 +78,8 @@ const TipsToExcel = () => {
                     </div>
 
                     <div className={styles.factorCard}>
-                        <h4>Factor 3</h4>
-                        <h4>Social Effectiveness</h4>
+                        <h3 className={styles.factorCard_heading_OfH4}>Factor 3</h3>
+                        <h3 className={styles.factorCard_heading_OfH4}>Social Effectiveness</h3>
                         <ul>
                             <li>Initiative</li>
                             <li>Self Confidence</li>
@@ -90,8 +90,8 @@ const TipsToExcel = () => {
                     </div>
 
                     <div className={styles.factorCard}>
-                        <h4>Factor 4</h4>
-                        <h4>Dynamic</h4>
+                        <h3 className={styles.factorCard_heading_OfH4}>Factor 4</h3>
+                        <h3 className={styles.factorCard_heading_OfH4}>Dynamic</h3>
                         <ul>
                             <li>Determination</li>
                             <li>Courage</li>

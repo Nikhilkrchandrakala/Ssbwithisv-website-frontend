@@ -138,7 +138,7 @@ const Courses = () => {
                                 {/* Card Content */}
                                 <div className={styles.cardInner}>
                                     <h1 className={styles.number}>{course.number}</h1>
-                                    <h3>{course.title}</h3>
+                                    <h2>{course.title}</h2>
                                     <p>Total Sessions - {course.sessions}</p>
                                     <p>Total Learning Hours - {course.hours}</p>
                                 </div>

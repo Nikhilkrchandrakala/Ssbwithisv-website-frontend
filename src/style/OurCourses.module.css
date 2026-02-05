@@ -99,12 +99,13 @@
 }
 
 /* TITLE */
-.courseCard h3 {
+.courseCard h2 {
   font-size: 30px;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 15px;
   font-family: var(--font1);
   transition: all 0.3s ease;
+  line-height: 40px;
 }
 
 .courseCard.active h3 {

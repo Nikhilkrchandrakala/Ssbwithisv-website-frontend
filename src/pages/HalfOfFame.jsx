@@ -125,7 +125,7 @@ function HalfOfFame() {
                                                 alt={candidate?.name}
                                             />
                                             <div className="hof-content">
-                                                <h5>{candidate.name}</h5>
+                                                <h2>{candidate.name}</h2>
                                                 <span>{candidate?.board}</span>
                                                 <br/>
                                                 <span>{candidate?.entry}</span>

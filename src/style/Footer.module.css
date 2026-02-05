@@ -32,8 +32,8 @@
 }
 
 /* COMMON SECTION STYLES */
-.links h4,
-.contact h4 {
+.links h3,
+.contact h3 {
     font-size: 18px;
     margin-bottom: 10px;
     color: #f2f0e1;

@@ -14,6 +14,13 @@
     margin-bottom: 20px;
 }
 
+.header h2 {
+    font-size: 36px;
+    font-weight: 400;
+    color: #f2f0e1;
+    margin-bottom: 20px;
+}
+
 .header p {
     max-width: 720px;
     font-size: 16px;
@@ -42,16 +49,17 @@
     text-align: center;
 }
 
-.factorCard h3 {
+/* .factorCard h3 {
     font-size: 14px;
     color: #c6c5af;
     opacity: 0.7;
-}
+} */
 
-.factorCard h4 {
-    font-size: 18px;
+.factorCard_heading_OfH4  {
+    font-size: 22px;
     margin: 10px 0 20px;
     color: #f2f0e1;
+    line-height: 20px;
 }
 
 .factorCard ul {
@@ -109,6 +117,9 @@
 @media (max-width: 768px) {
     .header h1 {
         font-size: 36px;
+    }
+    .header h2 {
+        font-size: 26px;
     }
 
     .section {
