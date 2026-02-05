@@ -44,18 +44,7 @@ const RogerThat = () => {
 
     return (
         <>
-            <Helmet>
-                <title>
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
-                    SSB Current Affairs & Insights | Defence Aspirants Magazine
-                </title>
-
-                <meta
-                    name="description"
-                    content="Curated current affairscontent to help SSB aspirants excel in interviews, group discussions and lecturette."
-                />
-            </Helmet>
+            
             <section className={styles.section}>
                 {/* HEADER */}
                 <div className={styles.header}>

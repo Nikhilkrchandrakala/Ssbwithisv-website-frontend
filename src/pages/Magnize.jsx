@@ -5,6 +5,7 @@ import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 
 function Magnize() {
 
@@ -109,7 +110,18 @@ function Magnize() {
 
     return (
         <>
+            <Helmet >
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    SSB Current Affairs & Insights | Defence Aspirants Magazine
+                </title>
 
+                <meta
+                    name="description"
+                    content="Curated current affairscontent to help SSB aspirants excel in interviews, group discussions and lecturette."
+                />
+            </Helmet>
             <CustomHeader heading={data?.heading} text={data?.text} banner={data?.banner} />
 
             <section className="container sectionspace80">
@@ -146,7 +158,7 @@ function Magnize() {
 
                 </div>
 
-                <div style={{marginTop:'0'}} className="col-12 mx-auto row g-4">
+                <div style={{ marginTop: '0' }} className="col-12 mx-auto row g-4">
                     {filteredMagazines?.map((item, index) => (
                         // <div className="col-lg-4 col-md-6 col-sm-6" key={item._id || index}>
                         <div className="col-lg-4 col-md-6 col-6" key={item._id || index}>
