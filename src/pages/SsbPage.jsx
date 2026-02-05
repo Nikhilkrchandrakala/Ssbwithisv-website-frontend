@@ -7,6 +7,7 @@ import DaySchedule from '../components/DaySchedule'
 import From from './From'
 import Footer from './Footer'
 import Faq from '../components/Faq'
+import { Helmet } from 'react-helmet-async'
 
 function SsbPage() {
 
@@ -18,6 +19,19 @@ function SsbPage() {
 
     return (
         <>
+            <Helmet>
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    What is Services Selection Board? | Complete SSB Selection Explained
+                </title>
+
+                <meta
+                    name="description"
+                    content="Understand the Services Selection Board process, tests, OLQs and assessment system explained clearly by experienced SSB mentors."
+                />
+            </Helmet>
+
             <CustomHeader heading={data.heading} textTwo={data.textTwo} banner={data?.banner} />
             <Methodology />
             <DaySchedule />

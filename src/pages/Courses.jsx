@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CustomHeader from "../components/CustomHeader";
 import From from "./From";
 import Footer from "./Footer";
+import { Helmet } from "react-helmet-async";
 
 function Courses() {
     const [activeTab, setActiveTab] = useState("c1");
@@ -26,6 +27,20 @@ function Courses() {
 
     return (
         <>
+
+            <Helmet>
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    SSB Preparation Courses | Online Structured Training
+                </title>
+
+                <meta
+                    name="description"
+                    content="Explore comprehensive SSB preparation courses covering psychology, GTO tasks, interviews and personality development by experts."
+                />
+            </Helmet>
+
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
 
             <section className="container sectionspace80">

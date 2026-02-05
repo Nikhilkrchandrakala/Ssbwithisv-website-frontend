@@ -5,6 +5,7 @@ import Footer from '../Footer'
 import { VscUnmute } from 'react-icons/vsc'
 import { IoVolumeMuteSharp } from 'react-icons/io5'
 import styles from '../../style/UniquePedagogy.module.css'
+import { Helmet } from 'react-helmet-async'
 
 function GtoTrain() {
 
@@ -37,6 +38,19 @@ function GtoTrain() {
     return (
         <>
 
+
+            <Helmet>
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    Virtual Training Xperience | Virtual GTO Ground by SSB with ISV
+                </title>
+
+                <meta
+                    name="description"
+                    content="VTX by SSB with ISV offers online SSB coaching on India’s 1st Virtual GTO Ground with assessment-aligned training to master GTO tasks."
+                />
+            </Helmet>
 
 
 

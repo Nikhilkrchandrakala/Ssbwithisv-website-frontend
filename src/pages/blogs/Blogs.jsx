@@ -3,6 +3,7 @@ import axios from 'axios'
 import CustomHeader from '../../components/CustomHeader'
 import styles from '../../style/Blog.module.css'
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 
 function Blogs() {
     const data = {
@@ -55,6 +56,20 @@ function Blogs() {
 
     return (
         <>
+
+            <Helmet>
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    SSB Podcast | Leadership & SSB Insights by Veterans
+                </title>
+
+                <meta
+                    name="description"
+                    content="Listen to expert discussions on military leadership and Armed Forces careers hosted by a veteran with real selection board experience."
+                />
+            </Helmet>
+
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
 
             <section className={styles.blogSection}>
@@ -78,7 +93,7 @@ function Blogs() {
                             <div className={styles.contentWrapper}>
 
 
-                               
+
 
 
                                 <h2 className={styles.blogTitle}>

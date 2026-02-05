@@ -12,6 +12,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'
 import styles from '../style/RogerThat.module.css'
+import { Helmet } from 'react-helmet-async'
 
 // import 
 
@@ -126,6 +127,19 @@ function About() {
 
     return (
         <>
+
+            <Helmet>
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    About SSB with ISV | Veteran-Led SSB Coaching in India
+                </title>
+
+                <meta
+                    name="description"
+                    content="Ex SSB assessors led SSB training institute with virtual GTO ground shaping future Armed Forces officers through structured preparation."
+                />
+            </Helmet>
 
             <CustomHeader heading={data?.heading} text={data?.text} textTwo={data.textTwo} banner={data?.banner} />
 
