@@ -1,3 +1,8 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: courses.html
+Disallow: courses/course-1.html
+Disallow: courses/course-2.html
+Disallow: courses/course-3.html
+Disallow: courses/course-4.html
+Disallow: courses/course-5.html
