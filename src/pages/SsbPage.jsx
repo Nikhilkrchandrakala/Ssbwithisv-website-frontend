@@ -30,6 +30,7 @@ function SsbPage() {
                     name="description"
                     content="Understand the Services Selection Board process, tests, OLQs and assessment system explained clearly by experienced SSB mentors."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/aboutSSB" />
             </Helmet>
 
             <CustomHeader heading={data.heading} textTwo={data.textTwo} banner={data?.banner} />

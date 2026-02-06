@@ -121,6 +121,7 @@ function Magnize() {
                     name="description"
                     content="Curated current affairscontent to help SSB aspirants excel in interviews, group discussions and lecturette."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/magazine" />
             </Helmet>
             <CustomHeader heading={data?.heading} text={data?.text} banner={data?.banner} />
 

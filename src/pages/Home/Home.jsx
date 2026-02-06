@@ -26,6 +26,7 @@ function Home() {
                     name="description"
                     content="India’s trusted SSB coaching institute led by ex-SSB assessors. Complete SSB preparation for Army, Navy & Air Force aspirants."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/" />
             </Helmet>
             <Navbar />
             <CircleBox />

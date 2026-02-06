@@ -68,6 +68,7 @@ function Blogs() {
                     name="description"
                     content="Listen to expert discussions on military leadership and Armed Forces careers hosted by a veteran with real selection board experience."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/blogs" /> 
             </Helmet>
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />

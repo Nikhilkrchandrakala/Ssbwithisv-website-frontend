@@ -3,6 +3,7 @@ import CustomHeader from '../components/CustomHeader'
 import From from './From'
 import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
+import { Helmet } from 'react-helmet-async'
 
 function HalfOfFame() {
 
@@ -69,6 +70,20 @@ function HalfOfFame() {
 
     return (
         <>
+            <Helmet >
+                <title>
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    Hall of Fame | SSB With ISV
+                </title>
+
+                <meta
+                    name="description"
+                    content="Hall of Fame | SSB With ISV ."
+                />
+                {/* <link rel="canonical" href="https://ssbwithisv.in/magazine" /> */}
+                <link rel="canonical" href="https://ssbwithisv.in/HalfOfFame" />
+            </Helmet>
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} color2={data.color2} />
 
             <section className="GTO-what-is-not-section sectionspace80">
@@ -127,7 +142,7 @@ function HalfOfFame() {
                                             <div className="hof-content">
                                                 <h2>{candidate.name}</h2>
                                                 <span>{candidate?.board}</span>
-                                                <br/>
+                                                <br />
                                                 <span>{candidate?.entry}</span>
                                             </div>
                                         </div>

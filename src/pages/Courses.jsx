@@ -39,6 +39,7 @@ function Courses() {
                     name="description"
                     content="Explore comprehensive SSB preparation courses covering psychology, GTO tasks, interviews and personality development by experts."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/Courses" />
             </Helmet>
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />

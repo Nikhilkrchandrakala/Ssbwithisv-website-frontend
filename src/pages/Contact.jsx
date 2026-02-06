@@ -19,6 +19,7 @@ function Contact() {
                     name="description"
                     content="Get in touch with SSB with ISV for admissions, counselling and expert guidance for SSB preparation and Armed Forces careers."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/Contactus" />
             </Helmet>
             <CustomHeader heading={'Contact us'} text={`At CS Joint Services Academy, we believe every aspirant deserves personal guidance and clarity.
                 Reach out to us for course details, counselling, or any queries related to SSB preparation.

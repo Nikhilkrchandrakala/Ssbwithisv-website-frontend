@@ -139,6 +139,7 @@ function About() {
                     name="description"
                     content="Ex SSB assessors led SSB training institute with virtual GTO ground shaping future Armed Forces officers through structured preparation."
                 />
+                <link rel="canonical" href="https://ssbwithisv.in/aboutssbwithisv" />
             </Helmet>
 
             <CustomHeader heading={data?.heading} text={data?.text} textTwo={data.textTwo} banner={data?.banner} />

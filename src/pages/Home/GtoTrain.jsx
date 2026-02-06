@@ -50,6 +50,9 @@ function GtoTrain() {
                     name="description"
                     content="VTX by SSB with ISV offers online SSB coaching on India’s 1st Virtual GTO Ground with assessment-aligned training to master GTO tasks."
                 />
+
+                <link rel="canonical" href="https://ssbwithisv.in/ssbVirtualTrainingXperience" />
+
             </Helmet>
 
 
