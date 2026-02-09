@@ -121,6 +121,29 @@ function Magnize() {
                     name="description"
                     content="Curated current affairscontent to help SSB aspirants excel in interviews, group discussions and lecturette."
                 />
+
+                {/* *MAGAZINE PAGE* */}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Magazine",
+                                "item": "https://ssbwithisv.in/magazine"
+                            }
+                        ]
+                    })}
+                </script>
                 <link rel="canonical" href="https://ssbwithisv.in/magazine" />
             </Helmet>
             <CustomHeader heading={data?.heading} text={data?.text} banner={data?.banner} />

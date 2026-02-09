@@ -30,6 +30,29 @@ function SsbPage() {
                     name="description"
                     content="Understand the Services Selection Board process, tests, OLQs and assessment system explained clearly by experienced SSB mentors."
                 />
+
+                {/* *ABOUT SSB PAGE* */}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "About SSB",
+                                "item": "https://ssbwithisv.in/aboutSSB"
+                            }
+                        ]
+                    })}
+                </script>
                 <link rel="canonical" href="https://ssbwithisv.in/aboutSSB" />
             </Helmet>
 

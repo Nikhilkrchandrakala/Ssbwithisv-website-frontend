@@ -28,10 +28,10 @@ function Courses() {
     return (
         <>
 
+            {/* import { Helmet } from "react-helmet"; */}
+
             <Helmet>
                 <title>
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
                     SSB Preparation Courses | Online Structured Training
                 </title>
 
@@ -39,8 +39,32 @@ function Courses() {
                     name="description"
                     content="Explore comprehensive SSB preparation courses covering psychology, GTO tasks, interviews and personality development by experts."
                 />
+
+                {/* BREADCRUMB SCHEMA */}
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Courses",
+                                "item": "https://ssbwithisv.in/Courses"
+                            }
+                        ]
+                    })}
+                </script>
+
                 <link rel="canonical" href="https://ssbwithisv.in/Courses" />
             </Helmet>
+
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
 

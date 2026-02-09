@@ -19,6 +19,29 @@ function Contact() {
                     name="description"
                     content="Get in touch with SSB with ISV for admissions, counselling and expert guidance for SSB preparation and Armed Forces careers."
                 />
+
+                {/* *CONTACT PAGE* */}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Contact Us",
+                                "item": "https://ssbwithisv.in/Contactus"
+                            }
+                        ]
+                    })}
+                </script>
                 <link rel="canonical" href="https://ssbwithisv.in/Contactus" />
             </Helmet>
             <CustomHeader heading={'Contact us'} text={`At CS Joint Services Academy, we believe every aspirant deserves personal guidance and clarity.

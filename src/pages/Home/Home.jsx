@@ -16,9 +16,10 @@ const From = lazy(() => import("../From"));
 function Home() {
     return (
         <>
+            {/* import { Helmet } from "react-helmet"; */}
+
             <Helmet>
                 <title>
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
                     Best online SSB Coaching in India with over 50% recommendation rate
                 </title>
 
@@ -26,8 +27,69 @@ function Home() {
                     name="description"
                     content="India’s trusted SSB coaching institute led by ex-SSB assessors. Complete SSB preparation for Army, Navy & Air Force aspirants."
                 />
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            {
+                                "@type": "WebSite",
+                                "@id": "https://ssbwithisv.in/#website",
+                                "url": "https://ssbwithisv.in/",
+                                "name": "SSB with ISV",
+                                "description":
+                                    "SSB with ISV provides expert Services Selection Board (SSB) coaching, mentoring and interview preparation for Indian Army, Navy and Air Force aspirants.",
+                                "publisher": {
+                                    "@id": "https://ssbwithisv.in/#organization"
+                                },
+                                "potentialAction": {
+                                    "@type": "SearchAction",
+                                    "target": "https://ssbwithisv.in/?s={search_term_string}",
+                                    "query-input": "required name=search_term_string"
+                                }
+                            },
+                            {
+                                "@type": "Organization",
+                                "@id": "https://ssbwithisv.in/#organization",
+                                "name": "SSB with ISV",
+                                "url": "https://ssbwithisv.in/",
+                                "logo": {
+                                    "@type": "ImageObject",
+                                    "url": "https://ssbwithisv.in/assets/logo/ISV.webp"
+                                },
+                                "sameAs": [
+                                    "https://www.instagram.com/ssbwithisv/",
+                                    "https://www.facebook.com/ssbwithisv/",
+                                    "https://www.linkedin.com/company/ssbwithisv"
+                                ],
+                                "contactPoint": [
+                                    {
+                                        "@type": "ContactPoint",
+                                        "telephone": "+91-8420422821",
+                                        "contactType": "customer support",
+                                        "areaServed": "IN",
+                                        "availableLanguage": ["English", "Hindi"]
+                                    }
+                                ]
+                            },
+                            {
+                                "@type": "EducationalOrganization",
+                                "@id": "https://ssbwithisv.in/#educationalorganization",
+                                "name": "SSB with ISV",
+                                "url": "https://ssbwithisv.in/",
+                                "description":
+                                    "A professional SSB coaching institute offering structured courses, mock interviews and mentoring by experienced assessors.",
+                                "parentOrganization": {
+                                    "@id": "https://ssbwithisv.in/#organization"
+                                }
+                            }
+                        ]
+                    })}
+                </script>
+
                 <link rel="canonical" href="https://ssbwithisv.in/" />
             </Helmet>
+
             <Navbar />
             <CircleBox />
 

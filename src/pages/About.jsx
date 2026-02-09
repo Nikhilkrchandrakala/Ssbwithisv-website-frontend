@@ -139,6 +139,29 @@ function About() {
                     name="description"
                     content="Ex SSB assessors led SSB training institute with virtual GTO ground shaping future Armed Forces officers through structured preparation."
                 />
+
+                {/* *ABOUT US PAGE* */}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "About Us",
+                                "item": "https://ssbwithisv.in/aboutssbwithisv"
+                            }
+                        ]
+                    })}
+                </script>
                 <link rel="canonical" href="https://ssbwithisv.in/aboutssbwithisv" />
             </Helmet>
 

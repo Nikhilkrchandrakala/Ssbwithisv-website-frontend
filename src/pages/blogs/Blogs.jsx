@@ -68,7 +68,30 @@ function Blogs() {
                     name="description"
                     content="Listen to expert discussions on military leadership and Armed Forces careers hosted by a veteran with real selection board experience."
                 />
-                <link rel="canonical" href="https://ssbwithisv.in/blogs" /> 
+
+                {/* *BLOG PAGE* */}
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Blogs",
+                                "item": "https://ssbwithisv.in/blogs"
+                            }
+                        ]
+                    })}
+                </script>
+                <link rel="canonical" href="https://ssbwithisv.in/blogs" />
             </Helmet>
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />

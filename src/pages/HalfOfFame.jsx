@@ -81,6 +81,29 @@ function HalfOfFame() {
                     name="description"
                     content="Hall of Fame | SSB With ISV ."
                 />
+
+                *HALL OF FAME*
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://ssbwithisv.in/"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": "Hall of Fame",
+                                "item": "https://ssbwithisv.in/HalfOfFame"
+                            }
+                        ]
+                    })}
+                </script>
                 {/* <link rel="canonical" href="https://ssbwithisv.in/magazine" /> */}
                 <link rel="canonical" href="https://ssbwithisv.in/HalfOfFame" />
             </Helmet>
