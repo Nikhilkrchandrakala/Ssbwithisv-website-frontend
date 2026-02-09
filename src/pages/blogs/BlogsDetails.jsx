@@ -64,7 +64,7 @@ function BlogsDetails() {
             <CustomHeader
                 heading="Blog Details"
                 text="Detailed view of the selected blog post."
-                banner={'/assets/website/blogs_banner.png'}
+                banner={'/assets/website/blogs_banner.webp'}
             />
 
             {/* Back Arrow - Only shows after scrolling */}

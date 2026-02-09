@@ -25,7 +25,7 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
                 <div className=''>
                     <div className={styles.topBar}>
                         <img
-                            src="/assets/logo/ISV.png"
+                            src="/assets/logo/ISV.webp"
                             alt="Logo"
                             className={styles.logo}
                             onClick={() => navigate('/')}

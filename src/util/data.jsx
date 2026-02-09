@@ -2,7 +2,7 @@
 export const mentorsData = [
     {
         id: 1,
-        image: "/assets/team-8.png",
+        image: "/assets/team-8.webp",
         role: "Interviewing Officer",
         name: "Commodore Pankaj Singh (Retd.)",
         description: [
@@ -20,7 +20,7 @@ export const mentorsData = [
     },
     {
         id: 2,
-        image: "/assets/founder.png",
+        image: "/assets/founder.webp",
         role: "Group Testing Officer",
         name: "Lt. Commander Nikhil Kumar Chandrakala (Retd.)",
         description: [
@@ -50,7 +50,7 @@ export const coursesData = [
         sessions: "10",
         hours: "60",
         description: `${""}`,
-        image: "/assets/website/course5.png",
+        image: "/assets/website/course5.webp",
     },
 
     {
@@ -64,7 +64,7 @@ export const coursesData = [
         hours: "05",
         description:
             "Break your myths about SSB",
-        image: "/assets/website/PPDTcoursethumbnail.png",
+        image: "/assets/website/PPDTcoursethumbnail.webp",
     },
 
     {
@@ -79,7 +79,7 @@ export const coursesData = [
         description:
             "Focused preparation for Psych Tests",
         // image: "/assets/course-3.jpg",
-        image: "/assets/website/psychcoursethumbnail.png",
+        image: "/assets/website/psychcoursethumbnail.webp",
 
     },
 
@@ -93,7 +93,7 @@ export const coursesData = [
         sessions: "02",
         hours: "04",
         description: "Learn how to present yourself",
-        image: "/assets/website/Interviewcoursethumbnail.png",
+        image: "/assets/website/Interviewcoursethumbnail.webp",
     },
 
     {
@@ -109,7 +109,7 @@ export const coursesData = [
             "Complete preparation for 9  group situational tasks",
         // image: "/assets/98c7a7f50b4f84914d4384c7773d36774b2c9ad3.jpg",
 
-        image: "/assets/website/10dayshackathon_thumbail.png",
+        image: "/assets/website/10dayshackathon_thumbail.webp",
 
     },
 ];
@@ -119,52 +119,52 @@ export const coursesData = [
 export const resourcesData = [
     {
         id: 1,
-        image: "/assets/1.png",
+        image: "/assets/1.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 2,
-        image: "/assets/6.png",
+        image: "/assets/6.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 3,
-        image: "/assets/3.png",
+        image: "/assets/3.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 4,
-        image: "/assets/4.png",
+        image: "/assets/4.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 5,
-        image: "/assets/5.png",
+        image: "/assets/5.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 1,
-        image: "/assets/1.png",
+        image: "/assets/1.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 2,
-        image: "/assets/6.png",
+        image: "/assets/6.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 3,
-        image: "/assets/3.png",
+        image: "/assets/3.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 4,
-        image: "/assets/4.png",
+        image: "/assets/4.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
     {
         id: 5,
-        image: "/assets/5.png",
+        image: "/assets/5.webp",
         title: "Learn to Speak better English by SSB with ISV",
     },
 ];
@@ -178,33 +178,33 @@ export const journeyData = [
         desc: `Started as an online SSB mentoring platform.
                 ~200+ students coached single-handedly. 140+ success stories.`,
         // image: "/assets/website/journey_ssbwithisv.png",
-        image: "/assets/website/journey_isvclub.png",
+        image: "/assets/website/journey_isvclub.webp",
 
     },
     {
         date: "  26 October 2023 to 01 January 2024",
         title: "ISV Club re-branded as SSB with ISV",
         desc: `Established a team of ex-interviewing officers & psychologists.`,
-        image: "/assets/website/journey_ssbwithisv.png",
+        image: "/assets/website/journey_ssbwithisv.webp",
 
     },
     {
         date: " 01 January 2024 ",
         title: "ROGER THAT WITH NKC",
         desc: `A military podcast started.`,
-        image: "/assets/website/journey_rogerthat_banner.png",
+        image: "/assets/website/journey_rogerthat_banner.webp",
     },
     {
         date: "01 January 2024 to 30 September 2024",
         title: "Increase in the success rate",
         desc: "150+ ISV students commissioned in the Indian Armed Forces.",
-        image: "/assets/website/journey_success_banner.png",
+        image: "/assets/website/journey_success_banner.webp",
     },
     {
         date: "30 September 2024",
         title: "Virtual GTO Ground Rolled Out",
         desc: "Launch of India’s first virtual training experience for remote SSB preparation.",
-        image: "/assets/website/virtual.png",
+        image: "/assets/website/virtual.webp",
     },
 
 ];

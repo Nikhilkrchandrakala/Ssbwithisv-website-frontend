@@ -14,7 +14,7 @@
     linear-gradient(180deg,
       rgba(0, 0, 0, 0.55),
       rgba(0, 0, 0, 0.85)),
-    url("../../public/assets/website/allyou.png") center / cover no-repeat;
+    url("../../public/assets/website/allyou.webp") center / cover no-repeat;
   z-index: 1;
 }
 

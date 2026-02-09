@@ -18,7 +18,7 @@ function GtoTrain() {
         text: ' See the GTO ground before you step onto it.',
         textThree: 'Virtual Training Xperience',
         color: true,
-        banner: '/assets/website/GTOCourseThumbnail.png'
+        banner: '/assets/website/GTOCourseThumbnail.webp'
     }
 
     useEffect(() => {

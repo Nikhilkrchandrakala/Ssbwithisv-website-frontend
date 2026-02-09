@@ -16,7 +16,7 @@ function Magnize() {
         // textTwo: ` We’re not just an academy, we’re a close-knit mentoring community. At CSJSA, every aspirant is personally guided by Lt Cdr Nikhil, whose experience assessing over 12,500 SSB candidates shapes our focused,
         //                         psychology-driven approach to SSB preparation. Our goal is simple yet powerful: to help every deserving young aspirant realise the dream of becoming a commissioned officer in the Indian Armed Forces.`
 
-        banner: '/assets/website/rogerthat_banner.png'
+        banner: '/assets/website/rogerthat_banner.webp'
 
     }
 

@@ -40,7 +40,7 @@ function Navbar() {
                 <section className={styles.heroSection}>
                     <div className={styles.topBar}>
                         <img
-                            src="/assets/logo/ISV.png"
+                            src="/assets/logo/ISV.webp"
                             alt="Logo"
                             className={styles.logo}
                         />

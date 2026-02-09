@@ -13,7 +13,7 @@ function Courses() {
         With direct guidance from ex-SSB DIPR certified assessors and a strong emphasis on the psychology of assessment,
         students learn to align their thinking, behaviour, and actions with the expectations of the
         Services Selection Board.`,
-        banner: '/assets/website/courses_banner.png',
+        banner: '/assets/website/courses_banner.webp',
 
     };
 

@@ -26,7 +26,7 @@ function Contact() {
                 Our team is always ready to assist you on your journey to becoming an officer in the Indian Armed Forces.
                 `}
                 // banner={''}
-                banner={'/assets/website/contact_us_banner.png'}
+                banner={'/assets/website/contact_us_banner.webp'}
 
             />
             <From />

@@ -16,7 +16,7 @@ function Footer() {
                 {/* LOGO SECTION */}
                 <div className={styles.logoBox}>
                     <img
-                        src="/assets/logo/ISV.png"
+                        src="/assets/logo/ISV.webp"
                         alt="Joint Services Academy"
                         className={styles.logo}
                     />

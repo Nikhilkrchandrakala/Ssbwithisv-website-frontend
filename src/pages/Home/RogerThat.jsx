@@ -12,9 +12,9 @@ import { Helmet } from "react-helmet-async";
 
 const RogerThat = () => {
     const array = [
-        { id: "1", img: "/assets/robot2.png", link: 'https://youtu.be/NGAHJlsmG7s?si=DT6gxCsC2UTnbkHa' },
-        { id: "2", img: "/assets/hq720.avif", link: 'https://youtu.be/_ZFpDTrM60E?si=lmdwDKmC2vs4WT0s' },
-        { id: "3", img: "/assets/hq7201.avif", link: 'https://youtu.be/_ZFpDTrM60E?si=T8sWXk7PQ0khT8G0' },
+        { id: "1", img: "/assets/robot2.webp", link: 'https://youtu.be/NGAHJlsmG7s?si=DT6gxCsC2UTnbkHa' },
+        { id: "2", img: "/assets/hq720.webp", link: 'https://youtu.be/_ZFpDTrM60E?si=lmdwDKmC2vs4WT0s' },
+        { id: "3", img: "/assets/hq7201.webp", link: 'https://youtu.be/_ZFpDTrM60E?si=T8sWXk7PQ0khT8G0' },
         { id: "4", img: "/assets/hq720.webp", link: 'https://youtu.be/nOqEUXMhAyQ?si=aRfuo9xTFVCJmyZC' },
     ];
 

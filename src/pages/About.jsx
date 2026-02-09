@@ -30,7 +30,7 @@ function About() {
         text: ' The Integrated SSB Virtuosos was setup on 04 July 2021 with a goal to shape India’s youth and fuel their aspirations to join Indian Armed Forces in the Officer Cadre.',
         textTwo: `We are not just an academy, we’re a close-knit mentoring community. At SSB with ISV , every aspirant is personally guided by Lt Cdr Nikhil, whose experience of assessing over 13000 SSB candidates shapes our focused,
          psychology-driven approach to SSB preparation. Our goal is simple yet powerful: to help deserving young aspirants realise the dream of becoming commissioned officers in the Indian Armed Forces.`,
-        banner: '/assets/website/about_us_banner.png'
+        banner: '/assets/website/about_us_banner.webp'
 
 
 
@@ -39,7 +39,7 @@ function About() {
     const teamData = [
         {
             id: "member-1",
-            image: "/assets/founder.png",
+            image: "/assets/founder.webp",
             designation: "Group Testing Officer",
             name: "Lt. Commander Nikhil Kumar Chandrakala (Retd.)",
             sections: [

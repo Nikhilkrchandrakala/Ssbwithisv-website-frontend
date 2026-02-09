@@ -10,7 +10,7 @@ function Blogs() {
         heading: 'Blogs',
         text: 'SSB with ISV blogs bring you practical tips, real insights, and current topics to help you prepare smarter for the SSB.',
 
-        banner: '/assets/website/blogs_banner.png',
+        banner: '/assets/website/blogs_banner.webp',
     }
 
     const navigate = useNavigate()

@@ -57,7 +57,7 @@ export default function LoadingScreen() {
         <div className="loading-root">
             <div className="loading-content">
                 <img
-                    src={'/assets/logo/ISV.png'}
+                    src={'/assets/logo/ISV.webp'}
                     alt="SSB with ISV Logo"
                     className="loading-logo"
                 />

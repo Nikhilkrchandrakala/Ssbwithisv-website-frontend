@@ -10,7 +10,7 @@ function HalfOfFame() {
     const data = {
         heading: 'Hall of Fame',
         text: `At SSB with ISV, we celebrate candidates who didn’t just prepare, they evolved...`,
-        banner: '/assets/website/halloffame_banner.png',
+        banner: '/assets/website/halloffame_banner.webp',
         color2: true
     }
 

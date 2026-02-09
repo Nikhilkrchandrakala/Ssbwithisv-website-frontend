@@ -14,7 +14,7 @@ function SsbPage() {
     const data = {
         heading: 'What is SSB?',
         textTwo: `The Services Selection Board (SSB) is not an exam. It is a five-day personality assessment board designed to identify shades of officer-like qualities in candidates aspiring to join the Indian Armed Forces in the officer cadre. From psychological tests and group tasks to personal interviews, the SSB process evaluates how you think, act, decide, and lead under pressure.`,
-        banner: '/assets/website/Whatisssb_banner.png'
+        banner: '/assets/website/Whatisssb_banner.webpa'
     }
 
     return (

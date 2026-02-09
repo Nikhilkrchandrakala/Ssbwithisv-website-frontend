@@ -252,7 +252,7 @@
     inset: 0;
 
     /* 👇 your section image */
-    background-image: url("../../public/assets/bg/bg2.png");
+    background-image: url("../../public/assets/bg/bg2.webp");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
