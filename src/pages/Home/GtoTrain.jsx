@@ -126,7 +126,7 @@ function GtoTrain() {
 
                         <div className="col-lg-7">
                             <div className="enable-image-wrap">
-                                <img src="/assets/vtx1.png" alt="Enable Image" />
+                                <img src="/assets/vtx1.webp" alt="Enable Image" />
                             </div>
                         </div>
 
@@ -142,7 +142,7 @@ function GtoTrain() {
                         {/* IMAGE */}
                         <div className="col-lg-7 order-2 order-lg-1">
                             <div className="enable-image-wrap">
-                                <img src="/assets/Vtxnot.png" alt="Enable Image" />
+                                <img src="/assets/Vtxnot.webp" alt="Enable Image" />
                             </div>
                         </div>
 
