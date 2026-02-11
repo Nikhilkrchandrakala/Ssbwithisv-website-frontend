@@ -138,9 +138,9 @@ function Footer() {
                             <p>
                                 <i className="fa fa-envelope"></i> info@ssbwithisv.in
                             </p>
-                            <p>
+                            {/* <p>
                                 <VisitorCounter />
-                            </p>
+                            </p> */}
                         </div>
 
                         {/* <div style={{ paddingTop: '5px' }} className={styles.contactRow}>
