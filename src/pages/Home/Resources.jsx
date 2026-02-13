@@ -11,10 +11,45 @@ import "swiper/css/pagination"
 import CustomButton from "../../components/CustomButton";
 import Heading from "../../components/Heading";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Resources = () => {
 
     const navigate = useNavigate()
+
+    const [blogs, setBlogs] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            try {
+                const token = localStorage.getItem("authToken"); // 🔑 JWT token
+
+                const res = await axios.get(
+                    'https://api.ssbwithisv.in/api/user/profile',
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+
+
+                setBlogs(res.data);
+
+            } catch (err) {
+                console.error(err);
+                setError('Failed to load blogs');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchBlogs();
+    }, []);
+
     return (
         <section className={styles.resourcesSection}>
             {/* <div className={styles.sectionGlowTwo}></div> */}
@@ -74,9 +109,9 @@ const Resources = () => {
             </div>
 
             {/* <div> */}
-            <p className='downloadYour'>
+            {blogs?.user?.name ? "" : (<p className='downloadYour'>
                 <span onClick={() => navigate('/SignUp')}>Sign up</span> to download your free magazine.
-            </p>
+            </p>)}
             {/* </div> */}
 
             <div className="KnowMoreBtn">
