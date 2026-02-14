@@ -337,7 +337,7 @@ function SignUp() {
                                     required
                                 />
                                 {fieldErrors.name && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.name}</div>
+                                    <div className="error-message">{fieldErrors.name}</div>
                                 )}
                             </div>
 
@@ -353,7 +353,7 @@ function SignUp() {
                                     required
                                 />
                                 {fieldErrors.email && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.email}</div>
+                                    <div className="error-message">{fieldErrors.email}</div>
                                 )}
                             </div>
 
@@ -386,7 +386,7 @@ function SignUp() {
                                     </button>
                                 </div>
                                 {fieldErrors.phone && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.phone}</div>
+                                    <div className="error-message">{fieldErrors.phone}</div>
                                 )}
                             </div>
 
@@ -407,7 +407,7 @@ function SignUp() {
                                     required
                                 />
                                 {fieldErrors.otp && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.otp}</div>
+                                    <div className="error-message">{fieldErrors.otp}</div>
                                 )}
                                 {successMsg && otpSent && (
                                     <div className="text-success small mt-1">{successMsg}</div>
@@ -433,7 +433,7 @@ function SignUp() {
                                     {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                 </span>
                                 {fieldErrors.password && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.password}</div>
+                                    <div className="error-message">{fieldErrors.password}</div>
                                 )}
                             </div>
 
@@ -455,14 +455,14 @@ function SignUp() {
                                     {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                 </span>
                                 {fieldErrors.confirmPassword && (
-                                    <div className="invalid-feedback d-block">{fieldErrors.confirmPassword}</div>
+                                    <div className="error-message">{fieldErrors.confirmPassword}</div>
                                 )}
                             </div>
 
                             {/* Error Message Display */}
                             {errorMsg && (
                                 <div className="col-lg-12">
-                                    <p className="text-danger text-center">{errorMsg}</p>
+                                    <p className="error-message ">{errorMsg}</p>
                                 </div>
                             )}
 
@@ -500,7 +500,7 @@ function SignUp() {
                                     </span>
                                 </label>
                                 {fieldErrors.serviceConsent && (
-                                    <div className="text-danger small mt-2">{fieldErrors.serviceConsent}</div>
+                                    <div className="error-message ">{fieldErrors.serviceConsent}</div>
                                 )}
                             </div>
 
