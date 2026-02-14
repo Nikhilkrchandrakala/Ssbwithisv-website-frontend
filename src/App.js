@@ -31,6 +31,9 @@ import AccountRecovery from './pages/register/AccountRecovery';
 import Successful from './pages/register/Successful';
 import AuthRoute from './components/AuthRoute';
 import NotFound from './components/NotFound';
+import ProfilePage from './pages/profile/ProfilePage';
+import OrderHistory from './pages/OrderHistory';
+import PaymentHistory from './pages/PaymentHistory';
 
 function App() {
 
@@ -70,6 +73,9 @@ function App() {
         <Route path="/RefundCancellation" element={<RefundCancellation />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogsDetails" element={<BlogsDetails />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/OrderHistory" element={<OrderHistory />} />
+        <Route path="/PaymentHistory" element={<PaymentHistory />} />
         <Route element={<AuthRoute />}>
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />

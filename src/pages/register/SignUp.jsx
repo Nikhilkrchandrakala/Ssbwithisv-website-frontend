@@ -16,65 +16,161 @@ function SignUp() {
     const [otp, setOtp] = useState("");
     const [reqId, setReqId] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
     const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [serviceConsent, setServiceConsent] = useState('');
+    const [serviceConsent, setServiceConsent] = useState(false);
 
     const [timer, setTimer] = useState(0);
     const [otpSent, setOtpSent] = useState(false);
 
+    // Validation error states
+    const [fieldErrors, setFieldErrors] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        otp: "",
+        password: "",
+        confirmPassword: "",
+        serviceConsent: ""
+    });
 
-    // const [seePassword, setSeePassword] = useState("");
-    // const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
         let interval;
-
         if (timer > 0) {
             interval = setInterval(() => {
                 setTimer((prev) => prev - 1);
             }, 1000);
         }
-
         return () => clearInterval(interval);
     }, [timer]);
 
-
-
-
+    // Validation functions
     const isValidEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const isValidPhone = (phone) => {
+        return /^[0-9]{10}$/.test(phone);
+    };
+
+    const isValidPassword = (password) => {
+        return password.length >= 6;
+    };
+
+    const validateField = (field, value) => {
+        let error = "";
+
+        switch (field) {
+            case "name":
+                if (!value.trim()) error = "Name is required";
+                else if (value.trim().length < 2) error = "Name must be at least 2 characters";
+                break;
+            case "email":
+                if (!value) error = "Email is required";
+                else if (!isValidEmail(value)) error = "Please enter a valid email address";
+                break;
+            case "phone":
+                if (!value) error = "Phone number is required";
+                else if (!isValidPhone(value)) error = "Please enter a valid 10-digit phone number";
+                break;
+            case "otp":
+                if (otpSent && !value) error = "OTP is required";
+                else if (value && !/^[0-9]{6}$/.test(value)) error = "OTP must be exactly 6 digits";
+                break;
+            case "password":
+                if (!value) error = "Password is required";
+                else if (!isValidPassword(value)) error = "Password must be at least 6 characters";
+                break;
+            case "confirmPassword":
+                if (!value) error = "Please confirm your password";
+                else if (value !== password) error = "Passwords do not match";
+                break;
+            case "serviceConsent":
+                if (!value) error = "You must agree to the terms and conditions";
+                break;
+            default:
+                break;
+        }
+
+        setFieldErrors(prev => ({ ...prev, [field]: error }));
+        return !error;
+    };
+
+    // Handle field changes with validation
+    const handleNameChange = (e) => {
+        const value = e.target.value;
+        setName(value);
+        validateField("name", value);
+    };
+
+    const handleEmailChange = (e) => {
+        const value = e.target.value;
+        setEmail(value);
+        validateField("email", value);
+    };
+
+    const handlePhoneChange = (e) => {
+        const value = e.target.value.replace(/\D/g, ""); // only numbers
+        if (value.length <= 10) {
+            setPhone(value);
+            validateField("phone", value);
+        }
+    };
+
+    const handleOtpChange = (e) => {
+        const value = e.target.value.replace(/\D/g, ""); // only numbers
+        if (value.length <= 6) {
+            setOtp(value);
+            validateField("otp", value);
+        }
+    };
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setPassword(value);
+        validateField("password", value);
+        if (confirmPassword) {
+            validateField("confirmPassword", confirmPassword);
+        }
+    };
+
+    const handleConfirmPasswordChange = (e) => {
+        const value = e.target.value;
+        setConfirmPassword(value);
+        validateField("confirmPassword", value);
+    };
+
+    const handleConsentChange = (e) => {
+        const checked = e.target.checked;
+        setServiceConsent(checked);
+        validateField("serviceConsent", checked);
     };
 
     // ================= SEND OTP =================
     let tokenAuth = "432663TzWGndK2N7sR6710de92P1"
     let widgetId = "346a776c5749333834363239"
 
-    /* ================= SEND OTP ================= */
     const handleSendOtp = async () => {
         console.log("SEND OTP clicked");
 
-        if (!name || !email || !phone) {
-            setErrorMsg("Please fill in all fields.");
-            return;
-        }
+        // Validate required fields before sending OTP
+        const isNameValid = validateField("name", name);
+        const isEmailValid = validateField("email", email);
+        const isPhoneValid = validateField("phone", phone);
 
-        if (!isValidEmail(email)) {
-            setErrorMsg("Please enter a valid email address.");
-            return;
-        }
-
-        if (phone.length !== 10) {
-            setErrorMsg("Please enter a valid 10-digit phone number.");
+        if (!isNameValid || !isEmailValid || !isPhoneValid) {
+            setErrorMsg("Please fill in all fields correctly.");
             return;
         }
 
         setErrorMsg("");
+        setSuccessMsg("");
         setLoading(true);
-
 
         try {
             const res = await axios.post(
@@ -91,6 +187,8 @@ function SignUp() {
                 setOtpSent(true);
                 setTimer(30);
                 setReqId(res.data.message);
+                setSuccessMsg("OTP sent successfully!");
+                setErrorMsg("");
             } else {
                 setErrorMsg("Failed to send OTP.");
             }
@@ -104,45 +202,34 @@ function SignUp() {
 
     /* ================= VALIDATE FORM ================= */
     const validateForm = () => {
-        if (!otp) {
-            setErrorMsg("Please enter OTP.");
-            return false;
-        }
+        // Validate all fields
+        const isNameValid = validateField("name", name);
+        const isEmailValid = validateField("email", email);
+        const isPhoneValid = validateField("phone", phone);
+        const isOtpValid = validateField("otp", otp);
+        const isPasswordValid = validateField("password", password);
+        const isConfirmPasswordValid = validateField("confirmPassword", confirmPassword);
+        const isConsentValid = validateField("serviceConsent", serviceConsent);
 
-        if (password.length < 4) {
-            setErrorMsg("Password must be at least 4 characters long.");
-            return false;
-        }
-
-        if (password !== confirmPassword) {
-            setErrorMsg("Passwords do not match.");
-            return false;
-        }
-
-        if (!serviceConsent) {
-            setErrorMsg("You must agree to the terms and conditions.");
-            return false;
-        }
-
-        return true;
+        return isNameValid && isEmailValid && isPhoneValid && isOtpValid &&
+            isPasswordValid && isConfirmPasswordValid && isConsentValid;
     };
 
     /* ================= REGISTER USER ================= */
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-
         if (!validateForm()) {
-            // setErrorMsg("fill all details correctly");
+            setErrorMsg("Please fix all errors before submitting.");
             return;
         }
 
         setErrorMsg("");
+        setSuccessMsg("");
         setLoading(true);
 
         try {
             // Step 1: Verify OTP
-
             const otpRes = await axios.post(
                 "https://api.msg91.com/api/v5/widget/verifyOtp",
                 {
@@ -160,10 +247,7 @@ function SignUp() {
                 return;
             }
 
-            // const accessToken = otpRes.data.message;
-            // localStorage.setItem("accessToken", accessToken);
-
-            // Step 2: Register user (main registration)
+            // Step 2: Register user
             const registerResponse = await axios.post("https://api.ssbwithisv.in/api/register", {
                 name,
                 email,
@@ -171,29 +255,17 @@ function SignUp() {
                 password,
             });
 
-            // console.log(registerResponse?.message == "User registered successfully")
-
-
-            // Check if registration was successful
-            if (registerResponse) {
+            if (registerResponse.data) {
                 console.log("User registered successfully:", registerResponse.data);
                 await addLead();
-
-
-
-
             } else {
-                // Handle registration failure
                 setErrorMsg(registerResponse.data.message || "Registration failed. Please try again.");
             }
 
         } catch (error) {
             console.error("Registration ERROR:", error);
 
-            // Handle specific error cases
             if (error.response) {
-                console.log(error)
-                // Server responded with error status
                 if (error.response.status === 409) {
                     setErrorMsg("User with this email or phone already exists.");
                 } else if (error.response.status === 400) {
@@ -202,10 +274,8 @@ function SignUp() {
                     setErrorMsg("Registration failed. Please try again.");
                 }
             } else if (error.request) {
-                // Request was made but no response
                 setErrorMsg("Network error. Please check your connection.");
             } else {
-                // Something else happened
                 setErrorMsg("An unexpected error occurred.");
             }
         } finally {
@@ -213,7 +283,7 @@ function SignUp() {
         }
     };
 
-    /* ================= ADD LEAD (Secondary API) ================= */
+    /* ================= ADD LEAD ================= */
     const addLead = async () => {
         try {
             const response = await axios.post("https://api.ssbwithisv.in/api/addLead", {
@@ -222,8 +292,8 @@ function SignUp() {
                 phoneNumber: phone,
             });
 
-            if (response) {
-                navigate('/SignIn')
+            if (response.data) {
+                navigate('/SignIn');
                 console.log("Lead added successfully:", response.data);
                 return response.data;
             } else {
@@ -231,20 +301,16 @@ function SignUp() {
             }
         } catch (error) {
             console.error("Add Lead ERROR:", error);
-            throw error; // Re-throw to handle in main flow
+            throw error;
         }
     };
 
-    // Optional: You can add more secondary API functions here
-    /*
-    const sendWelcomeEmail = async () => {
-        // Email sending logic
-    }
-
-    const createUserProfile = async () => {
-        // Profile creation logic
-    }
-    */
+    // Check if submit button should be enabled
+    const isSubmitDisabled = () => {
+        return loading || !otpSent || !serviceConsent ||
+            Object.values(fieldErrors).some(error => error !== "") ||
+            !name || !email || !phone || !otp || !password || !confirmPassword;
+    };
 
     return (
         <>
@@ -259,160 +325,152 @@ function SignUp() {
 
                     <div className="position-relative" style={{ zIndex: '55555' }}>
                         <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
+                            {/* Name Field */}
                             <div className="col-lg-12">
                                 <input
                                     type="text"
-                                    className="form-control thm-input"
+                                    className={`form-control thm-input ${fieldErrors.name ? 'is-invalid' : ''}`}
                                     placeholder="Your Name"
                                     value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    onChange={handleNameChange}
+                                    onBlur={() => validateField("name", name)}
                                     required
                                 />
+                                {fieldErrors.name && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.name}</div>
+                                )}
                             </div>
 
+                            {/* Email Field */}
                             <div className="col-lg-12">
                                 <input
                                     type="email"
-                                    className="form-control thm-input"
+                                    className={`form-control thm-input ${fieldErrors.email ? 'is-invalid' : ''}`}
                                     placeholder="Your Email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={handleEmailChange}
+                                    onBlur={() => validateField("email", email)}
                                     required
                                 />
+                                {fieldErrors.email && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.email}</div>
+                                )}
                             </div>
 
+                            {/* Phone Field with OTP Button */}
                             <div className="col-lg-12 password-wrapper">
                                 <input
                                     type="text"
-                                    className="form-control thm-input"
+                                    className={`form-control thm-input ${fieldErrors.phone ? 'is-invalid' : ''}`}
                                     placeholder="Your Contact Number"
                                     value={phone}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, ""); // only numbers
-
-                                        if (value.length <= 10) {
-                                            setPhone(value);
-                                        }
-                                    }}
+                                    onChange={handlePhoneChange}
+                                    onBlur={() => validateField("phone", phone)}
                                     maxLength={10}
                                     required
                                 />
-
-
                                 <div className="password-toggle-btn">
-                                    {/* <div style={{ zIndex: '9999999' }} className="d-flex justify-content-end align-items-center gap-2"> */}
-                                    {/* <CustomButton
-                                        text={
-                                            timer > 0
-                                                ? `Resend ${timer}s`
-                                                : loading
-                                                    ? "Sending..."
-                                                    : "Send OTP"
-                                        }
-
-                                    /> */}
-
                                     <button
                                         className='SendOtpBtn'
                                         onClick={handleSendOtp}
-                                        disabled={timer > 0 || loading}>
-                                        {
-                                            timer > 0
-                                                ? `Resend ${timer}s`
-                                                : loading
-                                                    ? "Sending..."
-                                                    : "Send OTP"
-                                        }
-
+                                        disabled={timer > 0 || loading || !isValidPhone(phone) || !name || !email}
+                                        style={{
+                                            opacity: (timer > 0 || loading || !isValidPhone(phone) || !name || !email) ? 0.6 : 1,
+                                            cursor: (timer > 0 || loading || !isValidPhone(phone) || !name || !email) ? 'not-allowed' : 'pointer'
+                                        }}>
+                                        {timer > 0
+                                            ? `Resend ${timer}s`
+                                            : loading
+                                                ? "Sending..."
+                                                : "Send OTP"}
                                     </button>
-                                    {/* </div> */}
                                 </div>
+                                {fieldErrors.phone && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.phone}</div>
+                                )}
                             </div>
 
-
-
-
-
+                            {/* OTP Field */}
                             <div className="col-lg-12">
                                 <input
                                     type="tel"
-                                    className="form-control thm-input"
+                                    className={`form-control thm-input ${fieldErrors.otp ? 'is-invalid' : ''}`}
                                     placeholder="Enter 6 digit OTP"
                                     value={otp}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, ""); // only numbers
-                                        if (value.length <= 6) {
-                                            setOtp(value);
-                                        }
-                                    }}
+                                    onChange={handleOtpChange}
+                                    onBlur={() => validateField("otp", otp)}
                                     maxLength={6}
-                                    minLength={6}
                                     inputMode="numeric"
                                     pattern="[0-9]{6}"
                                     title="OTP must be exactly 6 digits"
+                                    disabled={!otpSent}
                                     required
                                 />
+                                {fieldErrors.otp && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.otp}</div>
+                                )}
+                                {successMsg && otpSent && (
+                                    <div className="text-success small mt-1">{successMsg}</div>
+                                )}
                             </div>
 
-
+                            {/* Password Field */}
                             <div className="col-lg-12 password-wrapper">
                                 <input
                                     type={showPassword ? "text" : "password"}
-                                    className="form-control thm-input password-input"
+                                    className={`form-control thm-input password-input ${fieldErrors.password ? 'is-invalid' : ''}`}
                                     placeholder="Password (min. 6 characters)"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={handlePasswordChange}
+                                    onBlur={() => validateField("password", password)}
                                     required
                                     minLength="6"
                                 />
-
                                 <span
                                     className="password-toggle"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                 </span>
+                                {fieldErrors.password && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.password}</div>
+                                )}
                             </div>
 
-
-
-                            {/* Confirm Password */}
-                            <div className="col-lg-12  password-wrapper mt-3">
+                            {/* Confirm Password Field */}
+                            <div className="col-lg-12 password-wrapper mt-3">
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
-                                    className="form-control thm-input"
+                                    className={`form-control thm-input ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
                                     placeholder="Repeat Password"
                                     value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    onChange={handleConfirmPasswordChange}
+                                    onBlur={() => validateField("confirmPassword", confirmPassword)}
                                     required
                                 />
-
                                 <span
                                     className="password-toggle"
-
-                                    onClick={() =>
-                                        setShowConfirmPassword(!showConfirmPassword)
-                                    }
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                 >
-                                    {showConfirmPassword ? (
-                                        <AiOutlineEyeInvisible />
-                                    ) : (
-                                        <AiOutlineEye />
-                                    )}
+                                    {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
                                 </span>
+                                {fieldErrors.confirmPassword && (
+                                    <div className="invalid-feedback d-block">{fieldErrors.confirmPassword}</div>
+                                )}
                             </div>
-                            {/* </> */}
 
+                            {/* Error Message Display */}
                             {errorMsg && (
-                                <p className="text-danger text-center">
-                                    {errorMsg}
-                                </p>
+                                <div className="col-lg-12">
+                                    <p className="text-danger text-center">{errorMsg}</p>
+                                </div>
                             )}
 
+                            {/* Consent Section */}
                             <div className="col-lg-12 mt-4 consent-wrapper">
                                 <label className="consent-item">
                                     <span style={{ textAlign: 'center' }}>
-                                        By submitting this from I agree to receive calls, WhatsApp messages, emails, and updates
+                                        By submitting this form I agree to receive calls, WhatsApp messages, emails, and updates
                                         related to courses, mentoring programs, events, and relevant
                                         information from <strong>SSB with ISV</strong>. I understand that I
                                         may opt out of promotional communication at any time.
@@ -423,7 +481,7 @@ function SignUp() {
                                     <input
                                         type="checkbox"
                                         checked={serviceConsent}
-                                        onChange={(e) => setServiceConsent(e.target.checked)}
+                                        onChange={handleConsentChange}
                                         required
                                     />
                                     <span>
@@ -441,16 +499,21 @@ function SignUp() {
                                         withdraw my consent at any time by contacting the Grievance Officer.
                                     </span>
                                 </label>
+                                {fieldErrors.serviceConsent && (
+                                    <div className="text-danger small mt-2">{fieldErrors.serviceConsent}</div>
+                                )}
                             </div>
 
+                            {/* Submit Button */}
                             <div className="col-12 d-flex justify-content-center mt-5">
                                 <CustomButton
                                     text={loading ? "Please wait..." : "SIGN UP"}
                                     onClick={handleSubmit}
-                                    disabled={loading || !otpSent}
+                                    disabled={isSubmitDisabled()}
                                 />
                             </div>
 
+                            {/* Login Link */}
                             <div className="col-12 text-center mt-5">
                                 <div
                                     onClick={() => navigate('/SignIn')}
@@ -465,9 +528,9 @@ function SignUp() {
 
                     <span style={{ zIndex: '654' }} className="thm-glow"></span>
                 </div>
-            </div >
+            </div>
         </>
     )
 }
 
-export default SignUp
+export default SignUp;

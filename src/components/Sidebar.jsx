@@ -213,6 +213,37 @@ const Sidebar = ({ open, onClose }) => {
                             Contact us
                         </NavLink>
 
+                        {/* <NavLink
+                            to="/profile"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Profile
+                        </NavLink> */}
+
+                        {/* <NavLink
+                            to="/profile"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Order
+                        </NavLink>
+
+
+                        <NavLink
+                            to="/profile"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Payment
+                        </NavLink> */}
+
                         {/* <button
                             onClick={handleLogout}
                             className={styles.logoutBtn}
@@ -264,6 +295,10 @@ const Sidebar = ({ open, onClose }) => {
                             <i className="fa fa-phone"></i> +91 90246 67319
                         </a>
                     </div>
+
+                    {/* <div className={styles.footerMarginBottom}>
+                       
+                    </div> */}
 
                 </div>
             </aside>
