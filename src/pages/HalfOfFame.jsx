@@ -82,7 +82,7 @@ function HalfOfFame() {
                     content="Hall of Fame | SSB With ISV ."
                 />
 
-                *HALL OF FAME*
+                {/* *HALL OF FAME* */}
 
                 <script type="application/ld+json">
                     {JSON.stringify({
