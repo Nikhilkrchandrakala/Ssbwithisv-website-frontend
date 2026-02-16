@@ -115,6 +115,15 @@ const Sidebar = ({ open, onClose }) => {
 
                     {/* Menu */}
                     <nav className={styles.menu}>
+                        {/* <NavLink
+                            to="/ProfileDashboard"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Profile
+                        </NavLink> */}
                         <NavLink
                             to="/"
                             onClick={onClose}
@@ -213,15 +222,7 @@ const Sidebar = ({ open, onClose }) => {
                             Contact us
                         </NavLink>
 
-                        {/* <NavLink
-                            to="/profile"
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                isActive ? styles.active : ""
-                            }
-                        >
-                            Profile
-                        </NavLink> */}
+
 
                         {/* <NavLink
                             to="/profile"

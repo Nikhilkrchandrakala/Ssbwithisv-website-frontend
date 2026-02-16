@@ -34,6 +34,7 @@ import NotFound from './components/NotFound';
 import ProfilePage from './pages/profile/ProfilePage';
 import OrderHistory from './pages/OrderHistory';
 import PaymentHistory from './pages/PaymentHistory';
+import ProfileDashboard from './pages/ProfileDashboard';
 
 function App() {
 
@@ -74,6 +75,7 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogsDetails" element={<BlogsDetails />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
         <Route path="/OrderHistory" element={<OrderHistory />} />
         <Route path="/PaymentHistory" element={<PaymentHistory />} />
         <Route element={<AuthRoute />}>

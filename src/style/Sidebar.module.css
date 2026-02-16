@@ -30,7 +30,7 @@
     padding: 60px 60px 40px;
     transform: translateX(100%);
     transition: transform 0.45s ease;
-    z-index: 100;
+    z-index: 999999;
     color: #c6c5af;
     display: flex;
     justify-content: flex-end;
