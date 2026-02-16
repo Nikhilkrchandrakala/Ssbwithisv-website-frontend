@@ -16,8 +16,8 @@ export default function SelectionMap() {
         army: [
             "31 | 32 – Selection Centre North, Jalandhar",
             "11 | 14 | 18 | 19 | 34 – Selection Centre East, Prayagraj",
-            "20 | 21 | 22 | 33 – Selection Centre Central, Bhopal",
-            "17 | 24 | 12 – Selection Centre South, Bangalore",
+            "20 | 21 | 22 – Selection Centre Central, Bhopal",
+            "17 | 24 – Selection Centre South, Bangalore",
         ],
 
         airforce: [

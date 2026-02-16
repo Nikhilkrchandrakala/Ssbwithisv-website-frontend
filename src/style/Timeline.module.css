@@ -1,7 +1,7 @@
 /* ================= CONTAINER ================= */
 .container {
     background-color: #0d0d0b;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     padding: 80px;
     color: #b9b9a6;
     font-family: sans-serif;
