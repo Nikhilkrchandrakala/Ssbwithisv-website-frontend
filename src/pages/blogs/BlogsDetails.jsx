@@ -10,14 +10,20 @@ import { BiArrowBack } from "react-icons/bi";
 
 // import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { useAllBlogsByIdQuery } from '../../redux/api'
 
 // import "swiper/css";
 
 function BlogsDetails() {
     const { id } = useParams()
-    const location = useLocation()
-    const { path } = location.state
-    const blog = path
+
+    console.log(id)
+    // const location = useLocation()
+    // const { path } = location.state
+
+
+    const { data: blog, isLoading } = useAllBlogsByIdQuery(id)
+
     const navigate = useNavigate()
 
     // State for controlling arrow visibility
@@ -68,6 +74,7 @@ function BlogsDetails() {
             />
 
             {/* Back Arrow - Only shows after scrolling */}
+
             <div className={`${styles.arrowBackContainer} ${showBackArrow ? styles.visible : styles.hidden}`}>
                 <div className={styles.arrowBackBtn}>
                     <BiArrowBack
@@ -77,35 +84,35 @@ function BlogsDetails() {
                     />
                 </div>
 
-                
+
             </div>
 
             <section className={styles.blogDetail}>
                 <div className={styles.container}>
                     {/* META */}
                     <p className={styles.meta}>
-                        {new Date(blog.createdAt).toDateString()}
+                        {new Date(blog?.data?.createdAt).toDateString()}
                     </p>
 
                     {/* TITLE */}
                     <h1 className={styles.title}>
-                        {blog.title}
+                        {blog?.data?.title}
                     </h1>
 
                     {/* INTRO / SHORT DESC */}
                     <p className={styles.intro}>
-                        {blog.shortDescription}
+                        {blog?.data?.shortDescription}
                     </p>
 
                     {/*TIME DURATION */}
-                    {blog?.timeDuration && (
+                    {blog?.data?.timeDuration && (
                         <p className={styles.intro}>
-                            Time: {blog.timeDuration}
+                            Time: {blog?.data?.timeDuration}
                         </p>
                     )}
 
                     {/* IMAGE SLIDER */}
-                    {blog.images?.length > 0 && (
+                    {blog?.data?.images?.length > 0 && (
                         <div className={styles.sliderWrapper}>
                             <Swiper
                                 spaceBetween={20}
@@ -117,10 +124,10 @@ function BlogsDetails() {
                                 }}
                                 modules={[Autoplay]}
                             >
-                                {blog.images.map((img, i) => (
+                                {blog?.data?.images.map((img, i) => (
                                     <SwiperSlide key={i}>
                                         <div className={styles.BlogImageWrapper}>
-                                            <img src={img?.imageUrl} alt={blog.title} />
+                                            <img src={img?.imageUrl} alt={blog?.data?.title} />
                                             <div className={styles.imageOverlay}></div>
                                         </div>
                                         <p className={styles.TextImage}>{img?.imageText}</p>
@@ -133,17 +140,17 @@ function BlogsDetails() {
                     {/* CONTENT (HTML) */}
                     <div
                         className={styles.content}
-                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                        dangerouslySetInnerHTML={{ __html: blog?.data?.content }}
                     />
 
                     {/* AUTHOR QUOTE */}
-                    {blog.authorQuote && (
+                    {blog?.data?.authorQuote && (
                         <blockquote className={styles.quote}>
                             <span className={styles.quoteDot}></span>
                             <div>
-                                <p>{blog.authorQuote}</p>
+                                <p>{blog?.data?.authorQuote}</p>
                                 <span className={styles.quoteAuthor}>
-                                    — {blog.authorName}
+                                    — {blog?.data?.authorName}
                                 </span>
                             </div>
                         </blockquote>
@@ -151,6 +158,7 @@ function BlogsDetails() {
                 </div>
             </section>
             <Footer />
+
         </>
     )
 }

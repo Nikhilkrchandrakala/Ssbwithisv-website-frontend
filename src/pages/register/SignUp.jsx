@@ -5,6 +5,7 @@ import axios from 'axios'
 import CustomButton from '../../components/CustomButton'
 import { BiArrowBack } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { useAddLeadMutation, useRegisterMutation } from '../../redux/api'
 
 function SignUp() {
     const navigate = useNavigate()
@@ -200,6 +201,10 @@ function SignUp() {
         }
     };
 
+
+    const [register] = useRegisterMutation()
+    const [addLeadStudent] = useAddLeadMutation()
+
     /* ================= VALIDATE FORM ================= */
     const validateForm = () => {
         // Validate all fields
@@ -248,31 +253,34 @@ function SignUp() {
             }
 
             // Step 2: Register user
-            const registerResponse = await axios.post("https://api.ssbwithisv.in/api/register", {
+            let body = {
                 name,
                 email,
-                phone: phone,
-                password,
-            });
+                phone,
+                password
+            }
+            const registerResponse = await register(body).unwrap();
 
-            if (registerResponse.data) {
-                console.log("User registered successfully:", registerResponse.data);
+            // axios.post("https://api.ssbwithisv.in/api/register", {
+            //     name,
+            //     email,
+            //     phone: phone,
+            //     password,
+            // });
+
+            if (registerResponse) {
+                console.log("User registered successfully:", registerResponse);
                 await addLead();
             } else {
-                setErrorMsg(registerResponse.data.message || "Registration failed. Please try again.");
+                setErrorMsg(registerResponse.message || "Registration failed. Please try again.");
             }
 
         } catch (error) {
-            console.error("Registration ERROR:", error);
+            console.error("Registration ERROR:", error?.data?.error);
 
-            if (error.response) {
-                if (error.response.status === 409) {
-                    setErrorMsg("User with this email or phone already exists.");
-                } else if (error.response.status === 400) {
-                    setErrorMsg(error.response.data.error || "Invalid registration data.");
-                } else {
-                    setErrorMsg("Registration failed. Please try again.");
-                }
+            if (error.data) {
+                setErrorMsg(error?.data?.error)
+
             } else if (error.request) {
                 setErrorMsg("Network error. Please check your connection.");
             } else {
@@ -286,16 +294,22 @@ function SignUp() {
     /* ================= ADD LEAD ================= */
     const addLead = async () => {
         try {
-            const response = await axios.post("https://api.ssbwithisv.in/api/addLead", {
+            const response = await addLeadStudent({
                 name,
                 email,
                 phoneNumber: phone,
-            });
+            }).unwrap();
 
-            if (response.data) {
+            // axios.post("https://api.ssbwithisv.in/api/addLead", {
+            //     name,
+            //     email,
+            //     phoneNumber: phone,
+            // });
+
+            if (response) {
                 navigate('/SignIn');
-                console.log("Lead added successfully:", response.data);
-                return response.data;
+                console.log("Lead added successfully:", response);
+                return response;
             } else {
                 throw new Error("Failed to add lead");
             }

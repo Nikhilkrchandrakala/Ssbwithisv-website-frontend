@@ -13,42 +13,19 @@ import Heading from "../../components/Heading";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useUserProfileQuery } from "../../redux/api";
 
 const Resources = () => {
 
     const navigate = useNavigate()
 
-    const [blogs, setBlogs] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
-
-    useEffect(() => {
-        const fetchBlogs = async () => {
-            try {
-                const token = localStorage.getItem("authToken"); // 🔑 JWT token
-
-                const res = await axios.get(
-                    'https://api.ssbwithisv.in/api/user/profile',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+    // const [blogs, setBlogs] = useState([])
+    // const [loading, setLoading] = useState(true)
+    // const [error, setError] = useState(null)
 
 
-                setBlogs(res.data);
+    const { data } = useUserProfileQuery()
 
-            } catch (err) {
-                console.error(err);
-                setError('Failed to load blogs');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchBlogs();
-    }, []);
 
     return (
         <section className={styles.resourcesSection}>
@@ -109,7 +86,7 @@ const Resources = () => {
             </div>
 
             {/* <div> */}
-            {blogs?.user?.name ? "" : (<p className='downloadYour'>
+            {data ? "" : (<p className='downloadYour'>
                 <span onClick={() => navigate('/SignUp')}>Sign up</span> to download your free magazine.
             </p>)}
             {/* </div> */}

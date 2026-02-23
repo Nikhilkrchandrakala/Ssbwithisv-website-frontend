@@ -4,6 +4,7 @@ import CustomHeader from '../../components/CustomHeader'
 import styles from '../../style/Blog.module.css'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { useAllBlogsQuery } from '../../redux/api'
 
 function Blogs() {
     const data = {
@@ -15,28 +16,29 @@ function Blogs() {
 
     const navigate = useNavigate()
 
-    const [blogs, setBlogs] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
 
     /* ================= FETCH BLOGS ================= */
-    useEffect(() => {
-        const fetchBlogs = async () => {
-            try {
-                const res = await axios.get(
-                    'https://api.ssbwithisv.in/api/allBlogs'
-                )
-                setBlogs(res.data)
-            } catch (err) {
-                console.error(err)
-                setError('Failed to load blogs')
-            } finally {
-                setLoading(false)
-            }
-        }
 
-        fetchBlogs()
-    }, [])
+
+    const { data: blogs, isLoading } = useAllBlogsQuery()
+
+    // useEffect(() => {
+    //     const fetchBlogs = async () => {
+    //         try {
+    //             const res = await axios.get(
+    //                 'https://api.ssbwithisv.in/api/allBlogs'
+    //             )
+    //             setBlogs(res.data)
+    //         } catch (err) {
+    //             console.error(err)
+    //             setError('Failed to load blogs')
+    //         } finally {
+    //             setLoading(false)
+    //         }
+    //     }
+
+    //     fetchBlogs()
+    // }, [])
 
     /* ================= UI STATES ================= */
     // if (loading) {
@@ -50,9 +52,14 @@ function Blogs() {
     console.log(blogs)
 
 
-    const handelNavigate = (path) => {
-        navigate('/blogsDetails', { state: { path } })
-    }
+    const handelNavigate = (blog) => {
+        const slug = blog?.title
+            ?.toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "");
+
+        navigate(`/blogs/${slug}/${blog?._id}`);
+    };
 
     return (
         <>
@@ -98,7 +105,9 @@ function Blogs() {
 
             <section className={styles.blogSection}>
                 <div className="container">
-                    {blogs.map((blog) => (
+                    {isLoading ? (
+                        <p className="text-center mt-5">Loading blogs...</p>
+                    ) : blogs?.map((blog) => (
                         <div
                             key={blog._id}
                             onClick={() => handelNavigate(blog)}

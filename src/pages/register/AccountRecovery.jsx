@@ -4,6 +4,7 @@ import CustomButton from '../../components/CustomButton'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { BiArrowBack } from 'react-icons/bi'
+import { useVerifyOtpMutation } from '../../redux/api'
 
 function AccountRecovery() {
     const navigate = useNavigate()
@@ -29,6 +30,9 @@ function AccountRecovery() {
     // Refs
     const timerRef = useRef(null)
     const otpInputRef = useRef(null)
+
+
+    const [verifyOtp] = useVerifyOtpMutation()
 
     // Timer effect
     useEffect(() => {
@@ -287,15 +291,16 @@ function AccountRecovery() {
                     tokenAuth,
                 };
 
-                const response = await axios.post(
-                    'https://api.msg91.com/api/v5/widget/verifyOtp',
-                    requestData,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
+                const response = await verifyOtp(requestData)
+                // axios.post(
+                //     'https://api.msg91.com/api/v5/widget/verifyOtp',
+                //     requestData,
+                //     {
+                //         headers: {
+                //             'Content-Type': 'application/json',
+                //         },
+                //     }
+                // );
 
                 console.log(response?.data?.message !== "invalid otp")
 

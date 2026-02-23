@@ -3,41 +3,39 @@ import styles from "../style/Sidebar.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CustomButton from "./CustomButton";
+import { useUserProfileQuery } from "../redux/api";
 
 const Sidebar = ({ open, onClose }) => {
     const navigate = useNavigate();
 
-    const [blogs, setBlogs] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+    // const [blogs, setBlogs] = useState([])
+    // const [loading, setLoading] = useState(true)
+    // const [error, setError] = useState(null)
 
-    useEffect(() => {
-        const fetchBlogs = async () => {
-            try {
-                const token = localStorage.getItem("authToken"); // 🔑 JWT token
+    const { data: blogs  } = useUserProfileQuery()
 
-                const res = await axios.get(
-                    'https://api.ssbwithisv.in/api/user/profile',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+    // useEffect(() => {
+    //     const fetchBlogs = async () => {
+    //         try {
+    //             const token = localStorage.getItem("authToken"); // 🔑 JWT token
+
+    //             const res = await axios.get(
+    //                 'https://api.ssbwithisv.in/api/user/profile',
+    //                 {
+    //                     headers: {
+    //                         Authorization: `Bearer ${token}`
+    //                     }
+    //                 }
+    //             );
 
 
-                setBlogs(res.data);
+    //             setBlogs(res.data);
 
-            } catch (err) {
-                console.error(err);
-                setError('Failed to load blogs');
-            } finally {
-                setLoading(false);
-            }
-        };
+    //         } 
+    //     };
 
-        fetchBlogs();
-    }, []);
+    //     fetchBlogs();
+    // }, []);
 
 
     const handleLogout = () => {

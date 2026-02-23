@@ -13,7 +13,7 @@ import GtoTrain from './pages/Home/GtoTrain';
 import ScrollToTop from './components/ScrollToTop';
 import SsbPage from './pages/SsbPage';
 import Contact from './pages/Contact';
-import Login from './pages/Login';
+// import Login from './pages/Login';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsConditions from './pages/TermsConditions';
 import RefundCancellation from './pages/RefundCancellation';
@@ -68,12 +68,12 @@ function App() {
         <Route path="/ssbVirtualTrainingXperience" element={<GtoTrain />} />
         <Route path="/aboutSSB" element={<SsbPage />} />
         <Route path="/Contactus" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login" element={<Login />} /> */}
         <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         <Route path="/TermsConditions" element={<TermsConditions />} />
         <Route path="/RefundCancellation" element={<RefundCancellation />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogsDetails" element={<BlogsDetails />} />
+        <Route path="/blogs/:slug/:id" element={<BlogsDetails />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
         <Route path="/OrderHistory" element={<OrderHistory />} />

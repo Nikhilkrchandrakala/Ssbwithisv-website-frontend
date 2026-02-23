@@ -6,6 +6,7 @@ import CustomButton from '../components/CustomButton'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { useGetAllMagazineQuery } from '../redux/api'
 
 function Magnize() {
 
@@ -27,38 +28,34 @@ function Magnize() {
     const [selectedTag, setSelectedTag] = useState("all");
 
 
+    const { data: allMagazineData = [], isSuccess } = useGetAllMagazineQuery();
 
-    const fetchAllMagazinePdfs = async () => {
-        try {
-            const res = await axios.get(
-                "https://api.ssbwithisv.in/api/allMagazinePdfs"
-            );
-
-            return res.data; // success response
-        } catch (error) {
-            console.error("Error fetching magazine PDFs:", error);
-            throw error;
-        }
-    };
+    const filteredMagazines = isSuccess
+        ? [...(selectedTag === "all"
+            ? allMagazineData
+            : allMagazineData.filter(item => item?.tags === selectedTag)
+        )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
+        : [];
 
 
 
 
 
-    useEffect(() => {
-        const loadMagazines = async () => {
-            try {
-                const data = await fetchAllMagazinePdfs();
-                setMagazines(data.data || data); // depending on API structure
-            } catch (error) {
-                console.log("Failed to load magazines");
-            } finally {
-                setLoading(false);
-            }
-        };
+    // useEffect(() => {
+    //     const loadMagazines = async () => {
+    //         try {
+    //             const data = await allMagazineData;
+    //             console.log(data)
+    //             setMagazines(data || []); // depending on API structure
+    //         } catch (error) {
+    //             console.log("Failed to load magazines");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        loadMagazines();
-    }, []);
+    //     loadMagazines();
+    // }, []);
 
     // console.log(magazines)
 
@@ -101,11 +98,7 @@ function Magnize() {
     //         : magazines.filter((item) => item.tags === selectedTag);
 
 
-    const filteredMagazines =
-        (selectedTag === "all"
-            ? magazines
-            : magazines.filter(item => item.tags === selectedTag)
-        ).sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+
 
 
     return (

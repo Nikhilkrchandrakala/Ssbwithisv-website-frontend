@@ -6,6 +6,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { BiArrowBack } from 'react-icons/bi'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { useLoginMutation } from '../../redux/api'
 
 function SignIn() {
     const navigate = useNavigate()
@@ -21,6 +22,8 @@ function SignIn() {
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [showPassword, setShowPassword] = useState(false);
+
+    const [login, { isLoading: isLoginLoading }] = useLoginMutation()
 
 
     // Handle input changes
@@ -137,19 +140,20 @@ function SignIn() {
             }
 
             // Call the login API
-            const response = await axios.post('https://api.ssbwithisv.in/api/login', requestData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any other required headers
-                }
-            })
+            const response = await login(requestData).unwrap()
+            // axios.post('https://api.ssbwithisv.in/api/login', requestData, {
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         // Add any other required headers
+            //     }
+            // })
 
             // Handle successful login
-            console.log('Login successful:', response.data)
+            console.log('Login successful:', response)
 
             // Store authentication data
-            if (response.data.token || response.data.accessToken) {
-                const token = response.data.token || response.data.accessToken
+            if (response.token || response.accessToken) {
+                const token = response.token || response.accessToken
 
                 if (formData.rememberMe) {
                     localStorage.setItem('authToken', token)
@@ -161,8 +165,8 @@ function SignIn() {
             }
 
             // Store user data if returned
-            if (response.data.user) {
-                const userData = JSON.stringify(response.data.user)
+            if (response.user) {
+                const userData = JSON.stringify(response.user)
                 localStorage.setItem('userData', userData)
                 sessionStorage.setItem('userData', userData)
             }
@@ -171,42 +175,22 @@ function SignIn() {
             localStorage.setItem('lastLoginType', loginType)
 
             // Redirect based on user role or default dashboard
-            if (response.data) {
+            if (response) {
                 navigate('/')
                 toast.success('Logged in successfully!')
             }
 
         } catch (err) {
             // Handle errors
-            console.error('Login error:', err)
+            console.error('Login error:', err?.data.error)
 
             // Set appropriate error message
-            if (err.response) {
+            if (err.data) {
                 // Server responded with error status
-                const errorData = err.response.data
+                const errorData = err.response
+                setError(err?.data?.error)
 
-                switch (err.response.status) {
-                    case 400:
-                        setError(errorData.message || 'Invalid input. Please check your credentials')
-                        break
-                    case 401:
-                        setError(errorData.message || 'Invalid email/phone or password')
-                        break
-                    case 403:
-                        setError(errorData.message || 'Account not verified. Please verify your account')
-                        break
-                    case 404:
-                        setError('Account not found. Please check your credentials')
-                        break
-                    case 429:
-                        setError('Too many attempts. Please try again later')
-                        break
-                    case 500:
-                        setError('Server error. Please try again later')
-                        break
-                    default:
-                        setError(errorData.message || 'Login failed. Please try again')
-                }
+
             } else if (err.request) {
                 // Request was made but no response
                 setError('Network error. Please check your internet connection')

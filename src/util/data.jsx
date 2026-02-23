@@ -209,6 +209,69 @@ export const journeyData = [
 
 ];
 
+
+export const orders = [
+    {
+        id: "ORD001",
+        date: "2024-02-15",
+        amount: "₹5,999",
+        status: "Delivered",
+        items: 3,
+        products: [
+            { name: "Product 1", price: "₹2,499", quantity: 1 },
+            { name: "Product 2", price: "₹1,999", quantity: 2 }
+        ],
+        tracking: "TRK123456",
+        estimatedDelivery: "2024-02-18"
+    },
+    {
+        id: "ORD002",
+        date: "2024-02-10",
+        amount: "₹3,499",
+        status: "Processing",
+        items: 2,
+        products: [
+            { name: "Product 3", price: "₹3,499", quantity: 1 }
+        ],
+        tracking: "TRK789012",
+        estimatedDelivery: "2024-02-20"
+    },
+    {
+        id: "ORD003",
+        date: "2024-02-05",
+        amount: "₹8,999",
+        status: "Delivered",
+        items: 5,
+        products: [
+            { name: "Product 4", price: "₹4,999", quantity: 1 },
+            { name: "Product 5", price: "₹2,000", quantity: 2 },
+            { name: "Product 6", price: "₹2,000", quantity: 2 }
+        ],
+        tracking: "TRK345678",
+        estimatedDelivery: "2024-02-08"
+    },
+    {
+        id: "ORD004",
+        date: "2024-01-28",
+        amount: "₹2,499",
+        status: "Shipped",
+        items: 1,
+        products: [
+            { name: "Product 7", price: "₹2,499", quantity: 1 }
+        ],
+        tracking: "TRK901234",
+        estimatedDelivery: "2024-02-02"
+    },
+];
+
+// Payment history data
+export const payments = [
+    { id: "PAY001", date: "2024-02-15", amount: "₹5,999", method: "Credit Card", status: "Success", cardLast4: "4242" },
+    { id: "PAY002", date: "2024-02-10", amount: "₹3,499", method: "UPI", status: "Success", upiId: "john@okhdfc" },
+    { id: "PAY003", date: "2024-02-05", amount: "₹8,999", method: "Debit Card", status: "Success", cardLast4: "1234" },
+    { id: "PAY004", date: "2024-01-28", amount: "₹2,499", method: "Net Banking", status: "Success", bank: "HDFC" },
+];
+
 // export const candidates = [
 //     {
 //         id: 1,
