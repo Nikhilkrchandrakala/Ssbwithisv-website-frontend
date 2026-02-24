@@ -17,12 +17,14 @@ import { useAllBlogsByIdQuery } from '../../redux/api'
 function BlogsDetails() {
     const { id } = useParams()
 
-    console.log(id)
-    // const location = useLocation()
-    // const { path } = location.state
+    // console.log(id)
+    const location = useLocation()
+    const  path  = location?.state?.id
+
+    // console.log(path)
 
 
-    const { data: blog, isLoading } = useAllBlogsByIdQuery(id)
+    const { data: blog, isLoading } = useAllBlogsByIdQuery(path)
 
     const navigate = useNavigate()
 

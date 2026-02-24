@@ -73,7 +73,7 @@ function App() {
         <Route path="/TermsConditions" element={<TermsConditions />} />
         <Route path="/RefundCancellation" element={<RefundCancellation />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogs/:slug/:id" element={<BlogsDetails />} />
+        <Route path="/blogs/:slug" element={<BlogsDetails />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
         <Route path="/OrderHistory" element={<OrderHistory />} />

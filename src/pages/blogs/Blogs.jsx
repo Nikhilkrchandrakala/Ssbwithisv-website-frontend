@@ -49,7 +49,7 @@ function Blogs() {
     //     return <p className="text-center mt-5 text-danger">{error}</p>
     // }
 
-    console.log(blogs)
+    // console.log(blogs)
 
 
     const handelNavigate = (blog) => {
@@ -58,7 +58,11 @@ function Blogs() {
             .replace(/\s+/g, "-")
             .replace(/[^a-z0-9-]/g, "");
 
-        navigate(`/blogs/${slug}/${blog?._id}`);
+        navigate(`/blogs/${slug}`, {
+            state: {
+                id: blog?._id
+            }
+        });
     };
 
     return (
