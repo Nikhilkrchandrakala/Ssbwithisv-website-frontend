@@ -5,31 +5,20 @@ import {
     BiHistory,
     BiCreditCard,
     BiLogOut,
-    // BiEdit,
     BiSave,
-
     BiCalendar,
     BiMap,
     BiPhone,
     BiEnvelope,
     BiChevronRight,
-
+    BiX,
 } from "react-icons/bi";
-
-// 
-
 import {
     FaCamera,
-    FaCheckCircle,
-    FaClock,
-    FaShippingFast,
     FaMedal,
-
     FaGem
 } from "react-icons/fa";
-// import { MdLocalShipping, MdPayment } from "react-icons/md";
-// import { IoMdPricetag } from "react-icons/io";
-import { RiVipCrownFill, RiDiscountPercentFill } from "react-icons/ri";
+import { RiVipCrownFill } from "react-icons/ri";
 import CustomButton from "../components/CustomButton";
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
@@ -38,12 +27,7 @@ import NavStyles from "../style/Navbar.module.css";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import { useUpdateUserProfileMutation, useUserProfileQuery } from "../redux/api";
-// import { orders, payments } from "../util/data";
-// import Payment from "./profileDash/Payment";
-// import OrderHistory from "./profileDash/OrderHistory";
-
-
-
+import toast from "react-hot-toast";
 
 const ProfileDashboard = () => {
     const navigate = useNavigate();
@@ -54,19 +38,37 @@ const ProfileDashboard = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [open, setOpen] = useState(false);
 
+    // Image upload states
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [showImagePopup, setShowImagePopup] = useState(false);
+    const fileInputRef = useRef(null);
+    const popupRef = useRef(null);
+
     const { data } = useUserProfileQuery();
-
-    const [updaterProfile] = useUpdateUserProfileMutation()
-
-
+    const [updaterProfile] = useUpdateUserProfileMutation();
 
     // User data
     const [previewData, setPreviewData] = useState(data?.user);
-
     const [formData, setFormData] = useState({ ...previewData });
 
-    // Enhanced order history data
+    // Handle click outside popup
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (popupRef.current && !popupRef.current.contains(event.target)) {
+                handleCancelImage();
+            }
+        }
 
+        if (showImagePopup) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showImagePopup]);
 
     // Detect mobile view
     useEffect(() => {
@@ -79,13 +81,84 @@ const ProfileDashboard = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+            if (!validTypes.includes(file.type)) {
+                toast.error('Please select a valid image file (JPEG, JPG, PNG, GIF, WEBP)');
+                return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                toast.error('File size should be less than 5MB');
+                return;
+            }
+
+            setSelectedImage(file);
+
+            // Create preview URL
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleImageUpload = async () => {
+        if (!selectedImage) return;
+
+        setIsUploading(true);
+        const formData = new FormData();
+        formData.append('profileImage', selectedImage);
+
+        try {
+            const response = await updaterProfile(formData).unwrap();
+            setPreviewData(prev => ({ ...prev, profileImage: response.profileImage }));
+
+            // Close popup and reset states after successful upload
+            setShowImagePopup(false);
+            setSelectedImage(null);
+            setImagePreview(null);
+
+            toast.success('Profile image updated successfully!');
+        } catch (error) {
+            // console.error('Error uploading image:', error);
+            toast.error('Failed to upload image. Please try again.');
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleCancelImage = () => {
+        setShowImagePopup(false);
+        setSelectedImage(null);
+        setImagePreview(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
+    const openImagePopup = () => {
+        setShowImagePopup(true);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         setPreviewData({ ...formData });
+        await updaterProfile(formData)
+        toast.success('Profile updated successfully!');
         setIsEditMode(false);
     };
 
@@ -100,7 +173,6 @@ const ProfileDashboard = () => {
         navigate('/');
         window.location.reload();
     };
-
 
     const getTierBadge = (tier) => {
         const tierConfig = {
@@ -118,11 +190,6 @@ const ProfileDashboard = () => {
         );
     };
 
-    const handleOrderClick = (order) => {
-        setSelectedOrder(order);
-        setShowOrderDetails(true);
-    };
-
     const sidebarRef = useRef(null);
 
     useEffect(() => {
@@ -132,7 +199,7 @@ const ProfileDashboard = () => {
                 !sidebarRef.current.contains(event.target)
             ) {
                 setIsMobileMenuOpen(false);
-                setOpen(false); // agar upper wala sidebar bhi close karna ho
+                setOpen(false);
             }
         }
 
@@ -142,12 +209,6 @@ const ProfileDashboard = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
-
-
-
-
-
 
     return (
         <>
@@ -163,20 +224,12 @@ const ProfileDashboard = () => {
                         className={NavStyles.menuIcon}
                         onClick={() => setOpen(true)}
                     />
-
                 </div>
 
                 <Sidebar open={open} onClose={() => setOpen(false)} />
 
                 <div className="">
-                    {/* <div className="thm-con2tent-bg"></div> */}
-                    {/* <div onClick={() => navigate(-1)} className='arrow_button'>
-                <BiArrowBack />
-            </div> */}
-
                     <div className="container position-relative z-1">
-                        {/* <h1 className="thm-big-title">My Dashboard</h1> */}
-
                         {/* Mobile Menu Toggle */}
                         <button
                             className={styles.mobileMenuToggle}
@@ -188,22 +241,29 @@ const ProfileDashboard = () => {
 
                         <div className={styles.dashboardContainer}>
                             {/* Sidebar */}
-                            {/* <div className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}> */}
                             <div
                                 ref={sidebarRef}
                                 className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}
                             >
-
                                 {/* Profile Summary with Enhanced Design */}
                                 <div className={styles.profileSummary}>
                                     <div className={styles.profileHeader}>
-                                        <div className={styles.avatarWrapper}>
-                                            <img src={previewData?.avatar} alt="profile" />
-                                            <button className={styles.changeAvatarBtn}>
+                                        <div
+                                            className={styles.avatarWrapper}
+                                            onClick={openImagePopup}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            <img
+                                                src={previewData?.profileImage || '/default-avatar.png'}
+                                                alt="profile"
+                                            />
+                                            <div className={styles.avatarOverlay}>
                                                 <FaCamera />
-                                            </button>
-                                            <div className={styles.onlineIndicator}></div>
+                                                <span>Change Photo</span>
+                                            </div>
+                                            {/* <div className={styles.onlineIndicator}></div> */}
                                         </div>
+
                                         <div className={styles.profileTitle}>
                                             <h3>{previewData?.name}</h3>
                                             <p className={styles.memberSince}>
@@ -211,9 +271,6 @@ const ProfileDashboard = () => {
                                             </p>
                                         </div>
                                     </div>
-
-                                    {/* Enhanced Stats Cards */}
-
 
                                     {/* Membership Tier */}
                                     <div className={styles.membershipCard}>
@@ -244,7 +301,7 @@ const ProfileDashboard = () => {
                                         <span>Profile</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
-                                    <button
+                                    {/* <button
                                         className={`${styles.navTab} ${activeTab === 'orders' ? styles.active : ''}`}
                                         onClick={() => {
                                             setActiveTab('orders');
@@ -254,8 +311,8 @@ const ProfileDashboard = () => {
                                         <BiHistory />
                                         <span>Order History</span>
                                         <BiChevronRight className={styles.chevron} />
-                                    </button>
-                                    <button
+                                    </button> */}
+                                    {/* <button
                                         className={`${styles.navTab} ${activeTab === 'payments' ? styles.active : ''}`}
                                         onClick={() => {
                                             setActiveTab('payments');
@@ -265,19 +322,8 @@ const ProfileDashboard = () => {
                                         <BiCreditCard />
                                         <span>Payment History</span>
                                         <BiChevronRight className={styles.chevron} />
-                                    </button>
+                                    </button> */}
                                 </nav>
-
-                                {/* Quick Actions */}
-                                {/* <div className={styles.quickActions}>
-                                    <h4>Quick Actions</h4>
-                                    <button className={styles.quickActionBtn}>
-                                        <BiGift /> Redeem Points
-                                    </button>
-                                    <button className={styles.quickActionBtn}>
-                                        <RiDiscountPercentFill /> Special Offers
-                                    </button>
-                                </div> */}
 
                                 {/* Logout Button */}
                                 <button className={styles.logoutBtn} onClick={handleLogout}>
@@ -299,7 +345,6 @@ const ProfileDashboard = () => {
                                                 <CustomButton
                                                     className={styles.editBtn}
                                                     onClick={() => setIsEditMode(true)}
-
                                                     text="Edit Profile"
                                                 />
                                             )}
@@ -342,7 +387,7 @@ const ProfileDashboard = () => {
                                                         </div>
                                                         <div className={styles.cardContent}>
                                                             <label>Address</label>
-                                                            <p>{previewData?.address}</p>
+                                                            <p>{previewData?.Address}</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -374,20 +419,27 @@ const ProfileDashboard = () => {
                                                     <div className={styles.formGroup}>
                                                         <label>Phone Number</label>
                                                         <input
-                                                            type="text"
+                                                            type="tel"
                                                             name="phone"
                                                             className="form-control thm-input"
                                                             value={formData.phone}
-                                                            onChange={handleInputChange}
-                                                            placeholder="Enter your phone number"
+                                                            onChange={(e) => {
+                                                                // 👇 Allow only numbers & max 10 digits
+                                                                const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                                                handleInputChange({
+                                                                    target: { name: "phone", value }
+                                                                });
+                                                            }}
+                                                            placeholder="Enter 10 digit phone number"
+                                                            maxLength={10}
                                                         />
                                                     </div>
                                                     <div className={styles.formGroup}>
                                                         <label>Address</label>
                                                         <textarea
-                                                            name="address"
+                                                            name="Address"
                                                             className="form-control thm-input"
-                                                            value={formData.address}
+                                                            value={formData.Address}
                                                             onChange={handleInputChange}
                                                             rows="3"
                                                             placeholder="Enter your address"
@@ -413,22 +465,102 @@ const ProfileDashboard = () => {
                                     </div>
                                 )}
 
-                                {/* Orders Tab - Mobile Optimized */}
+                                {/* Orders Tab */}
                                 {activeTab === 'orders' && (
                                     <>
                                     </>
-                                    //    <OrderHistory />
-
                                 )}
 
-                                {/* Payments Tab - Mobile Optimized */}
+                                {/* Payments Tab */}
                                 {activeTab === 'payments' && (
                                     <>
                                     </>
-                                    //    <Payment />
                                 )}
                             </div>
                         </div>
+
+                        {/* Image Upload Popup */}
+                        {showImagePopup && (
+                            <div className={styles.popupOverlay}>
+                                <div ref={popupRef} className={styles.popupContent}>
+                                    <div className={styles.popupHeader}>
+                                        <h3>Change Profile Photo</h3>
+                                        <button
+                                            className={styles.closePopupBtn}
+                                            onClick={handleCancelImage}
+                                        >
+                                            <BiX />
+                                        </button>
+                                    </div>
+
+                                    <div className={styles.popupBody}>
+                                        {/* Current Image Preview */}
+                                        <div className={styles.currentImageContainer}>
+                                            <img
+                                                src={imagePreview || previewData?.profileImage || '/default-avatar.png'}
+                                                alt="Profile Preview"
+                                                className={styles.previewImage}
+                                            />
+                                        </div>
+
+                                        {/* Hidden File Input */}
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleImageChange}
+                                            accept="image/*"
+                                            style={{ display: 'none' }}
+                                        />
+
+                                        {/* Image Selection Area */}
+                                        {!selectedImage ? (
+                                            <div className={styles.imageSelectionArea}>
+                                                <button
+                                                    className={styles.selectImageBtn}
+                                                    onClick={handleImageClick}
+                                                >
+                                                    <FaCamera />
+                                                    Select Image
+                                                </button>
+                                                <p className={styles.imageHint}>
+                                                    Supported formats: JPG, PNG, GIF, WEBP (Max 5MB)
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className={styles.imagePreviewArea}>
+                                                {/* <div className={styles.selectedImageContainer}>
+                                                    <img
+                                                        src={imagePreview}
+                                                        alt="Selected"
+                                                        className={styles.selectedImage}
+                                                    />
+                                                </div> */}
+                                            </div>
+                                        )}
+
+                                        {/* Action Buttons */}
+                                        {selectedImage && (
+                                            <div className={styles.popupActions}>
+                                                <button
+                                                    className={styles.cancelPopupBtn}
+                                                    onClick={handleCancelImage}
+                                                    disabled={isUploading}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    className={styles.savePopupBtn}
+                                                    onClick={handleImageUpload}
+                                                    disabled={isUploading}
+                                                >
+                                                    {isUploading ? 'Uploading...' : 'Save Photo'}
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <span style={{ zIndex: '654' }} className="thm-glow"></span>
                     </div>

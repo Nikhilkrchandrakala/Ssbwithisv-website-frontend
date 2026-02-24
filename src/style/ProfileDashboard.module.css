@@ -986,3 +986,364 @@
         justify-content: center;
     }
 }
+
+
+
+/* Add to your ProfileDashboard.module.css */
+
+.imageUploadControls {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(210, 161, 0, 0.2);
+}
+
+.imagePreviewContainer {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #d2a100;
+}
+
+.previewImage {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.uploadActions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.uploadBtn,
+.cancelUploadBtn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.uploadBtn {
+    background: #d2a100;
+    color: #000;
+}
+
+.uploadBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(210, 161, 0, 0.3);
+}
+
+.uploadBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cancelUploadBtn {
+    background: transparent;
+    border: 1px solid rgba(210, 161, 0, 0.3);
+    color: #c6c5af;
+}
+
+.cancelUploadBtn:hover:not(:disabled) {
+    background: rgba(210, 161, 0, 0.1);
+    border-color: #d2a100;
+}
+
+.cancelUploadBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Avatar Wrapper with Overlay */
+.avatarWrapper {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.avatarWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.avatarOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+}
+
+.avatarOverlay svg {
+    font-size: 1.5rem;
+    margin-bottom: 2px;
+}
+
+.avatarOverlay span {
+    font-size: 0.6rem;
+    text-align: center;
+}
+
+.avatarWrapper:hover .avatarOverlay {
+    opacity: 1;
+}
+
+.avatarWrapper:hover img {
+    transform: scale(1.1);
+}
+
+/* Popup Styles */
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.popupContent {
+    background: #1a1a1a;
+    border: 2px solid #d2a100;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: slideUp 0.3s ease;
+}
+
+.popupHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid rgba(210, 161, 0, 0.3);
+}
+
+.popupHeader h3 {
+    color: #d2a100;
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.closePopupBtn {
+    background: transparent;
+    border: none;
+    color: #c6c5af;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.closePopupBtn:hover {
+    background: rgba(210, 161, 0, 0.2);
+    color: #d2a100;
+    transform: rotate(90deg);
+}
+
+.popupBody {
+    padding: 20px;
+}
+
+.currentImageContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.previewImage {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #d2a100;
+}
+
+.imageSelectionArea {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 2px dashed rgba(210, 161, 0, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.imageSelectionArea:hover {
+    border-color: #d2a100;
+    background: rgba(210, 161, 0, 0.05);
+}
+
+.selectImageBtn {
+    background: #d2a100;
+    color: #000;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.selectImageBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(210, 161, 0, 0.3);
+}
+
+.imageHint {
+    color: #c6c5af;
+    font-size: 0.85rem;
+    margin-top: 10px;
+}
+
+.imagePreviewArea {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.selectedImageContainer {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #d2a100;
+}
+
+.selectedImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.popupActions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.cancelPopupBtn,
+.savePopupBtn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancelPopupBtn {
+    background: transparent;
+    border: 2px solid rgba(210, 161, 0, 0.3);
+    color: #c6c5af;
+}
+
+.cancelPopupBtn:hover:not(:disabled) {
+    background: rgba(210, 161, 0, 0.1);
+    border-color: #d2a100;
+}
+
+.savePopupBtn {
+    background: #d2a100;
+    color: #000;
+}
+
+.savePopupBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(210, 161, 0, 0.3);
+}
+
+.cancelPopupBtn:disabled,
+.savePopupBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive for Popup */
+@media (max-width: 480px) {
+    .popupContent {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .popupHeader h3 {
+        font-size: 1.1rem;
+    }
+
+    .selectedImageContainer {
+        width: 150px;
+        height: 150px;
+    }
+
+    .popupActions {
+        flex-direction: column;
+    }
+
+    .cancelPopupBtn,
+    .savePopupBtn {
+        width: 100%;
+    }
+}

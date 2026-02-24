@@ -70,7 +70,7 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
                     </div>
                 </div>
                 <div className="decor-shape1">
-                    <img src="assets/img/shape/Group_11.png" alt="Shape1" />
+                    <img src="/assets/img/shape/Group_11.png" alt="Shape1" />
                 </div>
             </section>
         </>

@@ -897,7 +897,7 @@ export const faqData = [
     },
     {
         id: "faq4",
-        question: "Can candidates apply for multiple Armed Forces simultaneously?",
+        question: "Can candidates apply for Army, Navy and Airforce simultaneously?",
         answer: "Yes, candidates may apply for multiple services if eligibility criteria are met.",
         isOpen: false
     },
