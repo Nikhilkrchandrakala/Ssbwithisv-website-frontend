@@ -52,6 +52,12 @@ input[type=number] {
     cursor: pointer;
 }
 
+.arrow_button_two {
+
+    font-size: 30px;
+    /* cursor: pointer; */
+}
+
 .thm-content-bg {
     position: absolute;
     inset: 0;
@@ -421,6 +427,12 @@ input[type=number] {
         font-size: 22px;
         top: 3%;
         left: 5%;
+    }
+
+    .arrow_button_two {
+        font-size: 22px;
+        /* top: 3%;
+        left: 5%; */
     }
 
     .thm-input {

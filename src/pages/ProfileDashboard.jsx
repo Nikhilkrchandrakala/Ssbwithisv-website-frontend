@@ -11,7 +11,8 @@ import {
     BiChevronRight,
     BiX,
     BiCheck,
-    BiEdit
+    BiEdit,
+    BiArrowBack
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -432,23 +433,23 @@ const ProfileDashboard = () => {
         };
     }, []);
 
+    // const navigate = useNavigate();
+
     return (
         <>
             <section className={NavStyles.heroSection}>
                 <div className={NavStyles.topBar}>
-                    <img
-                        src="/assets/logo/ISV.webp"
-                        alt="Logo"
-                        className={NavStyles.logo}
-                        onClick={() => navigate('/')}
-                    />
-                    <IoMenu
-                        className={NavStyles.menuIcon}
-                        onClick={() => setOpen(true)}
-                    />
+                    <div onClick={() => navigate(-1)} className="arrow_button_two">
+
+
+                        <BiArrowBack />
+                    </div>
+
                 </div>
 
-                <Sidebar open={open} onClose={() => setOpen(false)} />
+                {/*  */}
+
+                {/* <Sidebar open={open} onClose={() => setOpen(false)} /> */}
 
                 <div className="">
                     <div className="container position-relative z-1">
