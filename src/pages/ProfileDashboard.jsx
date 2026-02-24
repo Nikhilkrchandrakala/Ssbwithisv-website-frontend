@@ -2,8 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
     BiUser,
-    BiHistory,
-    BiCreditCard,
     BiLogOut,
     BiSave,
     BiCalendar,
@@ -12,6 +10,8 @@ import {
     BiEnvelope,
     BiChevronRight,
     BiX,
+    BiCheck,
+    BiEdit
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -25,18 +25,25 @@ import styles from "../style/ProfileDashboard.module.css";
 import { IoMenu } from "react-icons/io5";
 import NavStyles from "../style/Navbar.module.css";
 import Sidebar from "../components/Sidebar";
-import axios from "axios";
+import OtpVerificationPopup from "../components/OtpVerificationPopup";
 import { useUpdateUserProfileMutation, useUserProfileQuery } from "../redux/api";
 import toast from "react-hot-toast";
+import ImageUploadPopup from "../components/ImageUploadPopup";
+import axios from "axios";
+import ReactDOM from 'react-dom';
 
 const ProfileDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditMode, setIsEditMode] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState(null);
-    const [showOrderDetails, setShowOrderDetails] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [open, setOpen] = useState(false);
+
+    // MSG91 Configuration
+    const MSG91_CONFIG = {
+        tokenAuth: "432663TzWGndK2N7sR6710de92P1",
+        widgetId: "346a776c5749333834363239"
+    };
 
     // Image upload states
     const [selectedImage, setSelectedImage] = useState(null);
@@ -46,12 +53,24 @@ const ProfileDashboard = () => {
     const fileInputRef = useRef(null);
     const popupRef = useRef(null);
 
+    // OTP Verification states
+    const [showOtpPopup, setShowOtpPopup] = useState(false);
+    const [otpField, setOtpField] = useState(null); // 'phone' or 'email'
+    const [oldValue, setOldValue] = useState('');
+    const [newValue, setNewValue] = useState('');
+    const [isVerifying, setIsVerifying] = useState(false);
+    const [otpSent, setOtpSent] = useState(false);
+    const [otp, setOtp] = useState('');
+    const [reqId, setReqId] = useState('');
+    const [otpError, setOtpError] = useState('');
+
     const { data } = useUserProfileQuery();
-    const [updaterProfile] = useUpdateUserProfileMutation();
+    const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
     const [previewData, setPreviewData] = useState(data?.user);
     const [formData, setFormData] = useState({ ...previewData });
+    const [tempFormData, setTempFormData] = useState({});
 
     // Handle click outside popup
     useEffect(() => {
@@ -120,7 +139,7 @@ const ProfileDashboard = () => {
         formData.append('profileImage', selectedImage);
 
         try {
-            const response = await updaterProfile(formData).unwrap();
+            const response = await updateProfile(formData).unwrap();
             setPreviewData(prev => ({ ...prev, profileImage: response.profileImage }));
 
             // Close popup and reset states after successful upload
@@ -130,7 +149,6 @@ const ProfileDashboard = () => {
 
             toast.success('Profile image updated successfully!');
         } catch (error) {
-            // console.error('Error uploading image:', error);
             toast.error('Failed to upload image. Please try again.');
         } finally {
             setIsUploading(false);
@@ -152,12 +170,216 @@ const ProfileDashboard = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        // Special handling for phone - only numbers and max 10 digits
+        if (name === 'phone') {
+            const numericValue = value.replace(/\D/g, "").slice(0, 10);
+            setFormData(prev => ({ ...prev, [name]: numericValue }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
+    // Handle field click for OTP verification with old and new values
+    const handleFieldClick = (field) => {
+        if (field === 'phone' || field === 'email') {
+            setTempFormData({ ...formData });
+            setOtpField(field);
+            setOldValue(previewData?.[field] || ''); // Set the old value from preview data
+            setNewValue(''); // Clear new value for input
+            setShowOtpPopup(true);
+            setOtpSent(false);
+            setOtp('');
+            setReqId('');
+            setOtpError('');
+        }
+    };
+
+    // Send OTP using MSG91
+    const handleSendOtp = async () => {
+        if (!newValue) {
+            setOtpError(`Please enter a valid ${otpField === 'phone' ? 'phone number' : 'email'}`);
+            return;
+        }
+
+        if (newValue === oldValue) {
+            setOtpError(`New ${otpField === 'phone' ? 'phone number' : 'email'} must be different from current`);
+            return;
+        }
+
+        if (otpField === 'phone' && newValue.length !== 10) {
+            setOtpError('Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        if (otpField === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newValue)) {
+                setOtpError('Please enter a valid email address');
+                return;
+            }
+        }
+
+        setIsVerifying(true);
+        setOtpError('');
+
+        try {
+            // 🔹 EMAIL OTP (Your Backend API)
+            if (otpField === 'email') {
+
+                const res = await axios.post(
+                    "https://api.ssbwithisv.in/api/send-otp",
+                    { email: newValue }
+                );
+
+                if (res.data.success) {
+                    setOtpSent(true);
+                    toast.success("OTP sent to your new email");
+                } else {
+                    setOtpError(res.data.message || "Failed to send OTP");
+                }
+
+            }
+            // 🔹 PHONE OTP (MSG91)
+            else {
+
+                const res = await axios.post(
+                    "https://api.msg91.com/api/v5/widget/sendOtp",
+                    {
+                        identifier: `91${newValue}`,
+                        widgetId: MSG91_CONFIG.widgetId,
+                        tokenAuth: MSG91_CONFIG.tokenAuth,
+                    },
+                    { headers: { "Content-Type": "application/json" } }
+                );
+
+                if (res.data.type === "success") {
+                    setOtpSent(true);
+                    setReqId(res.data.message);
+                    toast.success("OTP sent to your new phone number");
+                } else {
+                    setOtpError("Failed to send OTP");
+                }
+            }
+
+        } catch (error) {
+            console.error("OTP ERROR:", error);
+            setOtpError("Failed to send OTP. Please try again.");
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
+    // Verify OTP and update field
+    const handleVerifyOtp = async () => {
+        if (!otp || otp.length !== 6) {
+            setOtpError('Please enter a valid 6-digit OTP');
+            return;
+        }
+
+        setIsVerifying(true);
+        setOtpError('');
+
+        try {
+
+            // 🔹 EMAIL OTP VERIFY (Your Backend)
+            if (otpField === 'email') {
+
+                const otpRes = await axios.post(
+                    "https://api.ssbwithisv.in/api/verify-otp",
+                    {
+                        email: newValue,
+                        otp: otp
+                    }
+                );
+
+                if (!otpRes.data.success) {
+                    setOtpError(otpRes.data.message || "Invalid OTP");
+                    setIsVerifying(false);
+                    return;
+                }
+
+            }
+            // 🔹 PHONE OTP VERIFY (MSG91)
+            else {
+
+                const otpRes = await axios.post(
+                    "https://api.msg91.com/api/v5/widget/verifyOtp",
+                    {
+                        otp,
+                        reqId,
+                        widgetId: MSG91_CONFIG.widgetId,
+                        tokenAuth: MSG91_CONFIG.tokenAuth,
+                    },
+                    { headers: { "Content-Type": "application/json" } }
+                );
+
+                if (otpRes.data.type !== "success") {
+                    setOtpError("Invalid OTP");
+                    setIsVerifying(false);
+                    return;
+                }
+            }
+
+            // ✅ If OTP Verified Successfully
+            const updateData = { [otpField]: newValue };
+
+            await updateProfile(updateData).unwrap();
+
+            setPreviewData(prev => ({ ...prev, [otpField]: newValue }));
+            setFormData(prev => ({ ...prev, [otpField]: newValue }));
+
+            toast.success(`${otpField === 'phone' ? 'Phone number' : 'Email'} updated successfully!`);
+
+            setShowOtpPopup(false);
+            setOtpField(null);
+            setOldValue('');
+            setNewValue('');
+            setOtp('');
+            setReqId('');
+
+        } catch (error) {
+            console.error("Verification ERROR:", error);
+            setOtpError("OTP verification failed. Please try again.");
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
+    // Close OTP popup
+    const handleCloseOtpPopup = () => {
+        setShowOtpPopup(false);
+        setOtpField(null);
+        setOldValue('');
+        setNewValue('');
+        setOtp('');
+        setOtpSent(false);
+        setReqId('');
+        setOtpError('');
+        // Revert form data if cancelled
+        if (tempFormData[otpField]) {
+            setFormData(prev => ({ ...prev, [otpField]: tempFormData[otpField] }));
+        }
+        setTempFormData({});
+    };
+
+    console.log(showOtpPopup)
+
     const handleSave = async () => {
-        setPreviewData({ ...formData });
-        await updaterProfile(formData)
+        // Check if email or phone were changed without verification
+        if (formData.phone !== previewData?.phone || formData.email !== previewData?.email) {
+            toast.error('Please verify phone and email changes before saving');
+            return;
+        }
+
+        // Only save name and address without verification
+        const updateData = {
+            name: formData.name,
+            Address: formData.Address
+        };
+
+        setPreviewData(prev => ({ ...prev, ...updateData }));
+        await updateProfile(updateData);
         toast.success('Profile updated successfully!');
         setIsEditMode(false);
     };
@@ -254,14 +476,13 @@ const ProfileDashboard = () => {
                                             style={{ cursor: 'pointer' }}
                                         >
                                             <img
-                                                src={previewData?.profileImage || '/default-avatar.png'}
+                                                src={previewData?.profileImage || '/assets/profileImage.png'}
                                                 alt="profile"
                                             />
                                             <div className={styles.avatarOverlay}>
                                                 <FaCamera />
                                                 <span>Change Photo</span>
                                             </div>
-                                            {/* <div className={styles.onlineIndicator}></div> */}
                                         </div>
 
                                         <div className={styles.profileTitle}>
@@ -301,28 +522,6 @@ const ProfileDashboard = () => {
                                         <span>Profile</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
-                                    {/* <button
-                                        className={`${styles.navTab} ${activeTab === 'orders' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('orders');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiHistory />
-                                        <span>Order History</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button> */}
-                                    {/* <button
-                                        className={`${styles.navTab} ${activeTab === 'payments' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('payments');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiCreditCard />
-                                        <span>Payment History</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button> */}
                                 </nav>
 
                                 {/* Logout Button */}
@@ -352,7 +551,7 @@ const ProfileDashboard = () => {
 
                                         <div className={styles.profileContent}>
                                             {!isEditMode ? (
-                                                // Enhanced Preview Mode
+                                                // Enhanced Preview Mode with Edit Icons for Phone and Email
                                                 <div className={styles.infoCards}>
                                                     <div className={styles.infoCard}>
                                                         <div className={styles.cardIcon}>
@@ -363,24 +562,45 @@ const ProfileDashboard = () => {
                                                             <p>{previewData?.name}</p>
                                                         </div>
                                                     </div>
+
                                                     <div className={styles.infoCard}>
                                                         <div className={styles.cardIcon}>
                                                             <BiEnvelope />
                                                         </div>
                                                         <div className={styles.cardContent}>
                                                             <label>Email Address</label>
-                                                            <p>{previewData?.email}</p>
+                                                            <div className={styles.fieldWithEdit}>
+                                                                <p>{previewData?.email}</p>
+                                                                <button
+                                                                    className={styles.editFieldBtn}
+                                                                    onClick={() => handleFieldClick('email')}
+                                                                    title="Edit Email"
+                                                                >
+                                                                    <BiEdit />
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
+
                                                     <div className={styles.infoCard}>
                                                         <div className={styles.cardIcon}>
                                                             <BiPhone />
                                                         </div>
                                                         <div className={styles.cardContent}>
                                                             <label>Phone Number</label>
-                                                            <p>{previewData?.phone}</p>
+                                                            <div className={styles.fieldWithEdit}>
+                                                                <p>{previewData?.phone}</p>
+                                                                <button
+                                                                    className={styles.editFieldBtn}
+                                                                    onClick={() => handleFieldClick('phone')}
+                                                                    title="Edit Phone Number"
+                                                                >
+                                                                    <BiEdit />
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
+
                                                     <div className={styles.infoCard}>
                                                         <div className={styles.cardIcon}>
                                                             <BiMap />
@@ -400,166 +620,166 @@ const ProfileDashboard = () => {
                                                             type="text"
                                                             name="name"
                                                             className="form-control thm-input"
-                                                            value={formData.name}
+                                                            value={formData.name || ''}
                                                             onChange={handleInputChange}
                                                             placeholder="Enter your full name"
                                                         />
                                                     </div>
-                                                    <div className={styles.formGroup}>
-                                                        <label>Email Address</label>
-                                                        <input
-                                                            type="email"
-                                                            name="email"
-                                                            className="form-control thm-input"
-                                                            value={formData.email}
-                                                            onChange={handleInputChange}
-                                                            placeholder="Enter your email"
-                                                        />
-                                                    </div>
-                                                    <div className={styles.formGroup}>
-                                                        <label>Phone Number</label>
-                                                        <input
-                                                            type="tel"
-                                                            name="phone"
-                                                            className="form-control thm-input"
-                                                            value={formData.phone}
-                                                            onChange={(e) => {
-                                                                // 👇 Allow only numbers & max 10 digits
-                                                                const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-                                                                handleInputChange({
-                                                                    target: { name: "phone", value }
-                                                                });
-                                                            }}
-                                                            placeholder="Enter 10 digit phone number"
-                                                            maxLength={10}
-                                                        />
-                                                    </div>
+
                                                     <div className={styles.formGroup}>
                                                         <label>Address</label>
                                                         <textarea
                                                             name="Address"
                                                             className="form-control thm-input"
-                                                            value={formData.Address}
+                                                            value={formData.Address || ''}
                                                             onChange={handleInputChange}
                                                             rows="3"
                                                             placeholder="Enter your address"
                                                         />
                                                     </div>
+
                                                     <div className={styles.formActions}>
                                                         <button
                                                             className={styles.cancelBtn}
                                                             onClick={handleCancel}
+                                                            type="button"
                                                         >
                                                             Cancel
                                                         </button>
                                                         <button
                                                             className={styles.saveBtn}
                                                             onClick={handleSave}
+                                                            disabled={formData.phone !== previewData?.phone || formData.email !== previewData?.email}
+                                                            type="button"
                                                         >
                                                             <BiSave /> Save Changes
                                                         </button>
                                                     </div>
+                                                    {(formData.phone !== previewData?.phone || formData.email !== previewData?.email) && (
+                                                        <p className={styles.saveWarning}>
+                                                            ⚠️ Please verify phone and email changes before saving
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
                                     </div>
-                                )}
-
-                                {/* Orders Tab */}
-                                {activeTab === 'orders' && (
-                                    <>
-                                    </>
-                                )}
-
-                                {/* Payments Tab */}
-                                {activeTab === 'payments' && (
-                                    <>
-                                    </>
                                 )}
                             </div>
                         </div>
 
                         {/* Image Upload Popup */}
                         {showImagePopup && (
-                            <div className={styles.popupOverlay}>
-                                <div ref={popupRef} className={styles.popupContent}>
-                                    <div className={styles.popupHeader}>
-                                        <h3>Change Profile Photo</h3>
-                                        <button
-                                            className={styles.closePopupBtn}
-                                            onClick={handleCancelImage}
-                                        >
-                                            <BiX />
-                                        </button>
+                            <ImageUploadPopup
+                                isOpen={showImagePopup}
+                                onClose={handleCancelImage}
+                                onSave={handleImageUpload}
+                                previewImage={imagePreview}
+                                existingImage={previewData?.profileImage}
+                                selectedImage={selectedImage}
+                                onImageChange={handleImageChange}
+                                isUploading={isUploading}
+                            />
+                        )}
+
+                        {/* OTP Verification Popup - Updated with Old and New Value Fields */}
+                        {showOtpPopup && ReactDOM.createPortal(
+                            <div className={styles.overlay}>
+                                <div className={styles.popup}>
+                                    <button className={styles.closeBtn} onClick={handleCloseOtpPopup}>
+                                        <BiX />
+                                    </button>
+
+                                    <div className={styles.header}>
+                                        <div className={styles.icon}>
+                                            {otpField === 'phone' ? <BiPhone /> : <BiEnvelope />}
+                                        </div>
+                                        <h3>Verify {otpField === 'phone' ? 'Phone Number' : 'Email'}</h3>
                                     </div>
 
-                                    <div className={styles.popupBody}>
-                                        {/* Current Image Preview */}
-                                        <div className={styles.currentImageContainer}>
-                                            <img
-                                                src={imagePreview || previewData?.profileImage || '/default-avatar.png'}
-                                                alt="Profile Preview"
-                                                className={styles.previewImage}
+                                    <div className={styles.content}>
+                                        <p className={styles.message}>
+                                            Please verify your new {otpField === 'phone' ? 'phone number' : 'email address'}
+                                        </p>
+
+                                        {/* Old Value Display */}
+                                        <div className={styles.valueDisplay}>
+                                            <span className={styles.label}>Current {otpField === 'phone' ? 'Phone' : 'Email'}</span>
+                                            <span className={styles.value}>{oldValue}</span>
+                                        </div>
+
+                                        {/* New Value Input */}
+                                        <div className={styles.formGroup}>
+                                            <label>New {otpField === 'phone' ? 'Phone Number' : 'Email Address'}</label>
+                                            <input
+                                                type={otpField === 'phone' ? 'tel' : 'email'}
+                                                className={styles.input}
+                                                value={newValue}
+                                                onChange={(e) => {
+                                                    if (otpField === 'phone') {
+                                                        const numericValue = e.target.value.replace(/\D/g, "").slice(0, 10);
+                                                        setNewValue(numericValue);
+                                                    } else {
+                                                        setNewValue(e.target.value);
+                                                    }
+                                                }}
+                                                placeholder={otpField === 'phone' ? 'Enter 10-digit number' : 'Enter email address'}
+                                                disabled={otpSent}
                                             />
                                         </div>
 
-                                        {/* Hidden File Input */}
-                                        <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            onChange={handleImageChange}
-                                            accept="image/*"
-                                            style={{ display: 'none' }}
-                                        />
-
-                                        {/* Image Selection Area */}
-                                        {!selectedImage ? (
-                                            <div className={styles.imageSelectionArea}>
-                                                <button
-                                                    className={styles.selectImageBtn}
-                                                    onClick={handleImageClick}
-                                                >
-                                                    <FaCamera />
-                                                    Select Image
-                                                </button>
-                                                <p className={styles.imageHint}>
-                                                    Supported formats: JPG, PNG, GIF, WEBP (Max 5MB)
-                                                </p>
-                                            </div>
+                                        {!otpSent ? (
+                                            <button
+                                                className={styles.submitBtn}
+                                                onClick={handleSendOtp}
+                                                disabled={isVerifying || !newValue}
+                                            >
+                                                {isVerifying ? 'Sending...' : 'Send OTP'}
+                                            </button>
                                         ) : (
-                                            <div className={styles.imagePreviewArea}>
-                                                {/* <div className={styles.selectedImageContainer}>
-                                                    <img
-                                                        src={imagePreview}
-                                                        alt="Selected"
-                                                        className={styles.selectedImage}
-                                                    />
-                                                </div> */}
-                                            </div>
+                                            <>
+                                                <div className={styles.formGroup}>
+                                                    <label>Enter OTP</label>
+                                                    <div className={styles.otpInputGroup}>
+                                                        <input
+                                                            type="text"
+                                                            className={styles.otpInput}
+                                                            value={otp}
+                                                            onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                                                            placeholder="Enter 6-digit OTP"
+                                                            maxLength="6"
+                                                        />
+                                                        <button
+                                                            className={styles.resendBtn}
+                                                            onClick={handleSendOtp}
+                                                            disabled={isVerifying}
+                                                        >
+                                                            Resend
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <button
+                                                    className={styles.submitBtn}
+                                                    onClick={handleVerifyOtp}
+                                                    disabled={isVerifying || otp.length !== 6}
+                                                >
+                                                    {isVerifying ? 'Verifying...' : 'Verify & Update'}
+                                                </button>
+                                            </>
                                         )}
 
-                                        {/* Action Buttons */}
-                                        {selectedImage && (
-                                            <div className={styles.popupActions}>
-                                                <button
-                                                    className={styles.cancelPopupBtn}
-                                                    onClick={handleCancelImage}
-                                                    disabled={isUploading}
-                                                >
-                                                    Cancel
-                                                </button>
-                                                <button
-                                                    className={styles.savePopupBtn}
-                                                    onClick={handleImageUpload}
-                                                    disabled={isUploading}
-                                                >
-                                                    {isUploading ? 'Uploading...' : 'Save Photo'}
-                                                </button>
-                                            </div>
+                                        {otpError && (
+                                            <p className={styles.errorMessage}>{otpError}</p>
                                         )}
+
+                                        <p className={styles.note}>
+                                            We'll send a verification code to your new {otpField === 'phone' ? 'phone number' : 'email'}
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
+                            </div>,
+                            document.body
                         )}
 
                         <span style={{ zIndex: '654' }} className="thm-glow"></span>

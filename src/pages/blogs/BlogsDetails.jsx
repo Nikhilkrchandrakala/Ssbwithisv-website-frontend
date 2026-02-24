@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import  { useEffect, useState } from 'react'
+// import axios from 'axios'
 import CustomHeader from '../../components/CustomHeader'
 import styles from '../../style/BlogDetails.module.css'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css'
 import Footer from '../Footer'
@@ -15,7 +15,7 @@ import { useAllBlogsByIdQuery } from '../../redux/api'
 // import "swiper/css";
 
 function BlogsDetails() {
-    const { id } = useParams()
+    // const { id } = useParams()
 
     // console.log(id)
     const location = useLocation()
@@ -24,7 +24,7 @@ function BlogsDetails() {
     // console.log(path)
 
 
-    const { data: blog, isLoading } = useAllBlogsByIdQuery(path)
+    const { data: blog } = useAllBlogsByIdQuery(path)
 
     const navigate = useNavigate()
 

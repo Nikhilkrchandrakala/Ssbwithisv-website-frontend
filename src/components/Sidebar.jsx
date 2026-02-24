@@ -12,7 +12,7 @@ const Sidebar = ({ open, onClose }) => {
     // const [loading, setLoading] = useState(true)
     // const [error, setError] = useState(null)
 
-    const { data: blogs  } = useUserProfileQuery()
+    const { data: blogs } = useUserProfileQuery()
 
     // useEffect(() => {
     //     const fetchBlogs = async () => {
@@ -113,7 +113,7 @@ const Sidebar = ({ open, onClose }) => {
 
                     {/* Menu */}
                     <nav className={styles.menu}>
-                        {/* <NavLink
+                        {blogs?.user?.name && <NavLink
                             to="/ProfileDashboard"
                             onClick={onClose}
                             className={({ isActive }) =>
@@ -121,7 +121,7 @@ const Sidebar = ({ open, onClose }) => {
                             }
                         >
                             Profile
-                        </NavLink> */}
+                        </NavLink>}
                         <NavLink
                             to="/"
                             onClick={onClose}

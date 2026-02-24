@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+// import React, { useEffect, useState } from 'react'
+// import axios from 'axios'
 import CustomHeader from '../../components/CustomHeader'
 import styles from '../../style/Blog.module.css'
 import { useNavigate } from 'react-router-dom'

@@ -41,7 +41,7 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
 
                 <div className="breed-content container">
                     <div className="col-12 row mx-auto">
-                        {color && <img src='/assets/logo/VTXlogo.png' style={{ width: '250px' }} />}
+                        {color && <img src='/assets/logo/VTXlogo.png' alt='header ' style={{ width: '250px' }} />}
 
                         <div className='col-xl-12'>
                             {color && heading && <h1 style={{ color: 'var(--secondary-color)' }} className="breed-big-title">{heading}{span && <span className="sup-text">{span}</span>}</h1>}
@@ -63,7 +63,7 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
                         </div>
 
                         {color2 && <div className="col-xl-7">
-                            <img src='/assets/karam.webp' style={{ width: '250px' }} />
+                            <img src='/assets/karam.webp' alt='Shape2'  style={{ width: '250px' }} />
                         </div>}
 
 
