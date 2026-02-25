@@ -37,6 +37,32 @@ const Mentors = () => {
                                 ))}
                             </p>
 
+                            <div class="d-flex gap-3">
+
+
+                                {mentor.instagram &&
+                                    <a
+                                        href={mentor.instagram}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className='bottom-contact-box'
+                                    >
+                                        <i className="fa fa-instagram"></i>
+                                    </a>
+
+                                }
+
+                                {/* Phone Call */}
+                                <a
+                                    href={mentor.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className='bottom-contact-box'
+                                >
+                                    <i className="fa fa-linkedin"></i>
+                                </a>
+                            </div>
+
                         </div>
                     ))}
                 </div>

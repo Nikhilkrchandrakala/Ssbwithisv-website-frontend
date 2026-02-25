@@ -5,6 +5,9 @@ export const mentorsData = [
         image: "/assets/team-8.webp",
         role: "Interviewing Officer",
         name: "Commodore Pankaj Singh (Retd.)",
+        instagram: "",
+        linkedin: "https://www.linkedin.com/in/commodore-pankaj-singh-r-12062963/",
+
         description: [
             "Ex Board President, 12 SSB Bangalore",
             "Held command of various Indian Naval Ships and Bases",
@@ -23,6 +26,8 @@ export const mentorsData = [
         image: "/assets/founder.webp",
         role: "Group Testing Officer",
         name: "Lt. Commander Nikhil Kumar Chandrakala (Retd.)",
+        instagram: "https://www.instagram.com/ltcdr_nikhil_the_gto?igsh=MXRxdGdqcHZocjdwZA%3D%3D&utm_source=qr",
+        linkedin: "https://www.linkedin.com/in/lcnkc/",
         description: [
             "Youngest GTO since 1947",
             "Commissioning crew, SSB (Kolkata)",
