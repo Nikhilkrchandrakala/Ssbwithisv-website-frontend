@@ -19,6 +19,24 @@ function HalfOfFame() {
     /* ================= STATE ================= */
     const [candidates, setCandidates] = useState([])
     const [loading, setLoading] = useState(true)
+    const [columnCount, setColumnCount] = useState(3)
+
+    useEffect(() => {
+        const updateColumns = () => {
+            if (window.innerWidth < 768) {
+                setColumnCount(1)       // Mobile
+            } else if (window.innerWidth < 992) {
+                setColumnCount(2)       // Tablet
+            } else {
+                setColumnCount(3)       // Desktop
+            }
+        }
+
+        updateColumns()
+        window.addEventListener("resize", updateColumns)
+
+        return () => window.removeEventListener("resize", updateColumns)
+    }, [])
 
     /* ================= API CALL ================= */
     useEffect(() => {
@@ -54,7 +72,9 @@ function HalfOfFame() {
     const [page, setPage] = useState(1)
 
     const visibleCandidates = candidates.slice(0, page * ITEMS_PER_PAGE)
-    const columns = splitIntoColumns(visibleCandidates, 3)
+    // const columns = splitIntoColumns(visibleCandidates, 3)
+
+    const columns = splitIntoColumns(visibleCandidates, columnCount)
 
     const handleLoadMore = () => {
         if (page * ITEMS_PER_PAGE < candidates.length) {
@@ -116,19 +136,9 @@ function HalfOfFame() {
                         <div className="col-lg-12 px-0">
                             <div style={{ padding: '0' }} className="what-is-not-text">
                                 <div className="sct-title-section-gtx ">
-                                    {/* <h1 className='sct-title-gtx' >
-                                        <span>
-                                            VTX™ is a preparatory bridge —
-                                        </span>
-                                        <span>designed to support authentic performance.</span>
-                                    </h1> */}
-                                    <h1 className="sct-title_Sec_gtx ">
-                                        {/* <span className="highlight first-part">
 
-                                        </span>
-                                        <span className="highlight second-part">
-                                            designed to support authentic performance.
-                                        </span> */}
+                                    <h1 className="sct-title_Sec_gtx ">
+
 
                                         <span className='title-gtx shimmerText_sec'>
                                             करम वही करो जो करना ही फल लगे, क्युकी करम ही धर्म ।
@@ -150,54 +160,65 @@ function HalfOfFame() {
                     <div className="row g-4 col-12 mx-auto">
 
                         {columns.map((column, colIndex) => (
-                            <div key={colIndex} className="col-lg-4 col-md-6">
-                                <div className={`hof-column pattern-${colIndex + 1}`}>
+                            // <div key={colIndex} className="col-lg-4 col-md-6">
 
-                                    {column.map((candidate, index) => (
-                                        <div
-                                            key={candidate._id}
-                                            className={`Hall-of-fame-card `}
-                                        >
-                                            <img
-                                                src={candidate?.img}
-                                                alt={candidate?.name}
-                                            />
-                                            <div className="hof-content">
-                                                <h2>{candidate.name}</h2>
-                                                <span>{candidate?.board}</span>
-                                                <br />
-                                                <span>{candidate?.entry}</span>
+                                <div
+                                    key={colIndex}
+                                    className={
+                                        columnCount === 1
+                                            ? "col-12"
+                                            : columnCount === 2
+                                                ? "col-md-6 col-12"
+                                                : "col-lg-4 col-md-6 col-12"
+                                    }
+                                >
+                                    <div className={`hof-column pattern-${colIndex + 1}`}>
+
+                                        {column.map((candidate, index) => (
+                                            <div
+                                                key={candidate._id}
+                                                className={`Hall-of-fame-card `}
+                                            >
+                                                <img
+                                                    src={candidate?.img}
+                                                    alt={candidate?.name}
+                                                />
+                                                <div className="hof-content">
+                                                    <h2>{candidate.name}</h2>
+                                                    <span>{candidate?.board}</span>
+                                                    <br />
+                                                    <span>{candidate?.entry}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        ))}
 
+                                    </div>
                                 </div>
-                            </div>
                         ))}
 
-                    </div>
+                            </div>
                 </div>
 
-                {/* ================= PAGINATION FOOTER ================= */}
+                    {/* ================= PAGINATION FOOTER ================= */}
 
-                <div className="col-12 row mx-auto mt-5 text-center align-items-center">
-                    <div className="col-sm-4 col-3"></div>
+                    <div className="col-12 row mx-auto mt-5 text-center align-items-center">
+                        <div className="col-sm-4 col-3"></div>
 
-                    <div className="col-sm-4 col-6 mx-auto d-flex justify-content-center">
-                        {page * ITEMS_PER_PAGE < candidates.length && (
-                            <CustomButton
-                                text="Load More"
-                                onClick={handleLoadMore}
-                            />
-                        )}
+                        <div className="col-sm-4 col-6 mx-auto d-flex justify-content-center">
+                            {page * ITEMS_PER_PAGE < candidates.length && (
+                                <CustomButton
+                                    text="Load More"
+                                    onClick={handleLoadMore}
+                                />
+                            )}
+                        </div>
+
+                        <div className="col-sm-4 col-3 text-end">
+                            <span className="bottom-paginate">
+                                {Math.min(page * ITEMS_PER_PAGE, candidates.length)} of {candidates.length}
+                            </span>
+                        </div>
                     </div>
-
-                    <div className="col-sm-4 col-3 text-end">
-                        <span className="bottom-paginate">
-                            {Math.min(page * ITEMS_PER_PAGE, candidates.length)} of {candidates.length}
-                        </span>
-                    </div>
-                </div>
             </section>
 
             <From />
