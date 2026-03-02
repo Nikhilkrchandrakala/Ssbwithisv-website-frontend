@@ -66,7 +66,8 @@ function Magnize() {
 
     const navigate = useNavigate()
 
-    const downloadPdf = async (pdfPath) => {
+    const downloadPdf = async (pdfPath, item) => {
+        console.log(item?.pdfTitle)
         if (!token) {
             navigate('/SignIn')
 
@@ -87,7 +88,7 @@ function Magnize() {
             const link = document.createElement("a");
 
             link.href = window.URL.createObjectURL(blob);
-            link.download = "magazine.pdf";
+            link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
             link.click();
         }
     };
@@ -186,7 +187,7 @@ function Magnize() {
                                 <div className="magazine-hover">
 
 
-                                    <CustomButton text={downloadBtn ? 'Download PDF' : "LOADING..."} onClick={() => downloadPdf(item.pdfFilePath)} />
+                                    <CustomButton text={downloadBtn ? 'Download PDF' : "LOADING..."} onClick={() => downloadPdf(item.pdfFilePath, item)} />
                                 </div>
 
                                 <div className="card-header magazine-card-head">
