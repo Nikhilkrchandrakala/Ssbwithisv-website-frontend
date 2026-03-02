@@ -4,29 +4,29 @@ import {
     BiUser,
     BiLogOut,
     BiSave,
-    BiCalendar,
+    // BiCalendar,
     BiMap,
     BiPhone,
     BiEnvelope,
     BiChevronRight,
     BiX,
-    BiCheck,
+    // BiCheck,
     BiEdit,
     BiArrowBack
 } from "react-icons/bi";
 import {
     FaCamera,
-    FaMedal,
-    FaGem
+    // FaMedal,
+    // FaGem
 } from "react-icons/fa";
-import { RiVipCrownFill } from "react-icons/ri";
-import CustomButton from "../components/CustomButton";
+// import { RiVipCrownFill } from "react-icons/ri";
+// import CustomButton from "../components/CustomButton";
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
-import { IoMenu } from "react-icons/io5";
+// import { IoMenu } from "react-icons/io5";
 import NavStyles from "../style/Navbar.module.css";
-import Sidebar from "../components/Sidebar";
-import OtpVerificationPopup from "../components/OtpVerificationPopup";
+// import Sidebar from "../components/Sidebar";
+// import OtpVerificationPopup from "../components/OtpVerificationPopup";
 import { useUpdateUserProfileMutation, useUserProfileQuery } from "../redux/api";
 import toast from "react-hot-toast";
 import ImageUploadPopup from "../components/ImageUploadPopup";
@@ -38,7 +38,7 @@ const ProfileDashboard = () => {
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditMode, setIsEditMode] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [open, setOpen] = useState(false);
+    // const [open, setOpen] = useState(false);
 
     // MSG91 Configuration
     const MSG91_CONFIG = {
@@ -101,9 +101,9 @@ const ProfileDashboard = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const handleImageClick = () => {
-        fileInputRef.current.click();
-    };
+    // const handleImageClick = () => {
+    //     fileInputRef.current.click();
+    // };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -397,21 +397,21 @@ const ProfileDashboard = () => {
         window.location.reload();
     };
 
-    const getTierBadge = (tier) => {
-        const tierConfig = {
-            Gold: { icon: FaMedal, color: '#FFD700' },
-            Silver: { icon: FaMedal, color: '#C0C0C0' },
-            Platinum: { icon: FaGem, color: '#E5E4E2' }
-        };
-        const Icon = tierConfig[tier]?.icon || FaMedal;
+    // const getTierBadge = (tier) => {
+    //     const tierConfig = {
+    //         Gold: { icon: FaMedal, color: '#FFD700' },
+    //         Silver: { icon: FaMedal, color: '#C0C0C0' },
+    //         Platinum: { icon: FaGem, color: '#E5E4E2' }
+    //     };
+    //     const Icon = tierConfig[tier]?.icon || FaMedal;
 
-        return (
-            <span className={styles.tierBadge} style={{ backgroundColor: tierConfig[tier]?.color + '20', color: tierConfig[tier]?.color }}>
-                <Icon size={14} />
-                {tier}
-            </span>
-        );
-    };
+    //     return (
+    //         <span className={styles.tierBadge} style={{ backgroundColor: tierConfig[tier]?.color + '20', color: tierConfig[tier]?.color }}>
+    //             <Icon size={14} />
+    //             {tier}
+    //         </span>
+    //     );
+    // };
 
     const sidebarRef = useRef(null);
 
@@ -422,7 +422,7 @@ const ProfileDashboard = () => {
                 !sidebarRef.current.contains(event.target)
             ) {
                 setIsMobileMenuOpen(false);
-                setOpen(false);
+                // setOpen(false);
             }
         }
 
