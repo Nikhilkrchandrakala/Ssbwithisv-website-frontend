@@ -488,14 +488,12 @@ const ProfileDashboard = () => {
 
                                         <div className={styles.profileTitle}>
                                             <h3>{previewData?.name}</h3>
-                                            <p className={styles.memberSince}>
-                                                <BiCalendar /> Member since
-                                            </p>
+                                            <p>{previewData?.email}</p>
                                         </div>
                                     </div>
 
                                     {/* Membership Tier */}
-                                    <div className={styles.membershipCard}>
+                                    {/* <div className={styles.membershipCard}>
                                         <div className={styles.membershipHeader}>
                                             <RiVipCrownFill className={styles.crownIcon} />
                                             <span>Membership Tier</span>
@@ -507,7 +505,7 @@ const ProfileDashboard = () => {
                                             </div>
                                             <span className={styles.nextTier}>750 points to Platinum</span>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
 
                                 {/* Navigation Tabs with Icons */}
@@ -541,13 +539,21 @@ const ProfileDashboard = () => {
                                                 <BiUser className={styles.tabIcon} />
                                                 Profile Information
                                             </h2>
-                                            {!isEditMode && (
+
+                                            <button
+                                                className={styles.editFieldBtn}
+                                                onClick={() => setIsEditMode(true)}
+                                                title="Edit Profile"
+                                            >
+                                                <BiEdit />
+                                            </button>
+                                            {/* {!isEditMode && (
                                                 <CustomButton
                                                     className={styles.editBtn}
                                                     onClick={() => setIsEditMode(true)}
-                                                    text="Edit Profile"
+                                                    text={<BiEdit />}
                                                 />
-                                            )}
+                                            )} */}
                                         </div>
 
                                         <div className={styles.profileContent}>

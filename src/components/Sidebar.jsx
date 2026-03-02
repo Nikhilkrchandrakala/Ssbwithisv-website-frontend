@@ -120,7 +120,7 @@ const Sidebar = ({ open, onClose }) => {
                                 isActive ? styles.active : ""
                             }
                         >
-                            Profile
+                            My Profile
                         </NavLink>}
                         <NavLink
                             to="/"

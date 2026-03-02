@@ -158,11 +158,17 @@ function Form() {
             console.log(response.data);
 
             // ✅ Run Google conversion script here
-            if (window.gtag) {
-                window.gtag('event', 'conversion', {
-                    send_to: 'AW-16493985261/xmkVCNug_5sZEO37-Lg9'
-                });
-            }
+            // if (window.gtag) {
+            //     window.gtag('event', 'conversion', {
+            //         send_to: 'AW-16493985261/xmkVCNug_5sZEO37-Lg9'
+            //     });
+            // }
+
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'form_submit',
+                'formName': 'Contact Form'
+            });
 
             toast.success("Thank you for your enquiry. We will reach out to you soon");
 

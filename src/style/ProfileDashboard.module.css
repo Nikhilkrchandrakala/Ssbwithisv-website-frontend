@@ -126,9 +126,20 @@
 
 .profileTitle h3 {
     color: #fff;
-    font-size: 1.3rem;
-    margin: 0 0 5px;
+    font-size: 1rem;
+    margin: 0 0 2px;
     font-weight: 600;
+    line-height: 15px;
+}
+.profileTitle p {
+    color: #fff;
+    font-size: .8rem;
+    margin-bottom: 0;
+    line-height: 28px;
+    /* margin: 0;
+    padding: 0; */
+    /* margin: 0 0 5px; */
+    /* font-weight: 600; */
 }
 
 .memberSince {
@@ -1317,7 +1328,7 @@
     }
 
     .tabHeader {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 10px;
     }
