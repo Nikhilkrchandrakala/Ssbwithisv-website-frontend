@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import CustomButton from "./CustomButton";
 import { useUserProfileQuery } from "../redux/api";
+import ContactUs from "./ContactUs";
 
 const Sidebar = ({ open, onClose }) => {
     const navigate = useNavigate();
 
+
+    const [openContact, setOpenContact] = useState(false);
+    
     // const [blogs, setBlogs] = useState([])
     // const [loading, setLoading] = useState(true)
     // const [error, setError] = useState(null)
@@ -88,11 +92,7 @@ const Sidebar = ({ open, onClose }) => {
                         ✕
                     </button>
 
-                    {/* Top line */}
-                    {/* <div className={styles.topLine}>
-                        <span className={styles.dot}></span>
-                        <span className={styles.line}></span>
-                    </div> */}
+
 
                     {blogs?.user?.name ? (<div className="mb-4">
                         Welcome Back {blogs?.user?.name}!
@@ -211,14 +211,21 @@ const Sidebar = ({ open, onClose }) => {
 
 
                         <NavLink
-                            to="/Contactus"
-                            onClick={onClose}
+                            to="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setOpenContact(true);
+                                if (onClose) onClose();
+                            }}
                             className={({ isActive }) =>
-                                isActive ? styles.active : ""
+                                isActive ? "text-blue-600 font-semibold" : ""
                             }
                         >
-                            Contact us
+                            Contact Us
                         </NavLink>
+
+                        {/* Dialog */}
+                        <ContactUs open={openContact} setOpen={setOpenContact} />
 
 
 

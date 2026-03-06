@@ -5,11 +5,14 @@ import CustomButton from "../../components/CustomButton";
 import HeadingTwo from '../../components/HeadingTwo';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUserProfileQuery } from '../../redux/api';
 
 function CircleBox() {
 
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const { data: user } = useUserProfileQuery()
 
     const fetchNumberMonitors = async () => {
         try {
@@ -39,7 +42,7 @@ function CircleBox() {
     const navigate = useNavigate();
 
     const handelLogin = () => {
-        navigate('/ContactUS');
+        navigate('/SignIn');
     };
 
     if (loading) {
@@ -81,9 +84,10 @@ function CircleBox() {
                         <span className={styles.text}>Virtual GTO Training Experience</span>
                     </p>
 
-                    <div style={{ marginTop: '30px' }}>
+                    {!user && (<div style={{ marginTop: '30px' }}>
                         <CustomButton text="Sign Up Now" onClick={handelLogin} />
-                    </div>
+                    </div>)
+                    }
                 </div>
 
             </div>

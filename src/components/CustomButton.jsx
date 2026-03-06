@@ -1,14 +1,11 @@
-
-
-
-function CustomButton({ text, onClick, disabled }) {
+function CustomButton({ text, onClick, disabled, type = "button" }) {
     return (
         <button
-            type="button"
+            type={type}
             style={{
-                zIndex: '9999999',
+                zIndex: "9999999",
                 opacity: disabled ? 0.6 : 1,
-                cursor: disabled ? 'not-allowed' : 'pointer'
+                cursor: disabled ? "not-allowed" : "pointer",
             }}
             className="ctaButton"
             onClick={onClick}
