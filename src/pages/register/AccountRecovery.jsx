@@ -302,15 +302,16 @@ function AccountRecovery() {
                 //     }
                 // );
 
-                console.log(response?.data?.message !== "invalid otp")
+                // console.log(response?.error)
 
 
 
-                if (response?.data?.message !== "invalid otp") {
+                if (response?.error) {
+
+                    setError('Invalid OTP. Please try again.');
+                } else {
                     setSuccess('OTP verified successfully!');
                     setStep(3);
-                } else {
-                    setError('Invalid OTP. Please try again.');
                 }
             }
 
