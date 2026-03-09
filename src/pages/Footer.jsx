@@ -154,7 +154,7 @@ function Footer() {
             </div>
             <div className={styles.copyrightBox}>
                 <span className={styles.copy}>
-                    © Copyright 2021 – {year} SSB with ISV. All rights reserved
+                    © Copyright 2021 – {year} SSB with ISV, CS Joint Services Academy Pvt. Ltd.
                 </span>
             </div>
         </footer>
