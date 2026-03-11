@@ -266,103 +266,133 @@ function AccountRecovery() {
 
     // Step 2: Verify OTP
     const handleVerifyOtp = async () => {
-        if (!validateOtp()) {
-            return;
-        }
+
+        if (!validateOtp()) return;
 
         // OTP expiry check
         if (timer === 0) {
-            setError('OTP has expired. Please request a new one.');
+            setError("OTP has expired. Please request a new one.");
             return;
         }
 
         setIsLoading(true);
-        setError('');
+        setError("");
 
         try {
+
             const identifier = formData.identifier.trim();
 
-            // ✅ CASE 1: PHONE → MSG91 VERIFY
+            /* ---------------------------------
+               CASE 1: PHONE → MSG91 VERIFY
+            ---------------------------------- */
+
             if (/^\d+$/.test(identifier)) {
+
                 const requestData = {
                     otp: formData.otp,
                     reqId: reqID,
                     widgetId,
-                    tokenAuth,
+                    tokenAuth
                 };
 
-                const response = await verifyOtp(requestData)
-                // axios.post(
-                //     'https://api.msg91.com/api/v5/widget/verifyOtp',
-                //     requestData,
-                //     {
-                //         headers: {
-                //             'Content-Type': 'application/json',
-                //         },
-                //     }
-                // );
-
-                // console.log(response?.error)
-
-
-
-                if (response?.error) {
-
-                    setError('Invalid OTP. Please try again.');
-                } else {
-                    setSuccess('OTP verified successfully!');
-                    setStep(3);
-                }
-            }
-
-            // ✅ CASE 2: EMAIL → YOUR BACKEND VERIFY
-            else {
                 const response = await axios.post(
-                    'https://api.ssbwithisv.in/api/verify-otp',
-                    {
-                        email: identifier.toLowerCase(),
-                        otp: formData.otp,
-                    },
+                    "https://api.msg91.com/api/v5/widget/verifyOtp",
+                    requestData,
                     {
                         headers: {
-                            'Content-Type': 'application/json',
-                        },
+                            "Content-Type": "application/json"
+                        }
                     }
                 );
 
-                if (response.data.success) {
-                    setSuccess('OTP verified successfully!');
+                console.log("MSG91 Response:", response.data);
+
+                if (response.data?.type === "success") {
+
+                    setSuccess("OTP verified successfully!");
                     setStep(3);
+
                 } else {
-                    setError(response.data.message || 'Invalid OTP');
+
+                    setError("Invalid OTP. Please try again.");
+
                 }
+
+            }
+
+            /* ---------------------------------
+               CASE 2: EMAIL → YOUR BACKEND
+            ---------------------------------- */
+
+            else {
+
+                const response = await axios.post(
+                    "https://api.ssbwithisv.in/api/verify-otp",
+                    {
+                        email: identifier.toLowerCase(),
+                        otp: formData.otp
+                    },
+                    {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }
+                );
+
+                console.log("Email OTP Response:", response.data);
+
+                if (response.data?.success) {
+
+                    setSuccess("OTP verified successfully!");
+                    setStep(3);
+
+                } else {
+
+                    setError(response.data?.message || "Invalid OTP");
+
+                }
+
             }
 
         } catch (err) {
-            console.error('Verify OTP error:', err);
+
+            console.error("Verify OTP error:", err);
 
             if (err.response) {
-                switch (err.response.status) {
-                    case 400:
-                        setError(err.response.data?.message || 'Invalid OTP');
-                        break;
-                    case 404:
-                        setError('OTP not found');
-                        break;
-                    case 410:
-                        setError('OTP expired');
-                        break;
-                    default:
-                        setError(err.response.data?.message || 'Failed to verify OTP');
+
+                const status = err.response.status;
+
+                if (status === 400) {
+                    setError(err.response.data?.message || "Invalid OTP");
                 }
-            } else if (err.request) {
-                setError('Network error. Please check your connection');
-            } else {
-                setError('An error occurred. Please try again');
+                else if (status === 404) {
+                    setError("OTP not found");
+                }
+                else if (status === 410) {
+                    setError("OTP expired");
+                }
+                else {
+                    setError(err.response.data?.message || "Failed to verify OTP");
+                }
+
             }
+            else if (err.request) {
+
+                setError("Network error. Please check your connection");
+
+            }
+            else {
+
+                setError("Something went wrong");
+
+            }
+
         } finally {
+
             setIsLoading(false);
+
         }
+
     };
 
 
