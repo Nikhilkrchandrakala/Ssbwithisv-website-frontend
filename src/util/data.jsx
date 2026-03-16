@@ -913,3 +913,272 @@ export const faqData = [
         isOpen: false
     }
 ];
+
+export const faqDataHome = [
+    {
+        id: "faq1",
+        question: "What is the best way to prepare for SSB interview?",
+        answer: "The best way to prepare for the SSB interview is to understand the assessment process, work on officer-like qualities, practice psychology tests such as TAT, WAT and SRT, and participate in group discussions and leadership activities.",
+        isOpen: true
+    },
+    {
+        id: "faq2",
+        question: "How to choose the best SSB coaching institute for me?",
+        answer: "Choose an institute that provides guidance from experienced assessors or defence veterans, structured preparation for psychology, GTO tasks and interviews, and personalized mentoring to develop your personality and leadership qualities.",
+        isOpen: false
+    },
+    {
+        id: "faq3",
+        question: "Can SSB be cleared without coaching?",
+        answer: "Yes, SSB can be cleared without coaching if a candidate understands the process well, works on personality development and practices the required tests. However, professional guidance can help avoid common mistakes and myths.",
+        isOpen: false
+    },
+    {
+        id: "faq4",
+        question: "What are the psychology tests in SSB?",
+        answer: "The psychology tests in SSB include Thematic Apperception Test (TAT), Word Association Test (WAT), Situation Reaction Test (SRT) and Self Description Test (SDT). These tests evaluate the candidate’s thought process and personality traits.",
+        isOpen: false
+    },
+    {
+        id: "faq5",
+        question: "How long does SSB preparation take?",
+        answer: "SSB preparation time varies for each candidate, but generally a focused preparation period of 1 to 3 months is considered sufficient to understand the process and develop the required officer-like qualities.",
+        isOpen: false
+    },
+    {
+        id: "faq6",
+        question: "Is virtual training sufficient for cracking SSB?",
+        answer: "Yes, virtual training can be effective when it includes structured mentoring, psychology test practice, interview guidance and group task simulations that help candidates understand the SSB assessment process.",
+        isOpen: false
+    }
+];
+
+
+
+export const ssbTopics = [
+    {
+        title: "Introduction to SSB & Stage 1 Screening Tests",
+        content: `The first module provides candidates with a detailed understanding of the Services Selection Board selection process, including the structure and objectives of the five-day SSB assessment.
+
+Candidates learn about the Stage 1 screening tests including Officer Intelligence Rating (OIR) and the Picture Perception and Discussion Test (PPDT). These tests determine whether candidates proceed to the remaining stages of the SSB interview.
+
+Through guided practice and analysis, aspirants learn how to approach picture perception, structure their thoughts clearly and participate effectively in group discussions.`
+    },
+
+    {
+        title: "PIQ Form Analysis & Personal Interview Preparation",
+        content: `The Personal Information Questionnaire (PIQ) forms the basis of the personal interview conducted by the Interviewing Officer.
+
+Candidates learn how to present their personal background, achievements, academic history and hobbies authentically while demonstrating leadership potential.
+
+Training helps aspirants develop structured thinking and confident communication required for the SSB interview.`
+    },
+
+    {
+        title: "Mock Interview by a DIPR Certified Interviewing Officer",
+        content: `Candidates participate in a realistic mock interview conducted by a DIPR certified Interviewing Officer.
+
+After the mock interview, candidates receive feedback on communication style, clarity of thought, confidence, consistency of responses and demonstration of officer-like qualities.`
+    },
+
+    {
+        title: "SSB Psychology Tests Preparation",
+        content: `This module explains the psychological tests conducted during the SSB interview including:
+
+• Thematic Apperception Test (TAT)
+• Word Association Test (WAT)
+• Situation Reaction Test (SRT)
+• Self Description Test (SDT)
+
+Candidates learn how psychologists interpret responses and how to develop authentic thinking patterns instead of memorized answers.`
+    },
+
+    {
+        title: "Mock Psychology Test and Detailed Feedback",
+        content: `Candidates undergo a complete mock psychological testing session including TAT story writing, WAT responses, SRT situations and self description evaluation.
+
+A DIPR certified psychologist provides individual feedback to improve thinking patterns and behavioural responses.`
+    },
+
+    {
+        title: "Group Situational Tasks & GTO Training",
+        content: `Candidates are trained for GTO tasks such as:
+
+• Group Discussion
+• Group Planning Exercise
+• Progressive Group Task
+• Half Group Task
+• Lecturette
+• Command Task
+• Individual Obstacles
+• Final Group Task
+
+These activities evaluate leadership, cooperation and problem-solving ability.`
+    },
+
+    {
+        title: "Officer Like Qualities (OLQ) Theory",
+        content: `The SSB assessment system evaluates 15 Officer Like Qualities including initiative, reasoning ability, self-confidence, cooperation, determination, courage and stamina.
+
+This module helps candidates understand how OLQs are assessed during psychology tests, group tasks and interviews.`
+    },
+
+    {
+        title: "Conference Procedure",
+        content: `The conference is the final stage of the SSB interview where all assessors discuss the performance of each candidate before making the final recommendation.
+
+Candidates learn how their performance across all five days is evaluated.`
+    },
+
+    {
+        title: "Correlation Between Psychologist, GTO and Interviewing Officer",
+        content: `The final recommendation in SSB is based on triangulation of observations from the Psychologist, Group Testing Officer and Interviewing Officer.
+
+Consistency of behaviour across all tests plays a crucial role in final selection.`
+    },
+
+    {
+        title: "Individual Feedback and Mentoring",
+        content: `The program concludes with personalised mentoring and feedback sessions where candidates understand their strengths, areas of improvement and strategies to develop officer-like qualities.`
+    },
+
+    {
+        title: "Why Choose SSB with ISV for SSB Coaching",
+        content: `SSB with ISV focuses on authentic personality development based on the philosophy of Manasa – Vacha – Karmana.
+
+Through structured mentoring and realistic simulations we help candidates develop the mindset required to succeed in the SSB interview and serve as officers in the Indian Armed Forces.`
+    }
+];
+
+
+export const CoursesfaqData = [
+    {
+        id: "faq1",
+        question: "What is the best way to prepare for the SSB interview?",
+        answer: `The best way to prepare for the Services Selection Board (SSB) interview is to focus on personality development, leadership behaviour, and clarity of thought rather than memorized answers. Effective SSB preparation involves understanding the five-day selection process, practicing psychology tests such as TAT, WAT, and SRT, improving group discussion skills, and developing officer-like qualities through structured training. Programs like the SSB coaching and mentoring courses at SSB with ISV help aspirants understand the assessment methodology used by psychologists, GTOs, and interviewing officers.`,
+        isOpen: true
+    },
+    {
+        id: "faq2",
+        question: "Can SSB be cleared without coaching?",
+        answer: `Yes, it is possible to clear the SSB interview without formal coaching. However, structured SSB training programs help candidates understand the selection process, psychological tests, and group tasks more clearly. Many aspirants choose SSB coaching to gain insights into how assessors evaluate leadership behaviour, decision making, and officer-like qualities during the interview process.`,
+        isOpen: false
+    },
+    {
+        id: "faq3",
+        question: "What are the psychology tests conducted in the SSB interview?",
+        answer: `The SSB interview includes several psychological tests designed to understand a candidate’s personality and thinking patterns. These include Thematic Apperception Test (TAT), Word Association Test (WAT), Situation Reaction Test (SRT), and Self Description Test (SDT). These tests help psychologists assess emotional stability, problem solving ability, leadership traits, and consistency in behaviour.`,
+        isOpen: false
+    },
+    {
+        id: "faq4",
+        question: "What are GTO tasks in the SSB interview?",
+        answer: `GTO tasks are conducted by the Group Testing Officer to evaluate a candidate’s behaviour in group situations. Common GTO tasks include Group Discussion, Group Planning Exercise, Progressive Group Task, Half Group Task, Command Task, Lecturette, Individual Obstacles, and Final Group Task. These activities assess qualities such as teamwork, leadership, communication, initiative, and decision-making ability.`,
+        isOpen: false
+    },
+    {
+        id: "faq5",
+        question: "How long does it take to prepare for the SSB interview?",
+        answer: `SSB preparation timelines vary depending on the candidate’s background and familiarity with the selection process. Many candidates begin preparing 2–3 months before their SSB interview, focusing on personality development, psychological test practice, and understanding GTO tasks. Structured SSB coaching programs help aspirants accelerate their preparation by providing clarity on the evaluation process and guidance on developing officer-like qualities.`,
+        isOpen: false
+    },
+    {
+        id: "faq6",
+        question: "What are Officer Like Qualities (OLQs)?",
+        answer: `Officer Like Qualities are the personality traits evaluated during the SSB selection process to identify potential officers for the Indian Armed Forces. There are 15 OLQs broadly grouped into areas such as effective intelligence, reasoning ability, initiative, self confidence, cooperation, responsibility, determination, courage, and stamina. These qualities are assessed across psychology tests, group tasks, and personal interviews.`,
+        isOpen: false
+    },
+    {
+        id: "faq7",
+        question: "Is online SSB coaching effective?",
+        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Experience (VTX™) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
+        isOpen: false
+    }
+];
+
+
+export const vtxFaqData = [
+    {
+        id: "vtxFaq1",
+        question: "What is VTX™ in SSB preparation?",
+        answer:
+            "VTX™ (Virtual Training Xperience) is a virtual training environment designed to simulate the GTO ground used in the Services Selection Board interview. It helps aspirants understand how group tasks are structured and how behaviour is observed during the SSB assessment process.",
+        isOpen: true
+    },
+    {
+        id: "vtxFaq2",
+        question: "Can SSB preparation be done online?",
+        answer:
+            "Yes. With structured mentoring programs and simulation platforms like VTX™, candidates can prepare effectively for the SSB interview remotely. Online preparation helps aspirants understand the selection process, psychological tests, and group task dynamics before appearing at the board.",
+        isOpen: false
+    },
+    {
+        id: "vtxFaq3",
+        question: "Does VTX™ help in understanding GTO tasks?",
+        answer:
+            "Yes. The platform helps aspirants understand how tasks such as Progressive Group Task (PGT), Half Group Task (HGT), Command Task, and Group Discussions are structured and evaluated during the SSB interview.",
+        isOpen: false
+    },
+    {
+        id: "vtxFaq4",
+        question: "Who should use virtual SSB training?",
+        answer:
+            "Candidates preparing for NDA, CDS, AFCAT, NCC Special Entry, and other defence entries can benefit from virtual SSB preparation. It is particularly useful for aspirants who do not have access to a physical GTO ground for practice.",
+        isOpen: false
+    },
+    {
+        id: "vtxFaq5",
+        question: "Is VTX™ a shortcut for SSB preparation?",
+        answer:
+            "No. VTX™ (Virtual Training Xperience) is not a shortcut to clearing the SSB interview. The Services Selection Board evaluates a candidate’s personality, leadership potential, decision-making ability, and officer-like qualities, which cannot be developed through shortcuts or memorized responses. Instead, VTX™ helps aspirants understand the structure and behavioural expectations of the SSB process.",
+        isOpen: false
+    }
+];
+
+
+export const hallOfFameFaqData = [
+    {
+        id: "hofFaq1",
+        question: "What does it mean to be recommended in the SSB interview?",
+        answer:
+            "Being recommended means that the assessors at the Services Selection Board have found the candidate suitable for officer training based on their personality traits, leadership potential, and officer-like qualities.",
+        isOpen: true
+    },
+    {
+        id: "hofFaq2",
+        question: "How many candidates get recommended in SSB?",
+        answer:
+            "The number of recommended candidates varies depending on the board and the entry scheme. Only candidates who consistently demonstrate strong behavioural traits across psychology tests, group tasks, and interviews are recommended.",
+        isOpen: false
+    },
+    {
+        id: "hofFaq3",
+        question: "Can SSB success stories help in preparation?",
+        answer:
+            "Yes. Learning from the experiences of recommended candidates can provide valuable insights into how the SSB selection process works and what qualities assessors look for during the interview.",
+        isOpen: false
+    }
+];
+
+
+export const scheduleData = {
+    morning: [
+        { day: 1, time: "7:30 - 11:00 AM", topic: "Introduction to SSB, OIR & PPDT", by: "GTO" },
+        { day: 1, time: "5:30 - 8:00 PM", topic: "Psych Theory Session 1", by: "Psychologist" },
+        { day: 2, time: "7:30 - 11:00 AM", topic: "OLQs & Correlation", by: "GTO" },
+        { day: 2, time: "5:30 - 8:00 PM", topic: "Psych Theory Session 2", by: "Psychologist" },
+        { day: 3, time: "7:30 - 11:00 AM", topic: "Introduction to Group Testing", by: "GTO" },
+        { day: 3, time: "5:30 - 8:00 PM", topic: "How to fill PIQ & Interview Theory", by: "IO" },
+        { day: 4, time: "7:30 - 11:00 AM", topic: "Group Planning Exercise", by: "GTO" },
+    ],
+
+    evening: [
+        { day: 1, time: "7:30 - 11:00 PM", topic: "Introduction to SSB, OIR & PPDT", by: "GTO" },
+        { day: 1, time: "5:00 - 8:00 AM", topic: "Psych Theory Session 1", by: "Psychologist" },
+        { day: 2, time: "7:30 - 11:00 PM", topic: "OLQs & Correlation", by: "GTO" },
+        { day: 2, time: "5:00 - 8:00 AM", topic: "Psych Theory Session 2", by: "Psychologist" },
+        { day: 3, time: "7:30 - 11:00 PM", topic: "Introduction to Group Testing", by: "GTO" },
+        { day: 3, time: "7:00 - 8:00 AM", topic: "How to fill PIQ & Interview Theory", by: "IO" },
+        { day: 4, time: "7:30 - 11:00 PM", topic: "Group Planning Exercise", by: "GTO" },
+    ],
+};

@@ -3,13 +3,14 @@ import styles from "../style/SelectionMap.module.css";
 import IndiaSVG from "./IndiaSVG";
 import { style } from "framer-motion/client";
 import { faqData } from "../util/data";
+import Faq from "./Faq";
 
 export default function SelectionMap() {
     const [activeTab, setActiveTab] = useState("army");
     const [hoveredRegion, setHoveredRegion] = useState(null);
 
 
-//   {faqData}
+    //   {faqData}
 
 
     const selectionCenters = {
@@ -99,8 +100,10 @@ export default function SelectionMap() {
                 </div>
             </section>
 
+          
 
-           
+
+
         </>
 
 

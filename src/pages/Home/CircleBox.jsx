@@ -71,9 +71,8 @@ function CircleBox() {
                     </div>
 
                     <p className={styles.titleOfSecondSection}>
-                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTX™).
-                        Led by veterans of the Indian Armed Forces, SSB with ISV is a venture that comes with a promise to
-                        guide and prepare aspiring officers for success in the Services Selection Board.
+                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTXtm). At SSB with ISV, we provide structured SSB coaching and interview preparation designed to help aspirants understand the assessment process and develop authentic leadership behaviour. Our mentoring programs cover psychology tests such as TAT, WAT, SRT, GTO tasks, PIQ analysis, and personal interview training. Led by veterans of the Indian Armed Forces, SSB with ISV comes with a promise to guide and prepare aspiring officers for success in the Services Selection Board.
+
                     </p>
 
                     <p className={styles.titleOfThirdSection}>
@@ -83,6 +82,22 @@ function CircleBox() {
                         <span className={styles.divider}>/</span>
                         <span className={styles.text}>Virtual GTO Training Experience</span>
                     </p>
+
+                    <div className={styles.whySection}>
+                        <h3 className={styles.whyHeading}>
+                            Why SSB with ISV is one of the best SSB coaching institutes in India
+                        </h3>
+
+                        <ul className={styles.whyList}>
+                            <li>Mentoring by former GTO officers</li>
+                            <li>First hand exposure to a virtual GTO ground</li>
+                            <li>Psychology test preparation (TAT, WAT, SRT)</li>
+                            <li>GTO task practice</li>
+                            <li>Leadership and personality development</li>
+                            <li>Personalized SSB interview guidance</li>
+                        </ul>
+                    </div>
+
 
                     {!user && (<div style={{ marginTop: '30px' }}>
                         <CustomButton text="Sign Up Now" onClick={handelLogin} />

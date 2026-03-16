@@ -103,77 +103,105 @@ const Courses = () => {
     const navigate = useNavigate();
 
     return (
-        <section className={styles.coursesSection}>
-            {/* Header */}
-            <div className={styles.header}>
-                <Heading h1='Our Courses' />
-                <CustomButton
-                    text='Know More'
-                    onClick={() => navigate('/Courses')}
-                />
-            </div>
+        <>
 
-            {/* Content */}
-            <div className={styles.content}>
-                {/* LEFT LIST - Desktop / Horizontal Cards - Mobile */}
-                <div
-                    className={`${styles.courseList} ${isMobile ? styles.mobileList : ''}`}
-                    ref={courseListRef}
-                    onScroll={handleScroll}
-                >
-                    {coursesData?.map((course, index) => (
-                        <div
-                            key={course.id}
-                            ref={el => cardRefs.current[index] = el}
-                            className={`${styles.courseCard} ${activeCard === index ? styles.active : styles.inactive}`}
-                            onClick={() => handleCardClick(index)}
-                        >
-                            <div className={styles.cardContent}>
-                                {/* Corner Brackets */}
-                                <div className={`${styles.corner} ${styles.tl}`}></div>
-                                <div className={`${styles.corner} ${styles.tr}`}></div>
-                                <div className={`${styles.corner} ${styles.bl}`}></div>
-                                <div className={`${styles.corner} ${styles.br}`}></div>
+            <section className={styles.coursesSection}>
+                {/* Header */}
+                <div className={styles.header}>
+                    <Heading h1='Our Courses' />
+                    <CustomButton
+                        text='Know More'
+                        onClick={() => navigate('/Courses')}
+                    />
+                </div>
 
-                                {/* Card Content */}
-                                <div className={styles.cardInner}>
-                                    <h1 className={styles.number}>{course.number}</h1>
-                                    <h2>{course.title}</h2>
-                                    <p>Total Sessions - {course.sessions}</p>
-                                    <p>Total Learning Hours - {course.hours}</p>
+                {/* Content */}
+                <div className={styles.content}>
+                    {/* LEFT LIST - Desktop / Horizontal Cards - Mobile */}
+                    <div
+                        className={`${styles.courseList} ${isMobile ? styles.mobileList : ''}`}
+                        ref={courseListRef}
+                        onScroll={handleScroll}
+                    >
+                        {coursesData?.map((course, index) => (
+                            <div
+                                key={course.id}
+                                ref={el => cardRefs.current[index] = el}
+                                className={`${styles.courseCard} ${activeCard === index ? styles.active : styles.inactive}`}
+                                onClick={() => handleCardClick(index)}
+                            >
+                                <div className={styles.cardContent}>
+                                    {/* Corner Brackets */}
+                                    <div className={`${styles.corner} ${styles.tl}`}></div>
+                                    <div className={`${styles.corner} ${styles.tr}`}></div>
+                                    <div className={`${styles.corner} ${styles.bl}`}></div>
+                                    <div className={`${styles.corner} ${styles.br}`}></div>
+
+                                    {/* Card Content */}
+                                    <div className={styles.cardInner}>
+                                        <h1 className={styles.number}>{course.number}</h1>
+                                        <h2>{course.title}</h2>
+                                        <p>Total Sessions - {course.sessions}</p>
+                                        <p>Total Learning Hours - {course.hours}</p>
+                                    </div>
                                 </div>
                             </div>
+                        ))}
+                    </div>
+
+                    {/* CARD INDICATOR DOTS */}
+                    <div className={styles.cardIndicator}>
+                        {coursesData.map((_, index) => (
+                            <div
+                                key={index}
+                                className={`${styles.indicatorDot} ${activeCard === index ? styles.active : ''}`}
+                                onClick={() => handleIndicatorClick(index)}
+                                title={`Course ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+
+                    {/* RIGHT IMAGE PANEL */}
+                    <div
+                        className={styles.preview}
+                        style={{
+                            backgroundImage: `url(${coursesData[activeCard]?.image || '/assets/img/courses/default.webp'})`
+                        }}
+                    >
+                        <div className={styles.previewOverlay}>
+                            <h1 className={styles.courseTitle}>
+                                <span className={styles.white}>{coursesData[activeCard]?.description}</span>
+                            </h1>
                         </div>
-                    ))}
-                </div>
-
-                {/* CARD INDICATOR DOTS */}
-                <div className={styles.cardIndicator}>
-                    {coursesData.map((_, index) => (
-                        <div
-                            key={index}
-                            className={`${styles.indicatorDot} ${activeCard === index ? styles.active : ''}`}
-                            onClick={() => handleIndicatorClick(index)}
-                            title={`Course ${index + 1}`}
-                        />
-                    ))}
-                </div>
-
-                {/* RIGHT IMAGE PANEL */}
-                <div
-                    className={styles.preview}
-                    style={{
-                        backgroundImage: `url(${coursesData[activeCard]?.image || '/assets/img/courses/default.webp'})`
-                    }}
-                >
-                    <div className={styles.previewOverlay}>
-                        <h1 className={styles.courseTitle}>
-                            <span className={styles.white}>{coursesData[activeCard]?.description}</span>
-                        </h1>
                     </div>
                 </div>
-            </div>
-        </section>
+
+                <section className={styles.whoSection}>
+                    <div className={styles.whoContainer}>
+
+                        <Heading h1="Who Should Join Our SSB Coaching Program" />
+
+                        <div className={styles.whoGrid}>
+
+                            <div className={styles.whoCard}>NDA aspirants</div>
+
+                            <div className={styles.whoCard}>CDS aspirants</div>
+
+                            <div className={styles.whoCard}>AFCAT aspirants</div>
+
+                            <div className={styles.whoCard}>TES candidates</div>
+
+                            <div className={styles.whoCard}>NCC special entry candidates</div>
+
+                        </div>
+
+                    </div>
+                </section>
+            </section>
+            {/* WHO SHOULD JOIN SECTION */}
+
+
+        </>
     );
 };
 

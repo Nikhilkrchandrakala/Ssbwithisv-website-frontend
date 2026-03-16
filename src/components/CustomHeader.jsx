@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 
 
-function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, color2 }) {
+function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, color2, headingTwo, preragraph, preragraphTwo }) {
 
     const navigate = useNavigate()
 
@@ -63,8 +63,21 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
                         </div>
 
                         {color2 && <div className="col-xl-7">
-                            <img src='/assets/karam.webp' alt='Shape2'  style={{ width: '250px' }} />
+                            <img src='/assets/karam.webp' alt='Shape2' style={{ width: '250px' }} />
                         </div>}
+
+
+                        {headingTwo && <h1 className="breed-title mt-4">{headingTwo}</h1>}
+
+
+                        {preragraph && <p className="breed-subtitle">
+                            {preragraph}
+                        </p>}
+
+                        {preragraphTwo && <p className="breed-subtitle">
+                            {preragraphTwo}
+                        </p>}
+
 
 
                     </div>

@@ -3,6 +3,8 @@ import Navbar from "../Navbar";
 import Footer from "../Footer";
 import CircleBox from "./CircleBox";
 import { Helmet } from "react-helmet-async";
+import Faq from "../../components/Faq";
+import { faqDataHome } from "../../util/data";
 
 const OurMentor = lazy(() => import("./OurMentor"));
 const Philosophy = lazy(() => import("./Philosophy"));
@@ -14,18 +16,22 @@ const AllYouNeed = lazy(() => import("./AllYouNeed"));
 const From = lazy(() => import("../From"));
 
 function Home() {
+
+    // {}
     return (
         <>
             {/* import { Helmet } from "react-helmet"; */}
 
             <Helmet>
                 <title>
-                    Best online SSB Coaching in India with over 50% recommendation rate
+                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
+                    Best SSB Coaching in India | Online SSB Training by Ex-GTO | SSB with ISV
                 </title>
 
                 <meta
                     name="description"
-                    content="India’s trusted SSB coaching institute led by ex-SSB assessors. Complete SSB preparation for Army, Navy & Air Force aspirants."
+                    content="Prepare for the Services Selection Board (SSB) with India’s leading SSB coaching institute. Learn how to crack SSB interviews, psychology tests, GTO tasks and leadership assessments through expert mentoring by  a former GTO officer and veterans from the Defence forces. 
+"
                 />
 
                 <script type="application/ld+json">
@@ -101,6 +107,7 @@ function Home() {
                 <Resources />
                 <RogerThat />
                 <AllYouNeed />
+                <Faq data={faqDataHome} />
                 <From />
             </Suspense>
 

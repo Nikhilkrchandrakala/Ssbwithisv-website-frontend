@@ -494,3 +494,82 @@
     height: 10px;
   }
 }
+
+
+/* =========================
+   WHO SHOULD JOIN SECTION
+========================= */
+
+.whoSection{
+  /* padding: 80px 80px; */
+  background: linear-gradient(270deg,#111015 0%,#111111 50%,#111015 100%);
+}
+
+.whoContainer{
+  max-width: 1200px;
+  margin: auto;
+}
+
+.whoGrid{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.whoCard{
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 10px;
+  text-align: center;
+  font-size: 18px;
+  color:#c6c5af;
+  background:#1f1f21;
+  transition: all .3s ease;
+  position: relative;
+}
+
+.whoCard:hover{
+  background:#0b0b0b;
+  border-color:#747266;
+  transform: translateY(-5px);
+}
+
+/* GOLD DOT */
+
+.whoCard::before{
+  content:"";
+  width:8px;
+  height:8px;
+  background:#d2a100;
+  border-radius:50%;
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+
+@media(max-width:1024px){
+
+.whoGrid{
+  grid-template-columns: repeat(2,1fr);
+}
+
+}
+
+@media(max-width:768px){
+
+.whoSection{
+  padding:50px 20px;
+}
+
+.whoGrid{
+  grid-template-columns:1fr;
+  gap:20px;
+}
+
+.whoCard{
+  font-size:16px;
+}
+
+}

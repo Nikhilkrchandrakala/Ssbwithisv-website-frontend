@@ -800,3 +800,57 @@
         background-position: center;
     }
 }
+
+
+/* WHY SSB SECTION */
+
+.whySection {
+    margin-top: 30px;
+    width: 70%;
+}
+
+.whyHeading {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.whyList {
+    list-style: none;
+    padding-left: 0;
+}
+
+.whyList li {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    color: #C6C5AF;
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.whyList li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #D2A100;
+    font-size: 18px;
+}
+
+@media (max-width:768px) {
+
+    .whySection {
+        width: 100%;
+    }
+
+    .whyHeading {
+        font-size: 18px;
+    }
+
+    .whyList li {
+        font-size: 14px;
+    }
+
+}

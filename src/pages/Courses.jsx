@@ -3,16 +3,17 @@ import CustomHeader from "../components/CustomHeader";
 import From from "./From";
 import Footer from "./Footer";
 import { Helmet } from "react-helmet-async";
+import { CoursesfaqData, scheduleData } from "../util/data";
+import Faq from "../components/Faq";
 
 function Courses() {
+
     const [activeTab, setActiveTab] = useState("c1");
+    const [scheduleTab, setScheduleTab] = useState("morning");
 
     const data = {
         heading: "Our Courses",
-        text: `Our courses offer structured SSB preparation within a supportive mentoring ecosystem.
-        With direct guidance from ex-SSB DIPR certified assessors and a strong emphasis on the psychology of assessment,
-        students learn to align their thinking, behaviour, and actions with the expectations of the
-        Services Selection Board.`,
+        text: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
         banner: '/assets/website/courses_banner.webp',
 
     };
@@ -67,6 +68,38 @@ function Courses() {
 
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
+
+            <section className="container sectionspace60">
+                <div className="course-intro">
+
+                    <p>
+                        At SSB with ISV, we offer a comprehensive SSB coaching and interview preparation
+                        program designed to help aspirants understand the psychology behind the
+                        SSB selection process and develop the behavioural traits expected of future
+                        officers in the Indian Armed Forces.
+                    </p>
+
+                    <p>
+                        Our structured mentoring program combines theoretical understanding,
+                        practical training, mock assessments, and personalised feedback to help
+                        candidates build clarity, confidence, and authenticity during the SSB interview.
+                    </p>
+
+                    <h3 className="course-intro-title">
+                        The course is designed for aspirants preparing for:
+                    </h3>
+
+                    <ul className="course-intro-list">
+                        <li>NDA SSB Interview</li>
+                        <li>CDS SSB Interview</li>
+                        <li>AFCAT SSB Interview</li>
+                        <li>TES Entry</li>
+                        <li>NCC Special Entry</li>
+                        <li>Direct Entry into the Armed Forces</li>
+                    </ul>
+
+                </div>
+            </section>
 
             <section className="container sectionspace80">
                 <div className="our-courses-section">
@@ -195,6 +228,18 @@ function Courses() {
                                     <li>
                                         Two General Awareness sessions with Mentor-in-Residence
                                     </li>
+
+
+                                    <li>
+                                        This intensive SSB training program is designed to simulate the learning and behavioural development required to successfully navigate the Services Selection Board interview process.
+                                    </li>
+                                    <li>
+                                        Over ten structured sessions, candidates receive training across all major areas evaluated during the SSB selection process, including screening tests, psychological assessments, group testing officer tasks, personal interview preparation, and officer-like qualities development.
+                                    </li>
+                                    <li>
+                                        The program blends theoretical learning with practical exercises, mock tests, and expert feedback, helping aspirants understand how assessors evaluate behaviour and leadership potential.
+                                    </li>
+
                                     {/* <li>Introduction to SSB & Stage 1 Testing </li>
                                     <li>PIQ Form & Interview Procedure</li>
                                     <li>Mock Interview by DIPR certified IO</li>
@@ -342,6 +387,103 @@ function Courses() {
                     </div>
                 </div>
             </section>
+
+
+
+
+            <section className="container sectionspace80">
+
+                <div className="schedule-section">
+
+                    <h2 className="schedule-title">SSB Hackathon Schedule</h2>
+
+                    {/* TABS */}
+                    <div className="schedule-tabs">
+
+                        <button
+                            className={scheduleTab === "morning" ? "active" : ""}
+                            onClick={() => setScheduleTab("morning")}
+                        >
+                            Morning Batch
+                        </button>
+
+                        <button
+                            className={scheduleTab === "evening" ? "active" : ""}
+                            onClick={() => setScheduleTab("evening")}
+                        >
+                            Evening Batch
+                        </button>
+
+                    </div>
+
+
+                    {/* DESKTOP TABLE */}
+                    <div className="schedule-table-wrapper">
+
+                        <table className="schedule-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Topic</th>
+                                    <th>Classes Taken By</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {scheduleData[scheduleTab]?.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>{item.day}</td>
+                                        <td>{item.time}</td>
+                                        <td>{item.topic}</td>
+                                        <td>{item.by}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    {/* MOBILE CARD VIEW */}
+                    <div className="schedule-mobile">
+
+                        {scheduleData[scheduleTab]?.map((item, index) => (
+                            <div key={index} className="schedule-card">
+
+                                <div className="schedule-row">
+                                    <span>Day</span>
+                                    <p>{item.day}</p>
+                                </div>
+
+                                <div className="schedule-row">
+                                    <span>Time</span>
+                                    <p>{item.time}</p>
+                                </div>
+
+                                <div className="schedule-row">
+                                    <span>Topic</span>
+                                    <p>{item.topic}</p>
+                                </div>
+
+                                <div className="schedule-row">
+                                    <span>Classes Taken By</span>
+                                    <p>{item.by}</p>
+                                </div>
+
+                            </div>
+                        ))}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <Faq data={CoursesfaqData} />
 
             <From />
             <Footer />

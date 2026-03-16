@@ -83,6 +83,22 @@ const PhilosophySection = () => {
                                 <p className="recruitmentManasa">
                                     When the Manasa-Vacha-Karmana synchronizes, the human being becomes Limitless & Fearless
                                 </p>
+
+                                <div className="mvk-benefits">
+
+                                    <h3>How alignment to Manasa-Vacha-Karmana strengthens officer potential</h3>
+
+                                    <ul>
+                                        <li>Strengthens ownership mindset in a VUCA environment</li>
+                                        <li>Helps understand SSB psychology and assessment</li>
+                                        <li>Develop officer-like qualities</li>
+                                        <li>Improves decision making under pressure</li>
+                                        <li>Encourages group leadership and cooperation</li>
+                                        <li>Builds deeper self-awareness</li>
+                                    </ul>
+
+                                </div>
+
                             </div>
                         </>
 
@@ -120,11 +136,11 @@ const PhilosophySection = () => {
                 {/* RIGHT – STATIC CONTENT with smooth entrance */}
                 {isActive && (
                     <div className="text-area">
+
                         {circles.map((c) => (
                             <div
                                 key={c.id}
-                                className={`text-block ${activeCircle === c.id ? "active" : ""
-                                    }`}
+                                className={`text-block ${activeCircle === c.id ? "active" : ""}`}
                                 onMouseEnter={() => setActiveCircle(c.id)}
                             >
                                 <h2>{c.title}</h2>
@@ -132,7 +148,16 @@ const PhilosophySection = () => {
                                 <div>{c.desc2}</div>
                             </div>
                         ))}
+
+
+                        {/* NEW BENEFITS SECTION */}
+
+
+
                     </div>
+
+
+
                 )}
 
             </div>

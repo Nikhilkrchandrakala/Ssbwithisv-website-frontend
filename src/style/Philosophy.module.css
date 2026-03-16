@@ -97,3 +97,43 @@
 .hint {
   opacity: 0.6;
 }
+
+
+/* MANASA VACHA KARMANA BENEFITS */
+
+.mvk-benefits {
+  margin-top: 40px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+}
+
+.mvk-benefits h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #f2f0e1;
+}
+
+.mvk-benefits ul {
+  list-style: none;
+  padding: 0;
+}
+
+.mvk-benefits li {
+  font-size: 15px;
+  color: #c6c5af;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+  line-height: 24px;
+}
+
+/* gold bullet */
+
+.mvk-benefits li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #d2a100;
+  font-size: 18px;
+}

@@ -84,7 +84,7 @@
     padding-right: 20px;
     padding-top: 10px;
     /* justify-content: flex-end; */
-   
+
 }
 
 
@@ -280,3 +280,140 @@
 } */
 
 /* Line */
+
+.virtualTrainingSection {
+    color: #c6c5af;
+}
+
+.virtualTrainingText {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    color: #c6c5af;
+}
+
+.virtualTrainingSubtitle {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.virtualTrainingList {
+    margin-top: 10px;
+}
+
+.virtualItem {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.virtualItem::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #d2a100;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 9px;
+}
+
+.virtualTrainingImage img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+@media (max-width:768px) {
+
+    .virtualTrainingText {
+        font-size: 15px;
+    }
+
+    .virtualItem {
+        font-size: 14px;
+    }
+
+}
+
+.enable-item span {
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+.enable-item strong {
+    display: block;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   VTX Integration Section
+========================= */
+
+.vtxIntegrationSection {
+    color: #c6c5af;
+}
+
+.vtxIntegrationText {
+    font-size: 18px;
+    line-height: 1.7;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.vtxIntegrationSubtitle {
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.vtxIntegrationList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.vtxIntegrationItem {
+    position: relative;
+    padding-left: 18px;
+    font-size: 16px;
+}
+
+.vtxIntegrationItem::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #d2a100;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 9px;
+}
+
+@media (max-width:768px) {
+
+    .vtxIntegrationText {
+        font-size: 15px;
+    }
+
+    .vtxIntegrationList {
+        grid-template-columns: 1fr;
+    }
+
+    .vtxIntegrationItem {
+        font-size: 14px;
+    }
+
+}

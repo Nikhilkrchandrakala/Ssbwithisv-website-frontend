@@ -1,7 +1,7 @@
 import React from 'react'
-import { faqData } from '../util/data'
+// import {  } from '../util/data'
 
-function Faq() {
+function Faq({ data }) {
     return (
         <section className="FAQ-section sectionspace80">
             <div className="container">
@@ -11,7 +11,7 @@ function Faq() {
                 <div className="row g-4">
                     <div className="col-lg-9">
                         <div className="accordion faq-accordion" id="faqAccordion">
-                            {faqData.map((item, index) => (
+                            {data?.map((item, index) => (
                                 <div className="accordion-item" key={item.id}>
                                     <h2 className="accordion-header">
                                         <button
