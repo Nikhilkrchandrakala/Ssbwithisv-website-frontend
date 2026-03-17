@@ -1182,3 +1182,159 @@ export const scheduleData = {
         { day: 4, time: "7:30 - 11:00 PM", topic: "Group Planning Exercise", by: "GTO" },
     ],
 };
+
+
+export const CoursesModuleOne = [
+    {
+        title: "Introduction to SSB & Stage 1 Screening Tests",
+        content: `The first module provides candidates with a detailed understanding of the Services Selection Board selection process, including the structure and objectives of the five-day SSB assessment.
+Candidates learn about the Stage 1 screening tests, which include the Officer Intelligence Rating (OIR) test and the Picture Perception and Discussion Test (PPDT). These tests determine whether candidates proceed to the remaining stages of the SSB interview.
+Through guided practice and analysis, aspirants learn how to approach picture perception, structure their thoughts clearly, and participate effectively in group discussions. This module lays the foundation for effective SSB interview preparation by helping candidates understand how the screening process evaluates their observation skills, clarity of thought, and communication ability. `,
+        // "Detailed understanding of SSB process including 5-day structure, OIR and PPDT. Focus on observation, clarity and group discussion skills.",
+        points: []
+    },
+    {
+        title: "PIQ Form & Personal Interview Preparation",
+        content: `The Personal Information Questionnaire (PIQ) is one of the most important documents in the SSB interview process. The information provided in the PIQ form forms the basis of the personal interview conducted by the Interviewing Officer.This module focuses on helping candidates understand how to accurately present their personal background, achievements, academic history, hobbies, and life experiences in a way that reflects authenticity and leadership potential.
+Candidates learn how interview questions are derived from the PIQ form and how to answer them with confidence and clarity. This training helps aspirants develop strong communication skills and structured thinking, both of which are essential for success during the SSB personal interview.
+`,
+
+        // "Learn how to present personal details, achievements and background effectively and answer interview questions with clarity.",
+        points: []
+    },
+    {
+        title: "Mock Interview by DIPR Certified IO",
+        content: `One of the most valuable components of our SSB coaching program is the opportunity to participate in a realistic mock interview conducted by a DIPR certified Interviewing Officer. The mock interview simulates the actual environment of the SSB personal interview, allowing candidates to experience the type of questions, conversation flow, and behavioural evaluation used by the Services Selection Board.`,
+        // "Real interview simulation with detailed feedback to improve performance.",
+        points: [
+            "Communication style",
+            "Clarity of thought",
+            "Confidence and composure",
+            "Consistency of responses",
+            "Officer-like qualities"
+        ]
+    },
+    {
+        title: "Projective Technique Theory (Psych Tests)  Understanding SSB Psychology Tests",
+        content: `The psychological tests conducted during the SSB interview are designed to reveal a candidate’s natural thinking patterns, emotional stability, leadership traits, and problem-solving ability. This module introduces candidates to the theory and purpose of the major psychological assessments used in the SSB selection process, including:`,
+        // "Understanding psychological tests and how responses reflect personality traits.",
+        points: [
+            "Thematic Apperception Test (TAT)",
+            "Word Association Test (WAT)",
+            "Situation Reaction Test (SRT)",
+            "Self Description Test (SDT)"
+        ],
+        content2: `Candidates learn how these projective techniques work and how their responses are interpreted by psychologists. Instead of memorizing answers, aspirants are trained to develop clear thinking, logical reasoning, and authentic responses that reflect strong personality traits.`,
+        content3: 'This module is a critical component of SSB psychology test preparation.'
+    },
+    {
+        title: "Mock Psychology Test and Detailed  Feedback",
+        content:
+            "In this session, candidates undergo a complete mock psychological testing session conducted under conditions similar to the actual SSB assessment. The mock test includes:",
+        points: [
+            "TAT story writing",
+            "WAT responses",
+            "SRT situations",
+            "Self description evaluation"
+        ],
+        content2: `These exercises allow candidates to experience the time pressure and psychological evaluation format used during the SSB interview. After the test, a DIPR certified psychologist provides individual feedback, helping candidates understand how their responses reflect personality traits such as responsibility, initiative, emotional stability, and leadership potential. This structured feedback helps aspirants improve their thinking patterns and strengthen their psychological responses.`
+
+    },
+    {
+        title: "Group Situational Tasks (GTO Training)",
+        content:
+            "The Group Testing Officer (GTO) tasks form an essential part of the SSB assessment process. These tasks evaluate a candidate’s ability to function effectively in team environments, demonstrate leadership, and solve problems collaboratively. In this module, candidates learn the theory and structure behind various group testing activities, including:",
+        points: [
+            "Group Discussion",
+            "Group Planning Exercise",
+            "Progressive Group Task",
+            "Half Group Task",
+            "Group Obstacle Race",
+            "Lecturette",
+            "Individual Obstacles",
+            "Command Task",
+            "Final Group Task"
+        ],
+        content2: `Candidates are trained to understand how assessors evaluate behaviour during these activities and how to demonstrate qualities such as cooperation, initiative, communication, and leadership while working with others.
+`
+    },
+    {
+        title: "Genesis of Group Testing Technique",
+        content:
+            `This session explains the psychological principles behind the group testing techniques used in the SSB interview.
+Candidates learn how these tasks were designed to evaluate leadership behaviour and how Group Testing Officers observe specific behavioural indicators during group activities.
+The module helps aspirants understand what assessors look for in areas such as:`,
+        points: [
+            "Initiative",
+            "Team coordination",
+            "Decision making",
+            "Responsibility",
+            "Group influence"
+        ],
+
+        content2: `By understanding the logic behind these tests, candidates can approach group tasks with confidence and clarity.`
+    },
+    {
+        title: "Officer Like Qualities (OLQ) Theory",
+        content:
+            `The foundation of the SSB assessment system is the evaluation of Officer Like Qualities (OLQs).
+This module focuses on the 15 OLQs that define the personality traits expected from officers in the Indian Armed Forces. These qualities are assessed through psychology tests, group tasks, and personal interviews.
+Candidates learn how these qualities are categorized and how they influence the overall evaluation during the SSB selection process.
+Key OLQ areas include:`,
+        points: [
+            "Effective intelligence",
+            "Reasoning ability",
+            "Initiative",
+            "Self confidence",
+            "Cooperation",
+            "Sense of responsibility",
+            "Determination",
+            "Courage",
+            "Stamina"
+        ]
+    },
+    {
+        title: "Conference Procedure",
+        content:
+            "The conference is the final stage of the SSB interview process, where all assessors discuss the performance of each candidate before making the final recommendation. In this session, candidates learn what happens during the conference stage and how their performance across all five days of testing is evaluated. Understanding the conference procedure helps candidates maintain composure and confidence during the final interaction with the selection board.",
+        points: []
+    },
+    {
+        title: "Correlation Between Psychologist, GTO and Interviewing Officer",
+        content:
+            "One of the unique aspects of the Services Selection Board selection system is the triangulation method of assessment. In this method, the Psychologist, Group Testing Officer, and Interviewing Officer independently evaluate the candidate's personality and behaviour across different tests. The final recommendation is based on the correlation of observations from all three assessors. This module helps candidates understand how consistency of behaviour across different tests plays a crucial role in the final selection decision.",
+        points: []
+    },
+    {
+        title: "Individual Feedback & Mentoring",
+        content:
+            `The program concludes with a personalized mentoring and feedback session, where candidates receive insights into their overall performance.
+This session helps aspirants understand:`,
+        points: [
+            "Their strengths and personality traits",
+            "Areas of improvement",
+            "How to further develop officer-like qualities",
+            "Strategies for improving SSB performance"
+        ],
+        content2: 'This structured guidance helps candidates refine their preparation and approach future SSB interviews with greater clarity and confidence.'
+    },
+    // {
+    //     title: "Additional Sessions",
+    //     content:
+    //         "Extra sessions to enhance overall preparation.",
+    //     points: [
+    //         "Doubt clearing",
+    //         "Sociometry",
+    //         "General awareness sessions"
+    //     ]
+    // }
+];
+
+
+export const tabs = [
+    { id: "c1", label: "10 days Services Selection Board Hackathon" },
+    { id: "c2", label: "Introduction to SSB & PPDT, Stage 1 Process" },
+    { id: "c3", label: "Psychology Test Preparation Program" },
+    { id: "c4", label: "Interview Theory Course and Mock Interview" },
+    { id: "c5", label: "Group Testing Course" },
+];

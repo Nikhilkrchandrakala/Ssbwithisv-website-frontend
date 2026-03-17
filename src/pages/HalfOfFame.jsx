@@ -132,47 +132,43 @@ function HalfOfFame() {
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} color2={data.color2} />
 
 
-            <section className="hall-intro-section sectionspace80">
-                <div className="container">
-                    <div className="row justify-content-center">
 
-                        <div className="col-lg-10">
-
-                            <p className="hall-intro-text">
-                                The SSB interview is one of the most demanding leadership selection systems,
-                                evaluating a candidate’s personality, decision-making ability, teamwork,
-                                communication, and officer-like qualities through a structured five-day
-                                assessment process.
-                            </p>
-
-                            <p className="hall-intro-text">
-                                Candidates featured in this Hall of Fame have demonstrated the behavioural
-                                traits and leadership potential expected from officers in the Armed Forces.
-                                Their success stories reflect the importance of self-awareness, preparation,
-                                and consistent effort during SSB interview preparation.
-                            </p>
-
-                            <p className="hall-intro-text">
-                                Through structured mentoring, personality development training, and guidance
-                                on psychology tests, GTO tasks, and personal interview preparation, these
-                                aspirants prepared themselves to face the SSB selection process with clarity
-                                and confidence.
-                            </p>
-
-                            <p className="hall-intro-text">
-                                The Hall of Fame serves as an inspiration for future candidates preparing
-                                for NDA, CDS, AFCAT, and other defence entry schemes, showing that dedication
-                                and authentic preparation can lead to success in the SSB interview.
-                            </p>
-
-                        </div>
-
-                    </div>
-                </div>
-            </section>
 
             <section className="GTO-what-is-not-section sectionspace80">
-                <div className="container what-is-not-text-box px-0">
+
+                <div className="container">
+
+                    <p className="hall-intro-text">
+                        The SSB interview is one of the most demanding leadership selection systems,
+                        evaluating a candidate’s personality, decision-making ability, teamwork,
+                        communication, and officer-like qualities through a structured five-day
+                        assessment process.
+                    </p>
+
+                    <p className="hall-intro-text">
+                        Candidates featured in this Hall of Fame have demonstrated the behavioural
+                        traits and leadership potential expected from officers in the Armed Forces.
+                        Their success stories reflect the importance of self-awareness, preparation,
+                        and consistent effort during SSB interview preparation.
+                    </p>
+
+                    <p className="hall-intro-text">
+                        Through structured mentoring, personality development training, and guidance
+                        on psychology tests, GTO tasks, and personal interview preparation, these
+                        aspirants prepared themselves to face the SSB selection process with clarity
+                        and confidence.
+                    </p>
+
+                    <p className="hall-intro-text">
+                        The Hall of Fame serves as an inspiration for future candidates preparing
+                        for NDA, CDS, AFCAT, and other defence entry schemes, showing that dedication
+                        and authentic preparation can lead to success in the SSB interview.
+                    </p>
+
+                </div>
+
+
+                <div className="container what-is-not-text-box px-0 mt-5">
                     <div className="row g-0">
 
                         <div className="col-lg-12 px-0">

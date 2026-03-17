@@ -179,7 +179,7 @@ const Courses = () => {
                 <section className={styles.whoSection}>
                     <div className={styles.whoContainer}>
 
-                        <Heading h1="Who Should Join Our SSB Coaching Program" />
+                        {/* <Heading h1="Who Should Join Our SSB Coaching Program" /> */}
 
                         <div className={styles.whoGrid}>
 

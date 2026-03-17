@@ -3,7 +3,7 @@ import CustomHeader from "../components/CustomHeader";
 import From from "./From";
 import Footer from "./Footer";
 import { Helmet } from "react-helmet-async";
-import { CoursesfaqData, scheduleData } from "../util/data";
+import { CoursesfaqData, scheduleData, CoursesModuleOne, tabs } from "../util/data";
 import Faq from "../components/Faq";
 
 function Courses() {
@@ -11,20 +11,22 @@ function Courses() {
     const [activeTab, setActiveTab] = useState("c1");
     const [scheduleTab, setScheduleTab] = useState("morning");
 
+    const [openIndex, setOpenIndex] = useState(null);
+
+    const toggleAccordion = (index) => {
+        setOpenIndex(openIndex === index ? null : index);
+    };
+
     const data = {
-        heading: "Our Courses",
+        heading: "Our Courses - SSB Coaching & Interview Preparation Program",
         text: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
         banner: '/assets/website/courses_banner.webp',
 
     };
 
-    const tabs = [
-        { id: "c1", label: "10 days Services Selection Board Hackathon" },
-        { id: "c2", label: "Introduction to SSB & PPDT, Stage 1 Process" },
-        { id: "c3", label: "Psychology Test Preparation Program" },
-        { id: "c4", label: "Interview Theory Course and Mock Interview" },
-        { id: "c5", label: "Group Testing Course" },
-    ];
+
+
+
 
     return (
         <>
@@ -84,19 +86,29 @@ function Courses() {
                         practical training, mock assessments, and personalised feedback to help
                         candidates build clarity, confidence, and authenticity during the SSB interview.
                     </p>
-
+                    {/* 
                     <h3 className="course-intro-title">
                         The course is designed for aspirants preparing for:
                     </h3>
 
                     <ul className="course-intro-list">
-                        <li>NDA SSB Interview</li>
-                        <li>CDS SSB Interview</li>
-                        <li>AFCAT SSB Interview</li>
-                        <li>TES Entry</li>
-                        <li>NCC Special Entry</li>
-                        <li>Direct Entry into the Armed Forces</li>
-                    </ul>
+                      
+                    </ul> */}
+
+                    <div className="mvk-benefits">
+
+                        <h3>   The course is designed for aspirants preparing for:</h3>
+
+                        <ul>
+                            <li>NDA SSB Interview</li>
+                            <li>CDS SSB Interview</li>
+                            <li>AFCAT SSB Interview</li>
+                            <li>TES Entry</li>
+                            <li>NCC Special Entry</li>
+                            <li>Direct Entry into the Armed Forces</li>
+                        </ul>
+
+                    </div>
 
                 </div>
             </section>
@@ -126,16 +138,7 @@ function Courses() {
                                 </label>
 
 
-                                {/* <select
-                                    className="form-select thm-select w-100 w-md-auto"
-                                    value={selectedTag}
-                                    onChange={(e) => setSelectedTag(e.target.value)}
-                                >
-                                    <option value="all">All Resources</option>
-                                    <option value="Magazine">Current Affairs Magazine</option>
-                                    <option value="Books">Books</option>
-                                    <option value="SSBPrep">SSB Prep Material</option>
-                                </select> */}
+
 
                                 <select
                                     className="form-select thm-select w-100 w-md-auto"
@@ -179,77 +182,54 @@ function Courses() {
                                 <h2 className="course-tab-card-title">
                                     10 days Services Selection Board Hackathon
                                 </h2>
-                                {/* <p>INR 11000/- · 18% GST</p> */}
+
                                 <h3 className="course-tab-card-hours">
                                     <strong>Total Sessions:</strong> 10 |{" "}
                                     <strong>Total Learning Hours:</strong> 60
                                 </h3>
 
-                                <h3 className="m-0 fs-4 ">Topics Covered:</h3>
-                                <ul>
+                                <p>
+                                    This intensive SSB training program is designed to simulate the learning and behavioural development required to successfully navigate the Services Selection Board interview process.
+                                </p>
 
-                                    <li>
-                                        Introduction to SSB, Complete SSB Procedure, Stage 1 Testing – OIR Test, Picture Perception &
-                                        Discussion Test
-                                    </li>
-                                    <li>
-                                        PIQ Form and Interview Procedure
-                                    </li>
-                                    <li>
-                                        Mock Interview by a DIPR certified Interviewing Officer
-                                    </li>
-                                    <li>
-                                        Projective Technique Theory – Decoding the Psych Tests (Thematic Apperception Test, Word
-                                        Association Test, Situation Reaction Test, Self-Description Test)
-                                    </li>
-                                    <li>
-                                        Mock Psych Test and feedback by a DIPR certified Psychologist
-                                    </li>
-                                    <li>
-                                        Theory and Concepts of the Group Situational Tasks – Group Discussion, Group Planning
-                                        Exercise, Progressive Group Task, Group Obstacle Race, Half Group Task, Lecturette,
-                                        Individual Obstacles, Command Task, Final Group Task
-                                    </li>
-                                    <li>
-                                        Genesis of the Group Testing Technique and what GTO looks at during the Group Testing
-                                    </li>
-                                    <li>
-                                        Officer Like Qualities Theory and the OLQ Correlation
-                                    </li>
-                                    <li>
-                                        Conference Procedure
-                                    </li>
-                                    <li>
-                                        Correlation amongst all three techniques of assessment (GTO, Psych, IO)
-                                    </li>
-                                    <li>
-                                        Doubt Clearing, SOCIOMETRY, Individual Feedback
-                                    </li>
-                                    <li>
-                                        Two General Awareness sessions with Mentor-in-Residence
-                                    </li>
+                                <h3 className="m-0 fs-4">Topics Covered:</h3>
 
+                                <div className="ssb-accordion">
+                                    {CoursesModuleOne?.map((item, index) => (
+                                        <div key={index} className="ssb-accordion-item">
 
-                                    <li>
-                                        This intensive SSB training program is designed to simulate the learning and behavioural development required to successfully navigate the Services Selection Board interview process.
-                                    </li>
-                                    <li>
-                                        Over ten structured sessions, candidates receive training across all major areas evaluated during the SSB selection process, including screening tests, psychological assessments, group testing officer tasks, personal interview preparation, and officer-like qualities development.
-                                    </li>
-                                    <li>
-                                        The program blends theoretical learning with practical exercises, mock tests, and expert feedback, helping aspirants understand how assessors evaluate behaviour and leadership potential.
-                                    </li>
+                                            {/* TITLE */}
+                                            <div
+                                                className="ssb-accordion-title"
+                                                onClick={() => toggleAccordion(index)}
+                                            >
+                                                {item.title}
+                                                <span>{openIndex === index ? "-" : "+"}</span>
+                                            </div>
 
-                                    {/* <li>Introduction to SSB & Stage 1 Testing </li>
-                                    <li>PIQ Form & Interview Procedure</li>
-                                    <li>Mock Interview by DIPR certified IO</li>
-                                    <li>Psych Tests (TAT, WAT, SRT, SD)</li>
-                                    <li>Mock Psych Test & feedback</li>
-                                    <li>Group Testing Tasks (GTO)</li>
-                                    <li>Officer Like Qualities & Correlation</li>
-                                    <li>Conference Procedure</li>
-                                    <li>Doubt Clearing & Feedback</li> */}
-                                </ul>
+                                            {/* CONTENT */}
+                                            {openIndex === index && (
+                                                <div className="ssb-accordion-content">
+
+                                                    <p>{item.content}</p>
+
+                                                    {item.points?.length > 0 && (
+                                                        <ul>
+                                                            {item.points.map((point, i) => (
+                                                                <li key={i}>{point}</li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+
+                                                    <p>{item?.content2}</p>
+                                                    <p>{item?.content3}</p>
+
+                                                </div>
+                                            )}
+
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
 
@@ -478,6 +458,17 @@ function Courses() {
 
                     </div>
 
+                </div>
+
+            </section>
+
+
+            <section className="container sectionspace80">
+
+                <div className="mvk-benefits">
+
+                    <h3>Why Choose SSB with ISV for SSB Coaching</h3>
+                    <p>SSB with ISV focuses on authentic personality development rather than superficial coaching techniques.Our training philosophy is based on the principle of Manasa – Vacha – Karmana, emphasizing alignment between thought, communication, and action. Through structured mentoring, behavioural training, and realistic simulations, we help candidates develop the mindset and qualities required to succeed in the SSB interview and eventually serve as officers in the Indian Armed Forces.</p>
                 </div>
 
             </section>

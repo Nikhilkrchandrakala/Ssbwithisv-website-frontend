@@ -803,54 +803,34 @@
 
 
 /* WHY SSB SECTION */
-
-.whySection {
-    margin-top: 30px;
-    width: 70%;
-}
-
-.whyHeading {
-    font-family: var(--font-heading);
-    font-size: 22px;
-    font-weight: 500;
-    color: #ffffff;
-    margin-bottom: 12px;
-}
-
 .whyList {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 items per row */
+    gap: 10px 20px;
+    padding: 0;
     list-style: none;
-    padding-left: 0;
+    margin-top: 10px;
 }
 
 .whyList li {
-    font-family: var(--font-heading);
-    font-size: 16px;
-    color: #C6C5AF;
-    margin-bottom: 8px;
     position: relative;
-    padding-left: 20px;
+    padding-left: 18px;
+
 }
 
+/* optional bullet styling */
 .whyList li::before {
+    /* content: "✔"; */
     content: "•";
     position: absolute;
     left: 0;
-    color: #D2A100;
-    font-size: 18px;
+    /* : #e3c607; */
+    color: var(--secondary-color);
 }
 
-@media (max-width:768px) {
-
-    .whySection {
-        width: 100%;
+@media (max-width: 600px) {
+    .whyList {
+        grid-template-columns: 1fr;
     }
-
-    .whyHeading {
-        font-size: 18px;
-    }
-
-    .whyList li {
-        font-size: 14px;
-    }
-
 }

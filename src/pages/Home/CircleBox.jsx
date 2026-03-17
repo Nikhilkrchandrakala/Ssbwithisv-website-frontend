@@ -83,9 +83,9 @@ function CircleBox() {
                         <span className={styles.text}>Virtual GTO Training Experience</span>
                     </p>
 
-                    <div className={styles.whySection}>
+                    {/* <div className={styles.whySection}>
                         <h3 className={styles.whyHeading}>
-                            Why SSB with ISV is one of the best SSB coaching institutes in India
+
                         </h3>
 
                         <ul className={styles.whyList}>
@@ -96,7 +96,23 @@ function CircleBox() {
                             <li>Leadership and personality development</li>
                             <li>Personalized SSB interview guidance</li>
                         </ul>
+                    </div> */}
+
+                    <div className="mvk-benefits">
+
+                        <h3>  Why SSB with ISV is one of the best SSB coaching institutes in India</h3>
+
+                        <ul>
+                            <li>Mentoring by former GTO officers</li>
+                            <li>First hand exposure to a virtual GTO ground</li>
+                            <li>Psychology test preparation (TAT, WAT, SRT)</li>
+                            <li>GTO task practice</li>
+                            <li>Leadership and personality development</li>
+                            <li>Personalized SSB interview guidance</li>
+                        </ul>
+
                     </div>
+
 
 
                     {!user && (<div style={{ marginTop: '30px' }}>

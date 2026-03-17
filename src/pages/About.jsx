@@ -25,15 +25,15 @@ function About() {
 
     const data =
     {
-        heading: 'About us',
+        // heading: 'About us',
 
-        text: ' The Integrated SSB Virtuosos was setup on 04 July 2021 with a goal to shape India’s youth and fuel their aspirations to join Indian Armed Forces in the Officer Cadre.',
-        textTwo: `We are not just an academy, we’re a close-knit mentoring community. At SSB with ISV , every aspirant is personally guided by Lt Cdr Nikhil, whose experience of assessing over 13000 SSB candidates shapes our focused,
-         psychology-driven approach to SSB preparation. Our goal is simple yet powerful: to help deserving young aspirants realise the dream of becoming commissioned officers in the Indian Armed Forces.`,
+        text: 'SSB Coaching & Mentoring for Services Selection Board Preparation',
+        textTwo: `SSB with ISV is a mentoring platform dedicated to helping defence aspirants understand and prepare for the Services Selection Board (SSB) interview through authentic guidance, leadership development, and behavioural insight.
+What makes SSB with ISV different from conventional coaching institutes is that the mentoring is delivered by professionals who have direct experience with the SSB selection system itself. Candidates receive SSB coaching by an actual Group Testing Officer (GTO) along with guidance from former armed forces officers, providing insights that go far beyond theoretical preparation. This unique perspective helps aspirants understand how candidates are evaluated during the SSB interview and how officer-like qualities are observed in real situations.`,
         banner: '/assets/website/about_us_banner.webp',
 
-        headingTwo: "About SSB with ISV ",
-        preragraph: "SSB Coaching & Mentoring for Services Selection Board Preparation"
+        heading: "About SSB with ISV ",
+        // preragraph: "SSB Coaching & Mentoring for Services Selection Board Preparation"
 
 
 
@@ -177,37 +177,231 @@ function About() {
 
             <section className={`container sectionspace80 ${styles.aboutIntro}`}>
                 <div className="row justify-content-center">
-                    <div className="col-lg-10">
+                    {/* <div className="col-lg-10"> */}
 
-                        <div className="sct-title mb-4 text-center">
-                            <h2>SSB with ISV</h2>
-                        </div>
+
+
+
+
+
+
+                    <div className="mvk-benefits">
+
+                        <h3> Learning the SSB process from those who have assessed it</h3>
 
                         <p className={styles.aboutIntroText}>
-                            SSB with ISV is a mentoring platform dedicated to helping defence aspirants
-                            understand and prepare for the Services Selection Board (SSB) interview
-                            through authentic guidance, leadership development, and behavioural insight.
+                            The Services Selection Board interview is one of the most comprehensive leadership selection systems used anywhere in the world. The process evaluates personality traits such as decision-making ability, initiative, cooperation, emotional stability, and leadership potential.
+                            At SSB with ISV, candidates learn the SSB process from the perspective of assessors rather than from guesswork or second-hand coaching methods. Through mentoring by an actual GTO and experienced armed forces professionals, aspirants gain a deeper understanding of:
+
                         </p>
 
-                        <p className={styles.aboutIntroText}>
-                            What makes SSB with ISV different from conventional coaching institutes
-                            is that the mentoring is delivered by professionals who have direct
-                            experience with the SSB selection system itself.
-                        </p>
+                        <ul>
+                            <li>   how psychologists interpret responses in psychological tests </li>
+
+
+                            <li>  how GTOs observe behaviour during group tasks </li>
+
+
+                            <li> how interviewing officers evaluate personality and motivation </li>
+
+
+                            <li> how consistency of behaviour influences the final recommendation </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <div className="mvk-benefits">
+
+                        <h3>A Unique Advantage: The Virtual Training Experience (VTX)</h3>
 
                         <p className={styles.aboutIntroText}>
-                            Candidates receive SSB coaching by an actual Group Testing Officer (GTO)
-                            along with guidance from former armed forces officers, providing insights
-                            that go far beyond theoretical preparation.
+                            One of the biggest challenges for many defence aspirants preparing for the SSB interview is the lack of exposure to the Group Testing Officer (GTO) ground. To bridge this gap, SSB with ISV has developed the Virtual Training Experience (VTX) - a one-of-a-kind platform that provides aspirants with a virtual representation of the SSB GTO ground and task environment from any part of the globe.
+                            Through VTX, candidates can:
+
+
                         </p>
 
+                        <ul>
+                            <li>
+                                understand how GTO tasks are structured and conducted
+                            </li>
+
+
+                            <li>
+                                visualize obstacle layouts and task strategies
+                            </li>
+
+
+                            <li>
+                                develop clarity about group planning exercises and command tasks
+                            </li>
+
+
+                            <li>
+                                experience the logic behind different group testing activities
+                            </li>
+
+                        </ul>
+
                         <p className={styles.aboutIntroText}>
-                            This unique perspective helps aspirants understand how candidates are
-                            evaluated during the SSB interview and how officer-like qualities are
-                            observed in real situations.
+                            This innovative platform helps candidates gain exposure to the GTO task environment even before appearing for the actual SSB interview, making it a powerful tool for SSB preparation.
+
+
+
                         </p>
 
                     </div>
+
+                    <div className="mvk-benefits">
+
+                        <h3>Our Philosophy: Manasa, Vacha, Karmana</h3>
+
+                        <p className={styles.aboutIntroText}>
+                            The mentoring philosophy at SSB with ISV is rooted in the concept of Manasa, Vacha, Karmana — the alignment of thought, speech, and action.
+                            In the context of the SSB interview, this principle reflects the importance of authentic behaviour and internal consistency.
+                            Candidates who demonstrate alignment between what they think, what they say, and how they act are more likely to display the natural leadership traits expected from officers in the Armed Forces. Rather than teaching scripted responses or shortcuts, SSB with ISV focuses on helping aspirants develop self-awareness, clarity of thought, and confidence, enabling them to approach the SSB interview with authenticity.
+
+
+
+                        </p>
+
+
+
+                    </div>
+
+
+                    <div className="mvk-benefits">
+
+                        <h3>Understanding Officer Like Qualities</h3>
+
+                        <p className={styles.aboutIntroText}>
+                            The SSB interview is designed to identify individuals who demonstrate Officer Like Qualities (OLQs) — the leadership attributes required to serve in the Armed Forces.
+                            These include qualities such as:
+
+
+
+
+                        </p>
+
+                        <ul>
+                            <li>
+                                effective intelligence
+                            </li>
+
+
+                            <li>
+                                initiative and responsibility
+                            </li>
+
+
+                            <li>
+                                cooperation and teamwork
+                            </li>
+
+
+                            <li>
+                                self-confidence
+                            </li>
+
+
+                            <li>
+                                determination and courage
+                            </li>
+
+
+                            <li>
+                                emotional stability and stamina
+                            </li>
+
+
+
+                        </ul>
+
+
+                        <p className={styles.aboutIntroText}>
+                            Through mentoring sessions, practical discussions, and guided exercises, candidates learn how these qualities are evaluated across psychological tests, GTO tasks, and personal interviews. The goal is not to artificially display these traits, but to develop the awareness and behaviour that naturally reflect them.
+
+                        </p>
+
+
+
+                    </div>
+
+                    {/* ===== Bridging Gap ===== */}
+                    <div className="mvk-benefits">
+
+                        <h3>Bridging the Gap Between Preparation and Understanding</h3>
+
+                        <p className={styles.aboutIntroText}>
+                            Many aspirants approach the SSB interview with limited clarity about how the selection system actually works.
+                            SSB with ISV focuses on bridging this gap by helping candidates understand the logic behind the evaluation process.
+                        </p>
+
+                        <p className={styles.aboutIntroText}>
+                            Through guidance from an actual GTO and former armed forces officers, aspirants gain insight into:
+                        </p>
+
+                        <ul>
+                            <li>The philosophy behind the SSB selection system</li>
+                            <li>Behavioural indicators assessors observe during tasks</li>
+                            <li>How different tests contribute to the final recommendation</li>
+                            <li>Importance of consistency across psychology, GTO, and interview</li>
+                        </ul>
+
+                        <p className={styles.aboutIntroText}>
+                            This understanding enables candidates to approach the interview with confidence, awareness, and authenticity.
+                        </p>
+
+                    </div>
+
+
+                    {/* ===== Platform ===== */}
+                    <div className="mvk-benefits">
+
+                        <h3>A Platform for Defence Aspirants</h3>
+
+                        <p className={styles.aboutIntroText}>
+                            SSB with ISV is more than a training program. It is a learning platform for defence aspirants who want to understand leadership,
+                            develop perspective, and build the mindset required for military service.
+                        </p>
+
+                        <p className={styles.aboutIntroText}>
+                            Through mentoring sessions, structured courses, the Virtual Training Experience (VTX) platform, and initiatives like Roger That Magazine,
+                            aspirants expand their awareness of global issues, leadership principles, and responsibilities of military officers.
+                        </p>
+
+                        <p className={styles.aboutIntroText}>
+                            These initiatives help candidates prepare not only for the SSB interview but also for their larger journey as future leaders.
+                        </p>
+
+                    </div>
+
+
+                    {/* ===== Preparing Officers ===== */}
+                    <div className="mvk-benefits">
+
+                        <h3>Preparing Future Officers</h3>
+
+                        <p className={styles.aboutIntroText}>
+                            The objective of SSB with ISV is not simply to help candidates clear an interview, but to develop the qualities,
+                            mindset, and leadership awareness expected from future officers in the Indian Armed Forces.
+                        </p>
+
+                        <p className={styles.aboutIntroText}>
+                            By combining assessor-led mentoring, armed forces experience, and innovative platforms like VTX,
+                            aspirants gain a deeper understanding of the SSB selection process and behavioural expectations.
+                        </p>
+
+                        <p className={styles.aboutIntroText}>
+                            Preparing for SSB is not about shortcuts — it is about developing character and leadership qualities that define an officer.
+                        </p>
+
+                    </div>
+
+
+                    {/* </div> */}
                 </div>
             </section>
 
@@ -366,137 +560,7 @@ function About() {
             </section>
 
 
-            <section className="about-detailed-section sectionspace80">
-                <div className="container">
-
-                    {/* SECTION 1 */}
-                    <div className="row justify-content-center">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>Learning the SSB Process from Those Who Have Assessed It</h2>
-                            </div>
-
-                            <p className="about-text">
-                                The Services Selection Board interview is one of the most comprehensive leadership selection systems used anywhere in the world. The process evaluates personality traits such as decision-making ability, initiative, cooperation, emotional stability, and leadership potential.
-                            </p>
-
-                            <p className="about-text">
-                                At SSB with ISV, candidates learn the SSB process from the perspective of assessors rather than from guesswork or second-hand coaching methods.
-                            </p>
-
-                            <p className="about-text">
-                                Through mentoring by an actual GTO and experienced armed forces professionals, aspirants gain a deeper understanding of:
-                            </p>
-
-                            <ul className="about-list">
-                                <li>how psychologists interpret responses in psychological tests</li>
-                                <li>how GTOs observe behaviour during group tasks</li>
-                                <li>how interviewing officers evaluate personality and motivation</li>
-                                <li>how consistency of behaviour influences the final recommendation</li>
-                            </ul>
-
-                            <p className="about-text">
-                                This assessor-led guidance helps candidates approach the SSB interview with clarity and authenticity.
-                            </p>
-
-                        </div>
-                    </div>
-
-                    {/* SECTION 2 */}
-                    <div className="row justify-content-center mt-5">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>A Unique Advantage: The Virtual Training Experience (VTX)</h2>
-                            </div>
-
-                            <p className="about-text">
-                                One of the biggest challenges for many defence aspirants preparing for the SSB interview is the lack of exposure to the Group Testing Officer (GTO) ground. To bridge this gap, SSB with ISV has developed the Virtual Training Experience (VTX) — a platform that provides aspirants with a virtual representation of the SSB GTO ground and task environment from any part of the globe.
-                            </p>
-
-                            <p className="about-text">
-                                Through VTX, candidates can:
-                            </p>
-
-                            <ul className="about-list">
-                                <li>understand how GTO tasks are structured and conducted</li>
-                                <li>visualize obstacle layouts and task strategies</li>
-                                <li>develop clarity about group planning exercises and command tasks</li>
-                                <li>experience the logic behind different group testing activities</li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    {/* SECTION 3 */}
-                    <div className="row justify-content-center mt-5">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>Our Philosophy: Manasa, Vacha, Karmana</h2>
-                            </div>
-
-                            <p className="about-text">
-                                The mentoring philosophy at SSB with ISV is rooted in the concept of Manasa, Vacha, Karmana — the alignment of thought, speech, and action.
-                            </p>
-
-                            <p className="about-text">
-                                In the context of the SSB interview, this principle reflects the importance of authentic behaviour and internal consistency.
-                            </p>
-
-                            <p className="about-text">
-                                Rather than teaching scripted responses or shortcuts, SSB with ISV focuses on helping aspirants develop self-awareness, clarity of thought, and confidence.
-                            </p>
-
-                        </div>
-                    </div>
-
-                    {/* SECTION 4 */}
-                    <div className="row justify-content-center mt-5">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>Understanding Officer Like Qualities</h2>
-                            </div>
-
-                            <p className="about-text">
-                                The SSB interview is designed to identify individuals who demonstrate Officer Like Qualities (OLQs) — the leadership attributes required to serve in the Armed Forces.
-                            </p>
-
-                            <ul className="about-list">
-                                <li>effective intelligence</li>
-                                <li>initiative and responsibility</li>
-                                <li>cooperation and teamwork</li>
-                                <li>self-confidence</li>
-                                <li>determination and courage</li>
-                                <li>emotional stability and stamina</li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    {/* SECTION 5 */}
-                    <div className="row justify-content-center mt-5">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>Preparing Future Officers</h2>
-                            </div>
-
-                            <p className="about-text">
-                                The objective of SSB with ISV is not simply to help candidates clear an interview. Instead, the focus is on helping aspirants develop the qualities, mindset, and leadership awareness expected from future officers in the Indian Armed Forces.
-                            </p>
-
-                            <p className="about-text">
-                                By combining assessor-led mentoring, armed forces experience, and innovative training platforms like VTX, SSB with ISV provides aspirants with a deeper understanding of the SSB selection process and the behavioural traits required to succeed.
-                            </p>
-
-                        </div>
-                    </div>
-
-                </div>
-            </section>
+          
 
             <From />
             <Footer />

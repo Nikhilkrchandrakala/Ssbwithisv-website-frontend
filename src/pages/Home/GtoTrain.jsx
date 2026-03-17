@@ -14,25 +14,20 @@ function GtoTrain() {
     const data = {
         heading: 'GTX',
         span: 'TM',
-        textTwo: ` VTX™ (Virtual Training Xperience) is a virtual training experience that emulates the outdoor group tasks as they exist on a real GTO ground across SSBs and AFSBs.
-         It offers aspirants a first-hand visual and mental experience of the tasks before they encounter them physically — building clarity and confidence. 
-         The Virtual Training Experience (VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
-
-         `,
+        textTwo: `The Virtual Training Experience (VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
+`,
 
         text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the tasks conducted during the Services Selection Board interview. ',
-        textThree: 'Virtual Training Xperience',
+        textThree: 'Virtual Training Xperience by SSB with ISV',
         color: true,
         banner: '/assets/website/GTOCourseThumbnail.webp',
 
-        headingTwo: "Pedagogical intent",
-        preragraph: "The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.",
-        preragraphTwo: `Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Group Planning Exercise, Command Task, and Group Discussions, enabling them to build confidence and clarity before appearing for the actual SSB interview.  
+        //     headingTwo: "Pedagogical intent",
+        //     preragraph: "The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.",
+        //     preragraphTwo: `Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Group Planning Exercise, Command Task, and Group Discussions, enabling them to build confidence and clarity before appearing for the actual SSB interview.  
 
-    ${<br />}
-        This program is part of the broader SSB mentoring and online coaching program offered by SSB with ISV, led by experienced assessors and defence professionals.
-
-        `
+        // ${<br />}
+        //     This program is part of the broader SSB mentoring and online coaching program offered by SSB with ISV, led by experienced assessors and defence professionals. `
 
     }
 
@@ -87,13 +82,10 @@ function GtoTrain() {
 
                         <div className="pedagogical-text-box">
                             <p>
-                                For most candidates, the hardest part of the GTO ground isn’t the task — it’s the unknown.
-                                Unfamiliar structures, unclear movement, time pressure, and group dynamics often distract capable aspirants from what truly matters: their behaviour under observation.
-                            </p>
+                                The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.
+                                Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Group Planning Exercise, Command Task, and Group Discussions, enabling them to build confidence and clarity before appearing for the actual SSB interview.
+                                This program is part of the broader SSB mentoring and online coaching program offered by SSB with ISV, led by experienced assessors and defence professionals.
 
-                            <p>
-                                VTX<sup>TM</sup> does not teach shortcuts or rehearsed behaviour.<br />
-                                It prepares the mind first — much like chair flying before a sortie or mental navigation before letting go of a ship’s lines. By understanding task structure, group flow, and time pressure in advance, aspirants can approach the physical GTO ground with calm and focus.
 
                             </p>
                         </div>
@@ -121,38 +113,26 @@ function GtoTrain() {
                                 preparation but lack practical exposure to the group testing environment used by the SSB.
                             </p>
 
-                            <p className={styles.virtualTrainingSubtitle}>
-                                Virtual training helps aspirants:
-                            </p>
+                            <div className="mvk-benefits">
 
-                            <div className={styles.virtualTrainingList}>
+                                <h3>  Virtual training helps aspirants:</h3>
 
-                                <div className={styles.virtualItem}>
-                                    <span>Understand the structure of GTO tasks</span>
-                                </div>
+                                <ul>
+                                    <li>Understand the structure of GTO tasks</li>
+                                    <li>Develop clarity in group planning exercises</li>
+                                    <li>Improve decision making under time pressure</li>
+                                    {/* <li>Improves decision making under pressure</li> */}
+                                    <li>Build confidence in group discussions</li>
+                                    <li>Learn how leadership behaviour is evaluated</li>
+                                </ul>
 
-                                <div className={styles.virtualItem}>
-                                    <span>Develop clarity in group planning exercises</span>
-                                </div>
-
-                                <div className={styles.virtualItem}>
-                                    <span>Improve decision making under time pressure</span>
-                                </div>
-
-                                <div className={styles.virtualItem}>
-                                    <span>Build confidence in group discussions</span>
-                                </div>
-
-                                <div className={styles.virtualItem}>
-                                    <span>Learn how leadership behaviour is evaluated</span>
-                                </div>
+                                <p className={`${styles.virtualTrainingText} mt-3`}>
+                                    This experiential learning approach helps candidates prepare for the real SSB environment even before reaching the board.
+                                </p>
 
                             </div>
 
-                            <p className={`${styles.virtualTrainingText} mt-3`}>
-                                This experiential learning approach helps candidates prepare for the real
-                                SSB environment even before reaching the board.
-                            </p>
+
 
                         </div>
 
@@ -188,32 +168,44 @@ function GtoTrain() {
                                 <div className="enable-item">
                                     <i className="fa fa-users"></i>
                                     <span>
-                                        <strong>Progressive Group Task Simulation</strong><br />
-                                        Understand how teams collaborate to solve obstacles and how initiative, cooperation, and resourcefulness are assessed.
+                                        <strong>Progressive Group Task Simulation</strong>
+                                        <div className='Phergarph_of_'>
+
+                                            Understand how teams collaborate to solve obstacles and how initiative, cooperation, and resourcefulness are assessed.
+                                        </div>
                                     </span>
                                 </div>
 
                                 <div className="enable-item">
                                     <i className="fa fa-sitemap"></i>
                                     <span>
-                                        <strong>Group Planning Exercise</strong><br />
-                                        Practice analysing complex situations and presenting logical solutions under time pressure.
+                                        <strong>Group Planning Exercise</strong>
+                                        <div className='Phergarph_of_'>
+
+                                            Practice analysing complex situations and presenting logical solutions under time pressure.
+                                        </div>
                                     </span>
                                 </div>
 
                                 <div className="enable-item">
                                     <i className="fa fa-bullseye"></i>
                                     <span>
-                                        <strong>Command Task Familiarisation</strong><br />
-                                        Learn how candidates demonstrate leadership by guiding a small team through obstacle challenges.
+                                        <strong>Command Task Familiarisation</strong>
+                                        <div className='Phergarph_of_'>
+
+                                            Learn how candidates demonstrate leadership by guiding a small team through obstacle challenges.
+                                        </div>
                                     </span>
                                 </div>
 
                                 <div className="enable-item">
                                     <i className="fa fa-comments"></i>
                                     <span>
-                                        <strong>Group Discussion Dynamics</strong><br />
-                                        Understand how assessors observe participation, clarity of thought, and influence during discussions.
+                                        <strong>Group Discussion Dynamics</strong>
+                                        <div className='Phergarph_of_'>
+
+                                            Understand how assessors observe participation, clarity of thought, and influence during discussions.
+                                        </div>
                                     </span>
                                 </div>
 
@@ -336,59 +328,39 @@ function GtoTrain() {
 
 
 
-            <section className={`sectionspace80 ${styles.vtxIntegrationSection}`}>
+            <section className={`enable-section sectionspace80`}>
                 <div className="container">
 
-                    <div className="row justify-content-center">
-                        <div className="col-lg-9">
+                    <div className="mvk-benefits">
 
-                            <div className="sct-title text-center mb-4">
-                                <h2>Integrating Virtual Training with SSB Coaching</h2>
-                            </div>
+                        <h3>  Integrating Virtual Training with SSB Coaching</h3>
+                        <p className={styles.vtxIntegrationText}>
+                            The Virtual Training Experience is integrated with the SSB mentoring
+                            program offered by SSB with ISV.   Candidates combine:
+                        </p>
 
-                            <p className={styles.vtxIntegrationText}>
-                                The Virtual Training Experience is integrated with the SSB mentoring
-                                program offered by SSB with ISV.
-                            </p>
 
-                            <p className={styles.vtxIntegrationSubtitle}>
-                                Candidates combine:
-                            </p>
 
-                            <div className={styles.vtxIntegrationList}>
+                        <ul>
+                            <li>Conceptual learning</li>
+                            <li>Psychological test preparation</li>
+                            <li>Group task understanding</li>
+                            <li>Interview training</li>
+                            <li>Leadership development</li>
+                            {/* <li>Personalized SSB interview guidance</li> */}
+                        </ul>
 
-                                <div className={styles.vtxIntegrationItem}>
-                                    <span>Conceptual learning</span>
-                                </div>
-
-                                <div className={styles.vtxIntegrationItem}>
-                                    <span>Psychological test preparation</span>
-                                </div>
-
-                                <div className={styles.vtxIntegrationItem}>
-                                    <span>Group task understanding</span>
-                                </div>
-
-                                <div className={styles.vtxIntegrationItem}>
-                                    <span>Interview training</span>
-                                </div>
-
-                                <div className={styles.vtxIntegrationItem}>
-                                    <span>Leadership development</span>
-                                </div>
-
-                            </div>
-
-                            <p className={`${styles.vtxIntegrationText} mt-3`}>
-                                This holistic approach ensures candidates prepare not just for the interview,
-                                but for the development of officer-like qualities expected in the Armed Forces.
-                            </p>
-
-                        </div>
                     </div>
 
                 </div>
+
+
+
+
             </section>
+
+
+
 
 
             <section className="GTO-what-is-not-section sectionspace80">

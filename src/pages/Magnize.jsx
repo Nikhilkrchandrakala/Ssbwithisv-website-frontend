@@ -144,28 +144,32 @@ function Magnize() {
             </Helmet>
             <CustomHeader heading={data?.heading} text={data?.text} banner={data?.banner} />
 
-            <section className="magazine-intro-section sectionspace80">
-                <div className="container">
 
-                    <div className="row justify-content-center">
-                        <div className="col-lg-10">
 
-                            <p className="magazine-intro-text">
-                                Our monthly magazine brings together insights on global news, geopolitics,
-                                defence developments, social issues, technology, and leadership, helping
-                                candidates build a deeper understanding of the world around them.
-                                By engaging with diverse perspectives and analytical viewpoints,
-                                aspirants can develop the intellectual awareness and balanced thinking
-                                expected from future officers in the Armed Forces.
-                            </p>
+            <section className="container sectionspace80">
 
-                            <p className="magazine-intro-text">
-                                Through carefully selected articles, opinion pieces, and discussions
-                                on contemporary issues, Roger That Magazine helps candidates:
-                            </p>
 
-                            <ul className="magazine-intro-list">
+                <div className="row justify-content-center">
+                    <div className="">
 
+                        <p className="magazine-intro-text">
+                            Our monthly magazine brings together insights on global news, geopolitics,
+                            defence developments, social issues, technology, and leadership, helping
+                            candidates build a deeper understanding of the world around them.
+                            By engaging with diverse perspectives and analytical viewpoints,
+                            aspirants can develop the intellectual awareness and balanced thinking
+                            expected from future officers in the Armed Forces.
+                        </p>
+
+                       
+
+
+                        <div className="mvk-benefits">
+
+                            <h3>  Through carefully selected articles, opinion pieces, and discussions
+                                on contemporary issues, Roger That Magazine helps candidates:</h3>
+
+                            <ul>
                                 <li>Stay updated with important global and national developments</li>
 
                                 <li>Build informed viewpoints on current affairs</li>
@@ -175,30 +179,27 @@ function Magnize() {
                                 <li>Develop the ability to analyze complex situations and express balanced opinions</li>
 
                                 <li>Strengthen overall SSB interview preparation</li>
-
                             </ul>
 
-                            <p className="magazine-intro-text">
-                                Whether you are preparing for NDA, CDS, AFCAT, TES, or other defence
-                                entry schemes, staying informed about the world and developing thoughtful
-                                perspectives can significantly enhance your presence during group
-                                discussions, lecturettes, and personal interviews at the SSB.
-                            </p>
-
-                            <p className="magazine-intro-text">
-                                Roger That Magazine aims to become a knowledge companion for defence
-                                aspirants, helping them cultivate awareness, perspective, and intellectual
-                                curiosity—qualities that are essential for leadership in the Armed Forces.
-                            </p>
-
                         </div>
+
+                        <p className="magazine-intro-text mt-5">
+                            Whether you are preparing for NDA, CDS, AFCAT, TES, or other defence
+                            entry schemes, staying informed about the world and developing thoughtful
+                            perspectives can significantly enhance your presence during group
+                            discussions, lecturettes, and personal interviews at the SSB.
+                        </p>
+
+                        <p className="magazine-intro-text">
+                            Roger That Magazine aims to become a knowledge companion for defence
+                            aspirants, helping them cultivate awareness, perspective, and intellectual
+                            curiosity—qualities that are essential for leadership in the Armed Forces.
+                        </p>
+
                     </div>
-
                 </div>
-            </section>
 
-            <section className="container sectionspace80">
-                <div className="row align-items-center justify-content-between g-3">
+                <div className="row align-items-center justify-content-between g-3 mt-5">
 
                     {/* LEFT TEXT */}
                     {!token && <div className="col-12 col-md-8">

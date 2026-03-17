@@ -13,8 +13,10 @@ import { faqData } from '../util/data'
 function SsbPage() {
 
     const data = {
-        heading: 'What is SSB?',
-        textTwo: `The Services Selection Board (SSB) is not an exam. It is a five-day personality assessment board designed to identify shades of officer-like qualities in candidates aspiring to join the Indian Armed Forces in the officer cadre. From psychological tests and group tasks to personal interviews, the SSB process evaluates how you think, act, decide, and lead under pressure.`,
+        heading: ' What is the Services Selection Board (SSB)?',
+        textTwo: `The Services Selection Board (SSB) is the official selection system used by the Indian Armed Forces to identify candidates with the personality, leadership potential, and officer-like qualities required to become commissioned officers. Unlike traditional examinations that primarily evaluate academic knowledge, the SSB interview is designed to assess a candidate’s behaviour, decision-making ability, emotional intelligence, communication skills, and leadership potential.
+Through a structured five-day evaluation process, candidates are observed across psychological tests, group tasks, and personal interviews. The aim is to identify individuals who demonstrate the mindset, responsibility, and character required to lead troops and operate effectively in challenging environments.
+`,
         banner: '/assets/website/Whatisssb_banner.webp'
     }
 
@@ -60,40 +62,73 @@ function SsbPage() {
             <CustomHeader heading={data.heading} textTwo={data.textTwo} banner={data?.banner} />
 
 
-            <section className="ssb-philosophy-section sectionspace80">
-                <div className="container">
+            <section className="container sectionspace80">
+                <div className="row justify-content-center">
 
-                    <div className="row justify-content-center">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>Philosophy of SSB</h2>
-                            </div>
-
-                            <p className="ssb-philosophy-text">
-                                The SSB selection system is based on behavioural assessment rather than theoretical testing.
-                                The philosophy behind the process is that leadership potential cannot be accurately measured
-                                through written examinations alone.
-                            </p>
-
-                            <p className="ssb-philosophy-text">
-                                Instead, the SSB evaluates how candidates think, act, communicate, and interact with others
-                                in different situations. By observing candidates across multiple activities, the board gains
-                                a comprehensive understanding of their personality and suitability for military leadership.
-                            </p>
-
-                            <p className="ssb-philosophy-text">
-                                The selection process focuses on identifying individuals who demonstrate initiative,
-                                responsibility, cooperation, determination, and clarity of thought, which together form
-                                the foundation of officer-like qualities in the Armed Forces.
-                            </p>
-
-                        </div>
+                    {/* ===== PHILOSOPHY ===== */}
+                    <div className="sct-title mb-4 text-center">
+                        <h2>Philosophy of SSB</h2>
                     </div>
 
-                    {/* SECOND PART */}
+                    <p className="ssb-philosophy-text">
+                        The SSB selection system is based on behavioural assessment rather than theoretical testing.
+                        The philosophy behind the process is that leadership potential cannot be accurately measured
+                        through written examinations alone.
+                    </p>
 
+                    <p className="ssb-philosophy-text">
+                        Instead, the SSB evaluates how candidates think, act, communicate, and interact with others
+                        in different situations. By observing candidates across multiple activities, the board gains
+                        a comprehensive understanding of their personality and suitability for military leadership.
+                    </p>
 
+                    <p className="ssb-philosophy-text">
+                        The selection process focuses on identifying individuals who demonstrate initiative,
+                        responsibility, cooperation, determination, and clarity of thought.
+                    </p>
+
+                    {/* ===== FIVE DAY PROCESS ===== */}
+                    <div className="sct-title mb-4 text-center mt-5">
+                        <h2>The Five-Day SSB Interview Process</h2>
+                    </div>
+
+                    <p className="ssb-philosophy-text">
+                        The SSB interview process typically spans five days, during which candidates are assessed
+                        through multiple evaluation methods. Each stage is designed to observe different aspects
+                        of a candidate’s personality and behaviour.
+                    </p>
+
+                    <p className="ssb-philosophy-text">
+                        Candidates are evaluated by three independent assessors:
+                    </p>
+
+                    <ul className="ssb-philosophy-list ">
+                        <li>Psychologist</li>
+                        <li>Group Testing Officer (GTO)</li>
+                        <li>Interviewing Officer (IO)</li>
+                    </ul>
+
+                    <p className="ssb-philosophy-text">
+                        This multi-dimensional evaluation system ensures that a candidate’s personality is assessed
+                        from different perspectives before the final recommendation is made.
+                    </p>
+
+                    {/* ===== IMPORTANCE ===== */}
+                    <div className="sct-title mb-4 text-center mt-5">
+                        <h2>Why Understanding the SSB Process Matters</h2>
+                    </div>
+
+                    <p className="ssb-philosophy-text">
+                        Many candidates approach the SSB interview without fully understanding how the selection
+                        process works. This often leads to confusion during group discussions, psychological tests,
+                        and interviews.
+                    </p>
+
+                    <p className="ssb-philosophy-text">
+                        Preparation for the SSB interview is not about memorizing answers or following shortcuts.
+                        Instead, it involves developing self-awareness, leadership behaviour, communication skills,
+                        and officer-like qualities expected from future leaders of the Armed Forces.
+                    </p>
 
                 </div>
             </section>
@@ -105,46 +140,7 @@ function SsbPage() {
             <TipsToExcel />
             <SelectionMap />
 
-            <section className="ssb-philosophy-section sectionspace80">
-                <div className="container">
-
-                    <div className="row justify-content-center mt-5">
-                        <div className="col-lg-10">
-
-                            <div className="sct-title mb-4 text-center">
-                                <h2>The Five-Day SSB Interview Process</h2>
-                            </div>
-
-                            <p className="ssb-philosophy-text">
-                                The SSB interview process typically spans five days, during which candidates are assessed
-                                through multiple evaluation methods. Each stage is designed to observe different aspects
-                                of a candidate’s personality and behaviour.
-                            </p>
-
-                            <p className="ssb-philosophy-text">
-                                Candidates are evaluated by three independent assessors:
-                            </p>
-
-                            <ul className="ssb-assessor-list">
-                                <li>Psychologist</li>
-                                <li>Group Testing Officer (GTO)</li>
-                                <li>Interviewing Officer (IO)</li>
-                            </ul>
-
-                            <p className="ssb-philosophy-text">
-                                This multi-dimensional evaluation system ensures that a candidate’s personality is
-                                assessed from different perspectives before the final recommendation is made.
-                            </p>
-
-                            <p className="ssb-methodology-link">
-                                Methodology of Selection of Officers at Services Selection Board
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-
-            </section>
+           
 
             <Faq data={faqData} />
 
