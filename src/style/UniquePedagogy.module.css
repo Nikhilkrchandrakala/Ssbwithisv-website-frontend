@@ -6,7 +6,7 @@
             #111015 100%); */
     color: #c6c5af;
     font-family: var(--font1);
-    min-height: 100vh;
+    /* min-height: 100vh; */
     padding: 60px 0 30px;
 }
 

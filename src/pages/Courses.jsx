@@ -75,16 +75,12 @@ function Courses() {
                 <div className="course-intro">
 
                     <p>
-                        At SSB with ISV, we offer a comprehensive SSB coaching and interview preparation
-                        program designed to help aspirants understand the psychology behind the
-                        SSB selection process and develop the behavioural traits expected of future
-                        officers in the Indian Armed Forces.
+                        At SSB with ISV, we offer a comprehensive SSB coaching and interview preparation program designed to help aspirants understand the psychology behind the SSB selection process and develop the behavioural traits expected of future officers in the Indian Armed Forces.
                     </p>
 
                     <p>
-                        Our structured mentoring program combines theoretical understanding,
-                        practical training, mock assessments, and personalised feedback to help
-                        candidates build clarity, confidence, and authenticity during the SSB interview.
+                        Our structured mentoring program combines theoretical understanding, practical training, mock assessments, and personalised feedback to help candidates build clarity, confidence, and authenticity during the SSB interview.
+
                     </p>
                     {/* 
                     <h3 className="course-intro-title">
@@ -102,11 +98,17 @@ function Courses() {
                         <ul>
                             <li>NDA SSB Interview</li>
                             <li>CDS SSB Interview</li>
-                            <li>AFCAT SSB Interview</li>
-                            <li>TES Entry</li>
-                            <li>NCC Special Entry</li>
-                            <li>Direct Entry into the Armed Forces</li>
+                            <li>AFSB through AFCAT</li>
+                            <li>10+2 TES entry</li>
+                            <li>10+2 B Tech entry (Navy)</li>
+                            <li>NCC special entry</li>
+                            <li>Direct entry into the Indian Army after engineering through SSC(Tech)/ SSC (Non Tech)</li>
+                            <li>TGC Entry</li>
+                            <li>Service entry candidates (CW Scheme, SD List Commission, ACC Entry, SCO & PC-SL commission)</li>
+                            <li>SSC direct entries into various branches of the Navy (Executive, Law, Pilot, Naval Air Operations, Logistics, Engineering, Electrical, Naval Armament, Naval Constructor)</li>
                         </ul>
+
+                        <p style={{ margin: '20px' }}>With expert mentoring by professionals who understand the SSB assessment system, this program focuses on holistic personality development and officer-like qualities training, ensuring candidates are well prepared to face every stage of the SSB interview process.</p>
 
                     </div>
 
@@ -189,7 +191,7 @@ function Courses() {
                                 </h3>
 
                                 <p>
-                                    This intensive SSB training program is designed to simulate the learning and behavioural development required to successfully navigate the Services Selection Board interview process.
+                                    This intensive SSB training program is designed to simulate the learning and behavioural development required to successfully navigate the Services Selection Board interview process. Over fifteen structured sessions, candidates receive training across all major areas evaluated during the SSB selection process, including screening tests, psychological assessments, group testing officer tasks, personal interview preparation, and officer-like qualities development. The program blends theoretical learning with practical exercises, mock tests, and expert feedback, helping aspirants understand how assessors evaluate behaviour and leadership potential.
                                 </p>
 
                                 <h3 className="m-0 fs-4">Topics Covered:</h3>
@@ -366,16 +368,11 @@ function Courses() {
 
                     </div>
                 </div>
-            </section>
 
-
-
-
-            <section className="container sectionspace80">
 
                 <div className="schedule-section">
 
-                    <h2 className="schedule-title">SSB Hackathon Schedule</h2>
+                    <h2 className="schedule-title">10 days SSB Hackathon Schedule</h2>
 
                     {/* TABS */}
                     <div className="schedule-tabs">
@@ -458,12 +455,26 @@ function Courses() {
 
                     </div>
 
-                </div>
+                    <div style={{marginTop:'40px'}}>
+                        <h3 style={{margin:'10px 0'}}>Important Notes</h3>
 
+                        {scheduleData.notes.map((note, index) => (
+                            <p key={index}>
+                                <strong>{index + 1}.</strong> {note}
+                            </p>
+                        ))}
+                    </div>
+
+                </div>
             </section>
 
 
-            <section className="container sectionspace80">
+
+
+
+
+
+            <section className="container ">
 
                 <div className="mvk-benefits">
 

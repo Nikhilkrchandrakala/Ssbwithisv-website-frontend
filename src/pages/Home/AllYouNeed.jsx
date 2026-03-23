@@ -22,13 +22,13 @@ const AllYouNeed = () => {
             {/* CONTENT */}
             <div className={styles.contentMain}>
                 <div className={styles.content}>
-                    <h2 className={styles.heading}>
+                    <div className={styles.heading}>
                         {/* All you need to   <span>
 
                             know  <br /> about SSB
                         </span> */}
                         <HeadingTwo h1="All you need to know" t1={" about SSB"} />
-                    </h2>
+                    </div>
 
 
 

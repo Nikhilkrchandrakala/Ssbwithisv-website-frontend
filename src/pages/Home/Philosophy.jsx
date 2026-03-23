@@ -84,7 +84,7 @@ const PhilosophySection = () => {
                                     When the Manasa-Vacha-Karmana synchronizes, the human being becomes Limitless & Fearless
                                 </p>
 
-                                <div className="mvk-benefits">
+                                {/* <div className="mvk-benefits">
 
                                     <h3>How alignment to Manasa-Vacha-Karmana strengthens officer potential</h3>
 
@@ -97,7 +97,7 @@ const PhilosophySection = () => {
                                         <li>Builds deeper self-awareness</li>
                                     </ul>
 
-                                </div>
+                                </div> */}
 
                             </div>
                         </>

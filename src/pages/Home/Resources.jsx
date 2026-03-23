@@ -67,10 +67,10 @@ const Resources = () => {
                 >
 
 
-                    {resourcesData.map((item) => (
+                    {resourcesData?.map((item , index) => (
                         <SwiperSlide>
 
-                            <div key={item.id} className={styles.card}>
+                            <div key={index} className={styles.card}>
                                 <div className={styles.imageBox}>
                                     <img src={item.image} alt="" />
                                     {/* <span className={styles.overlayText}>SSB WITH ISV</span> */}

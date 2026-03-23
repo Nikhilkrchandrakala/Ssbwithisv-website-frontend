@@ -30,8 +30,7 @@ function Home() {
 
                 <meta
                     name="description"
-                    content="Prepare for the Services Selection Board (SSB) with India’s leading SSB coaching institute. Learn how to crack SSB interviews, psychology tests, GTO tasks and leadership assessments through expert mentoring by  a former GTO officer and veterans from the Defence forces. 
-"
+                    content="Prepare for the Services Selection Board (SSB) with India’s leading SSB coaching institute. Learn how to crack SSB interviews, psychology tests, GTO tasks and leadership assessments through expert mentoring by DIPR certified former SSB assessors"
                 />
 
                 <script type="application/ld+json">

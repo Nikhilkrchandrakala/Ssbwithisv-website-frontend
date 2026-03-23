@@ -71,7 +71,7 @@ function CircleBox() {
                     </div>
 
                     <p className={styles.titleOfSecondSection}>
-                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTXtm). At SSB with ISV, we provide structured SSB coaching and interview preparation designed to help aspirants understand the assessment process and develop authentic leadership behaviour. Our mentoring programs cover psychology tests such as TAT, WAT, SRT, GTO tasks, PIQ analysis, and personal interview training. Led by veterans of the Indian Armed Forces, SSB with ISV comes with a promise to guide and prepare aspiring officers for success in the Services Selection Board.
+                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTX™). At SSB with ISV, we provide structured SSB coaching and interview preparation designed to help aspirants understand the assessment process and develop authentic leadership behaviour. Our mentoring programs cover psychology tests such as TAT, WAT, SRT, GTO tasks, PIQ analysis, and personal interview training. Led by veterans of the Indian Armed Forces, SSB with ISV comes with a promise to guide and prepare aspiring officers for success in the Services Selection Board.
 
                     </p>
 
@@ -100,15 +100,16 @@ function CircleBox() {
 
                     <div className="mvk-benefits">
 
-                        <h3>  Why SSB with ISV is one of the best SSB coaching institutes in India</h3>
+                        <h3>  Why SSB with ISV is one of the best SSB coaching institutes in India?</h3>
 
                         <ul>
-                            <li>Mentoring by former GTO officers</li>
-                            <li>First hand exposure to a virtual GTO ground</li>
-                            <li>Psychology test preparation (TAT, WAT, SRT)</li>
-                            <li>GTO task practice</li>
+                            <li>Mentoring by DIPR certified former SSB officers (GTOs, IOs, Psychologists)</li>
+                            <li>First hand exposure to India’s 1st virtual GTO ground</li>
+
+                            <li>GTO task practice on 250+ GTO tasks</li>
                             <li>Leadership and personality development</li>
                             <li>Personalized SSB interview guidance</li>
+                            <li>TAT, WAT, SRT, SD assessment and personalised feedback</li>
                         </ul>
 
                     </div>

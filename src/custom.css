@@ -2316,6 +2316,10 @@ p {
     margin: 0;
 }
 
+.schedule-section {
+    margin-top: 40px;
+}
+
 
 /* RESPONSIVE */
 
@@ -2335,6 +2339,10 @@ p {
 
     .schedule-tabs button {
         width: 100%;
+    }
+
+    .schedule-section {
+        margin-top: 40px;
     }
 
 }

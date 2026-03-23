@@ -115,6 +115,42 @@ const Courses = () => {
                     />
                 </div>
 
+                {/* <section className={styles.whoSection}> */}
+                {/* <div className={styles.whoContainer}> */}
+
+                {/* <Heading h1="Who Should Join Our SSB Coaching Program" /> */}
+                <h2>Who should join our SSB coaching program?</h2>
+
+                <div className={styles.whoGrid_courser}>
+
+                    <div className={styles.whoCard_Courses}>NDA aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>CDS aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>AFCAT aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>10+2 TES candidates</div>
+
+                    <div className={styles.whoCard_Courses}>10+2 B. Tech. entry (Navy) candidates</div>
+
+                    <div className={styles.whoCard_Courses}>NCC special entry candidates</div>
+
+                    <div className={styles.whoCard_Courses}>Service entry candidates (SD list commission, ACC entry, CW Scheme, SCO & PC-SL entries)</div>
+
+                    <div className={styles.whoCard_Courses}>SSC (Tech) & SSC (Non Tech) aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>TGC aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>SSC (JAG) aspirants</div>
+
+                    <div className={styles.whoCard_Courses}>
+                        SSC Navy aspirants (Executive, Law, Pilot, Naval Air Operations, Engineering, Electrical, Logistics, Naval Armament, Naval Constructor, Air Traffic Control)
+
+                    </div>
+
+                </div>
+
+
                 {/* Content */}
                 <div className={styles.content}>
                     {/* LEFT LIST - Desktop / Horizontal Cards - Mobile */}
@@ -176,27 +212,7 @@ const Courses = () => {
                     </div>
                 </div>
 
-                <section className={styles.whoSection}>
-                    <div className={styles.whoContainer}>
 
-                        {/* <Heading h1="Who Should Join Our SSB Coaching Program" /> */}
-
-                        <div className={styles.whoGrid}>
-
-                            <div className={styles.whoCard}>NDA aspirants</div>
-
-                            <div className={styles.whoCard}>CDS aspirants</div>
-
-                            <div className={styles.whoCard}>AFCAT aspirants</div>
-
-                            <div className={styles.whoCard}>TES candidates</div>
-
-                            <div className={styles.whoCard}>NCC special entry candidates</div>
-
-                        </div>
-
-                    </div>
-                </section>
             </section>
             {/* WHO SHOULD JOIN SECTION */}
 
