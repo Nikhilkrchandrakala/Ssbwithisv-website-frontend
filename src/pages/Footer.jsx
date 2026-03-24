@@ -131,7 +131,7 @@ function Footer() {
                                 className={styles.contactItem}
                             >
                                 <p>
-                                    <i className="fa fa-phone"></i> +9170046 15277
+                                    <i className="fa fa-phone"></i> +91 70046 15277
                                 </p>
                             </a>
 

@@ -279,7 +279,7 @@ const Sidebar = ({ open, onClose }) => {
                     {/* Contact */}
                     {/* <div className={styles.contact}>
                         <div> <i className="fa fa-whatsapp"></i> +91 84204 22821</div>
-                        <div> <i className="fa fa-phone"></i> +9170046 15277</div>
+                        <div> <i className="fa fa-phone"></i> +91 70046 15277</div>
                     </div> */}
 
                     <div className={styles.contact}>
@@ -298,7 +298,7 @@ const Sidebar = ({ open, onClose }) => {
                             href="tel:+919024667319"
                             className={styles.contactItem}
                         >
-                            <i className="fa fa-phone"></i> +9170046 15277
+                            <i className="fa fa-phone"></i> +91 70046 15277
                         </a>
                     </div>
 
