@@ -295,7 +295,7 @@ const Sidebar = ({ open, onClose }) => {
 
                         {/* Phone Call */}
                         <a
-                            href="tel:+919024667319"
+                            href="tel:+917004615277"
                             className={styles.contactItem}
                         >
                             <i className="fa fa-phone"></i> +91 70046 15277

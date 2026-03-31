@@ -14,10 +14,10 @@ function Magnize() {
     {
         heading: 'Roger That - Our monthly magazine',
         text: 'Our monthly magazine Roger That is your go- to resource for in-depth insights, real - world perspectives, and expert analysis tailored to the Services Selection Board (SSB) process. Curated with a strong focus on current affairs, the magazine features probable Group Discussion and Lecturette topics, helping aspirants stay informed, articulate, and assessment - ready',
-        // textTwo: ` We’re not just an academy, we’re a close-knit mentoring community. At CSJSA, every aspirant is personally guided by Lt Cdr Nikhil, whose experience assessing over 12,500 SSB candidates shapes our focused,
+        // textTwo: ` We’re not just an academy, we’re a close-knit mentoring community. At CSJSA, every aspirant is personally guided by Lt Cdr Nikhil, whose Xperienceassessing over 12,500 SSB candidates shapes our focused,
         //                         psychology-driven approach to SSB preparation. Our goal is simple yet powerful: to help every deserving young aspirant realise the dream of becoming a commissioned officer in the Indian Armed Forces.`
 
-        textTwo: "Roger That Magazine is a curated current affairs and perspective platform created to support aspirants preparing for the Services Selection Board (SSB) interview. One of the most important aspects of the SSB selection process is the ability to demonstrate awareness of global developments, clarity of thought, and the ability to articulate informed opinions during group discussions and interviews.",
+        textTwo: "Roger That Magazine is a curated current affairs and perspective platform created to support aspirants preparing for the Services Selection Board (SSB) interview. One of the most important aspects of the SSB selection process is the ability to demonstrate awareness of global developments, clarity of thought, and the ability to articulate informed opinions during group discussions, lecturette and personal interviews. Roger That is your go-to resource for in-depth insights, real-world perspectives and expert analysis tailored to the SSB process.",
 
         banner: '/assets/website/rogerthat_banner.webp'
 
@@ -142,7 +142,7 @@ function Magnize() {
                 </script>
                 <link rel="canonical" href="https://ssbwithisv.in/magazine" />
             </Helmet>
-            <CustomHeader heading={data?.heading} text={data?.text} banner={data?.banner} />
+            <CustomHeader heading={data?.heading} text={data?.text} textTwo={data?.textTwo} banner={data?.banner} />
 
 
 
@@ -161,24 +161,49 @@ function Magnize() {
                             expected from future officers in the Armed Forces.
                         </p>
 
-                       
+
 
 
                         <div className="mvk-benefits">
 
-                            <h3>  Through carefully selected articles, opinion pieces, and discussions
-                                on contemporary issues, Roger That Magazine helps candidates:</h3>
+                            <h3> Through carefully selected articles, opinion pieces, and discussions on contemporary issues, Roger That magazine helps candidates:</h3>
 
                             <ul>
-                                <li>Stay updated with important global and national developments</li>
+                               
 
-                                <li>Build informed viewpoints on current affairs</li>
 
-                                <li>Improve confidence and clarity during SSB group discussions</li>
+                                <li>
+                                    Stay updated with important global and national developments
+                                </li>
+                                <li>
+                                    Prepare on the latest GD topics
+                                </li>
+                                <li>
+                                    Improve confidence and clarity during SSB group discussions
+                                </li>
 
-                                <li>Develop the ability to analyze complex situations and express balanced opinions</li>
 
-                                <li>Strengthen overall SSB interview preparation</li>
+                                <li>
+                                    Build informed viewpoints on current affairs
+                                </li>
+
+
+                                <li>
+                                    Develop the ability to analyze complex situations
+                                </li>
+                                <li>
+                                    Express balanced opinions during SSB personal interview
+                                </li>
+                                <li>
+                                    Sharpen knowledge areas on latest lecturette topics
+                                </li>
+                                <li>
+                                    Speak on the lecturette topics with clarity during GTO tasks
+                                </li>
+                                <li>
+                                    Strengthen overall SSB interview preparation
+                                </li>
+
                             </ul>
 
                         </div>

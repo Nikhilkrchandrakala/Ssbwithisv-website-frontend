@@ -20,7 +20,7 @@ function Successful() {
                         </div>
                         <div className="success-check-text">
                             Your account has been successfully recovered!
-                            <br />Sign in for better learning experience  .
+                            <br />Sign in for better learning Xperience .
                         </div>
                     </div>
 

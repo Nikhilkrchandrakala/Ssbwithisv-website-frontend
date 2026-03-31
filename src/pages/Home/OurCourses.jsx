@@ -151,7 +151,7 @@ const Courses = () => {
                 </div>
 
 
-                {/* Content */}
+                {/* Content */}    
                 <div className={styles.content}>
                     {/* LEFT LIST - Desktop / Horizontal Cards - Mobile */}
                     <div

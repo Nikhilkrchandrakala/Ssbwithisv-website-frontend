@@ -14,10 +14,10 @@ function GtoTrain() {
     const data = {
         heading: 'GTX',
         span: 'TM',
-        textTwo: `The Virtual Training Experience (VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
+        textTwo: `The Virtual Training Xperience(VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
 `,
 
-        text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the tasks conducted during the Services Selection Board interview. ',
+        text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the GTO tasks conducted during the Services Selection Board interview. ',
         textThree: 'Virtual Training Xperience by SSB with ISV',
         color: true,
         banner: '/assets/website/GTOCourseThumbnail.webp',
@@ -58,7 +58,7 @@ function GtoTrain() {
 
                 <meta
                     name="description"
-                    content="Experience India’s first Virtual Training Experience (VTX™) for SSB preparation. Practice GTO tasks, group discussions, and leadership exercises in a simulated SSB environment designed by ex-GTO assessors."
+                    content="XperienceIndia’s first Virtual Training Xperience(VTX™) for SSB preparation. Practice GTO tasks, group discussions, and leadership exercises in a simulated SSB environment designed by ex-GTO assessors."
                 />
 
                 <link rel="canonical" href="https://ssbwithisv.in/ssbVirtualTrainingXperience" />
@@ -82,8 +82,8 @@ function GtoTrain() {
 
                         <div className="pedagogical-text-box">
                             <p>
-                                The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.
-                                Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Group Planning Exercise, Command Task, and Group Discussions, enabling them to build confidence and clarity before appearing for the actual SSB interview.
+                                The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX™ platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.
+                                Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Half Group Task, Group Planning Exercise, Group Discussions, Command Task, and Final Group Task, enabling them to build confidence and clarity before appearing for the actual SSB interview.
                                 This program is part of the broader SSB mentoring and online coaching program offered by SSB with ISV, led by experienced assessors and defence professionals.
 
 
@@ -110,7 +110,7 @@ function GtoTrain() {
                             <p className={styles.virtualTrainingText}>
                                 Preparing for the SSB interview requires understanding how behaviour is observed
                                 during group tasks and leadership exercises. Many candidates focus only on theoretical
-                                preparation but lack practical exposure to the group testing environment used by the SSB.
+                                preparation but lack practical exposure to the group testing environment used at the SSB.
                             </p>
 
                             <div className="mvk-benefits">
@@ -118,12 +118,30 @@ function GtoTrain() {
                                 <h3>  Virtual training helps aspirants:</h3>
 
                                 <ul>
-                                    <li>Understand the structure of GTO tasks</li>
-                                    <li>Develop clarity in group planning exercises</li>
-                                    <li>Improve decision making under time pressure</li>
-                                    {/* <li>Improves decision making under pressure</li> */}
-                                    <li>Build confidence in group discussions</li>
-                                    <li>Learn how leadership behaviour is evaluated</li>
+                                    <li>
+                                        Understand the structure of GTO tasks
+                                    </li>
+
+
+                                    <li>
+                                        Develop clarity in group movement, group effectiveness and team dynamics
+                                    </li>
+
+
+                                    <li>
+                                        Improve decision making under time pressure
+                                    </li>
+
+
+                                    <li>
+                                        Build confidence in group endeavours and group discussions
+                                    </li>
+
+
+                                    <li>
+                                        Learn how leadership behaviour is evaluated
+                                    </li>
+
                                 </ul>
 
                                 <p className={`${styles.virtualTrainingText} mt-3`}>
@@ -152,7 +170,11 @@ function GtoTrain() {
                         <div className="col-lg-5">
 
                             <div className="sct-title mb-3">
-                                <h2>What You Learn in the Virtual Training Xperience (VTX™)</h2>
+                                {/* <h2>What You Learn in the Virtual Training Xperience (VTX™)</h2> */}
+                                <h2>
+                                    What you learn in the Virtual Training Xperience (VTX™ )
+                                </h2>
+
                             </div>
 
                             <div className="enable-list">
@@ -168,10 +190,11 @@ function GtoTrain() {
                                 <div className="enable-item">
                                     <i className="fa fa-users"></i>
                                     <span>
-                                        <strong>Progressive Group Task Simulation</strong>
+                                        <strong>Progressive Group Task/ Half Group Task/ Final Group Task simulation</strong>
                                         <div className='Phergarph_of_'>
 
-                                            Understand how teams collaborate to solve obstacles and how initiative, cooperation, and resourcefulness are assessed.
+                                            Understand how a team collaborates to solve obstacles and how effective intelligence, social adaptability, initiative, cooperation, ability to influence the group and resourcefulness are assessed.
+
                                         </div>
                                     </span>
                                 </div>
@@ -245,12 +268,12 @@ function GtoTrain() {
                         <div className="col-lg-6 order-lg-2 order-1">
 
                             <div className="sct-title mb-3">
-                                <h2>Who Should Use the VTX™</h2>
+                                <h2>Who should use  VTX™</h2>
                             </div>
 
                             <p className={styles.vtxAudienceText}>
-                                The Virtual Training Experience is designed for defence aspirants preparing
-                                for the Services Selection Board interview through different entry schemes.
+                                The Virtual Training Xperience is designed for defence aspirants preparing for the Services Selection Board interview through different entry schemes.
+
                             </p>
 
                             <p className={styles.vtxAudienceSubtitle}>
@@ -260,23 +283,28 @@ function GtoTrain() {
                             <div className={styles.vtxAudienceList}>
 
                                 <div className={styles.vtxAudienceItem}>
-                                    <span>NDA aspirants preparing for SSB</span>
+                                    <span> All defence aspirants preparing remotely without access to a physical GTO ground
+                                        NDA, 10+2 Tech, 10+2 B Tech (Navy) aspirants preparing for SSB online</span>
                                 </div>
 
                                 <div className={styles.vtxAudienceItem}>
-                                    <span>CDS aspirants appearing for SSB interviews</span>
+                                    <span>  CDS aspirants appearing for SSB interview online</span>
                                 </div>
 
                                 <div className={styles.vtxAudienceItem}>
-                                    <span>AFCAT candidates preparing for AFSB boards</span>
+                                    <span> AFCAT candidates preparing for AFSB online</span>
                                 </div>
 
                                 <div className={styles.vtxAudienceItem}>
-                                    <span>NCC Special Entry candidates</span>
+                                    <span> NCC special entry and JAG entry candidates</span>
                                 </div>
 
                                 <div className={styles.vtxAudienceItem}>
-                                    <span>Defence aspirants preparing remotely without access to a physical GTO ground</span>
+                                    <span>  Service entry candidates (CW Scheme candidates,SD list commission candidates, PC-SL entry, SCO entry and ACC candidates) looking for online SSB coaching while in service</span>
+                                </div>
+
+                                <div className={styles.vtxAudienceItem}>
+                                    <span>   SSC (Tech) and SSC (Non Tech) aspirants who are working and want online SSB preparation with a digital GTO ground</span>
                                 </div>
 
                             </div>
@@ -333,9 +361,9 @@ function GtoTrain() {
 
                     <div className="mvk-benefits">
 
-                        <h3>  Integrating Virtual Training with SSB Coaching</h3>
+                        <h3> Integrating Virtual Training with SSB coaching</h3>
                         <p className={styles.vtxIntegrationText}>
-                            The Virtual Training Experience is integrated with the SSB mentoring
+                          The Virtual Training Xperience (VTX™) is integrated with the SSB mentoring
                             program offered by SSB with ISV.   Candidates combine:
                         </p>
 

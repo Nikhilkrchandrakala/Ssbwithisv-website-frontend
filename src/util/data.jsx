@@ -208,7 +208,7 @@ export const journeyData = [
     {
         date: "30 September 2024",
         title: "Virtual GTO Ground Rolled Out",
-        desc: "Launch of India’s first virtual training experience for remote SSB preparation.",
+        desc: "Launch of India’s first virtual training Xperiencefor remote SSB preparation.",
         image: "/assets/website/virtual.webp",
     },
 
@@ -927,12 +927,12 @@ export const faqDataHome = [
         answer: "Choose an institute that provides guidance from DIPR qualified experienced ex-SSB assessors and offers structured preparation for psych tests, GTO tasks and personal interviews focused on deepening self awareness and enhancing leadership skills.  Can SSB be cleared without coaching?",
         isOpen: false
     },
-    {
-        id: "faq3",
-        question: "Can SSB be cleared without coaching?",
-        answer: "Yes, SSB can be cleared without coaching if a candidate understands the process well, works on personality development and practices the required tests. However, professional guidance can help avoid common mistakes and myths.",
-        isOpen: false
-    },
+    // {
+    //     id: "faq3",
+    //     question: "Can SSB be cleared without coaching?",
+    //     answer: "Yes, SSB can be cleared without coaching if a candidate understands the process well, works on personality development and practices the required tests. However, professional guidance can help avoid common mistakes and myths.",
+    //     isOpen: false
+    // },
     {
         id: "faq4",
         question: "What are the psychology tests in SSB?",
@@ -1007,6 +1007,7 @@ A DIPR certified psychologist provides individual feedback to improve thinking p
 • Group Discussion
 • Group Planning Exercise
 • Progressive Group Task
+• Group Obstacle Race
 • Half Group Task
 • Lecturette
 • Command Task
@@ -1091,7 +1092,7 @@ export const CoursesfaqData = [
     {
         id: "faq7",
         question: "Is online SSB coaching effective?",
-        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Experience (VTX™) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
+        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Xperience(VTX™) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
         isOpen: false
     }
 ];
@@ -1116,21 +1117,21 @@ export const vtxFaqData = [
         id: "vtxFaq3",
         question: "Does VTX™ help in understanding GTO tasks?",
         answer:
-            "Yes. The platform helps aspirants understand how tasks such as Progressive Group Task (PGT), Half Group Task (HGT), Command Task, and Group Discussions are structured and evaluated during the SSB interview.",
+            " Yes. The platform helps aspirants understand how tasks such as PGT, HGT, FGT, Command Tasks, and group discussions are structured and evaluated.",
         isOpen: false
     },
     {
         id: "vtxFaq4",
         question: "Who should use virtual SSB training?",
         answer:
-            "Candidates preparing for NDA, CDS, AFCAT, NCC Special Entry, and other defence entries can benefit from virtual SSB preparation. It is particularly useful for aspirants who do not have access to a physical GTO ground for practice.",
+            " Candidates preparing for NDA, CDS, AFCAT, and other defence entries online and do not have an access to physical GTO ground can benefit from virtual SSB preparation at SSB with ISV with VTX™.",
         isOpen: false
     },
     {
         id: "vtxFaq5",
         question: "Is VTX™ a shortcut for SSB preparation?",
         answer:
-            "No. VTX™ (Virtual Training Xperience) is not a shortcut to clearing the SSB interview. The Services Selection Board evaluates a candidate’s personality, leadership potential, decision-making ability, and officer-like qualities, which cannot be developed through shortcuts or memorized responses. Instead, VTX™ helps aspirants understand the structure and behavioural expectations of the SSB process.",
+            "No. VTX™ (Virtual Training Xperience) is not a shortcut to clearing the SSB interview. VTX™ is “The GTO ground before the GTO ground”. VTX™gives a first hand exposure of a full-fledged GTO ground that the candidates will encounter during SSB/ AFSB. The Services Selection Board evaluates a candidate’s personality, leadership potential, decision-making ability, and officer-like qualities, which cannot be developed through shortcuts or memorized responses.",
         isOpen: false
     }
 ];
@@ -1141,21 +1142,21 @@ export const hallOfFameFaqData = [
         id: "hofFaq1",
         question: "What does it mean to be recommended in the SSB interview?",
         answer:
-            "Being recommended means that the assessors at the Services Selection Board have found the candidate suitable for officer training based on their personality traits, leadership potential, and officer-like qualities.",
+            "Being recommended means that the assessors at the Services Selection Board have found the candidate suitable for officer training based on his/her personality traits, leadership potential, and officer-like qualities.",
         isOpen: true
     },
     {
         id: "hofFaq2",
         question: "How many candidates get recommended in SSB?",
         answer:
-            "The number of recommended candidates varies depending on the board and the entry scheme. Only candidates who consistently demonstrate strong behavioural traits across psychology tests, group tasks, and interviews are recommended.",
+            "The number of recommended candidates varies depending on the type of batch, the entry scheme and essential on each and every candidates’ performance of the day. Only candidates who consistently demonstrate strong behavioural traits across psychology tests, group tasks, and interviews are recommended.",
         isOpen: false
     },
     {
         id: "hofFaq3",
         question: "Can SSB success stories help in preparation?",
         answer:
-            "Yes. Learning from the experiences of recommended candidates can provide valuable insights into how the SSB selection process works and what qualities assessors look for during the interview.",
+            "Yes. Learning from the experiences of recommended candidates can provide valuable insights into how the SSB selection process works and what qualities assessors look for during the interview. However, one shoe does not fit all, meaning what worked for others may or may not work for you. Two individuals do not have the same personality and therefore the assessment for both individuals is not the same.",
         isOpen: false
     }
 ];
@@ -1252,7 +1253,7 @@ Candidates learn how interview questions are derived from the PIQ form and how t
     },
     {
         title: "Mock Interview by DIPR Certified IO",
-        content: `One of the most valuable components of our SSB coaching program is the opportunity to participate in a realistic mock interview conducted by a DIPR certified Interviewing Officer. The mock interview simulates the actual environment of the SSB personal interview, allowing candidates to experience the type of questions, conversation flow, and behavioural evaluation used by the Services Selection Board.`,
+        content: `One of the most valuable components of our SSB coaching program is the opportunity to participate in a realistic mock interview conducted by a DIPR certified Interviewing Officer. The mock interview simulates the actual environment of the SSB personal interview, allowing candidates to Xperiencethe type of questions, conversation flow, and behavioural evaluation used by the Services Selection Board.`,
         // "Real interview simulation with detailed feedback to improve performance.",
         points: [
             "Communication style",
@@ -1285,7 +1286,7 @@ Candidates learn how interview questions are derived from the PIQ form and how t
             "SRT situations",
             "Self description evaluation"
         ],
-        content2: `These exercises allow candidates to experience the time pressure and psychological evaluation format used during the SSB interview. After the test, a DIPR certified psychologist provides individual feedback, helping candidates understand how their responses reflect personality traits such as responsibility, initiative, emotional stability, and leadership potential. This structured feedback helps aspirants improve their thinking patterns and strengthen their psychological responses.`
+        content2: `These exercises allow candidates to Xperiencethe time pressure and psychological evaluation format used during the SSB interview. After the test, a DIPR certified psychologist provides individual feedback, helping candidates understand how their responses reflect personality traits such as responsibility, initiative, emotional stability, and leadership potential. This structured feedback helps aspirants improve their thinking patterns and strengthen their psychological responses.`
 
     },
     {
@@ -1309,7 +1310,7 @@ Candidates learn how interview questions are derived from the PIQ form and how t
     {
         title: "Genesis of Group Testing Technique",
         content:
-            `This session explains the psychological principles behind the group testing techniques used in the SSB interview.
+            `This session explains the psychological principles behind the group testing technique  used in the SSB interview.
 Candidates learn how these tasks were designed to evaluate leadership behaviour and how Group Testing Officers observe specific behavioural indicators during group activities.
 The module helps aspirants understand what assessors look for in areas such as:`,
         points: [

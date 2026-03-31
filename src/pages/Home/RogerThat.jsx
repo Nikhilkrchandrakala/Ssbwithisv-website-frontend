@@ -55,7 +55,7 @@ const RogerThat = () => {
                         </div>
                         <p className={styles.subTitle}>Our Official Podcast channel</p>
                         <p style={{ fontWeight: 'lighter' }} className={styles.description}>
-                            Roger That with NKC is Lt. Commander Nikhil Kumar Chandrakala’s military leadership and strategy channel focused on deconstructing real stories from the Indian Armed Forces and unpacking leadership principles with curated experience based insights from an ex-GTO and Warship Captain.
+                            Roger That with NKC is Lt. Commander Nikhil Kumar Chandrakala’s military leadership and strategy channel focused on deconstructing real stories from the Indian Armed Forces and unpacking leadership principles with curated Xperiencebased insights from an ex-GTO and Warship Captain.
                         </p>
                     </div>
 

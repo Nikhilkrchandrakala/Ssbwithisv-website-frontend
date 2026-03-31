@@ -246,7 +246,7 @@ p {
 }
 
 .breed-content .breed-subtitle {
-    font-size: 18px;
+    font-size: 25px;
     line-height: 28px;
     margin-bottom: 30px;
     color: var(--theme-white);
@@ -1960,7 +1960,7 @@ p {
     }
 
     .breed-content .breed-subtitle {
-        font-size: 15px;
+        font-size: 18px;
         line-height: 25px;
         margin-bottom: 20px;
     }
@@ -2438,4 +2438,8 @@ p {
 .ssb-accordion-title:hover {
     /* : #e3c607; */
     color: var(--secondary-color);
+}
+
+.aboutIntroText {
+    margin-top: 20px;
 }

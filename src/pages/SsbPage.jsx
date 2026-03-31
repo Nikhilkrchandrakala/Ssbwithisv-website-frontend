@@ -15,8 +15,7 @@ function SsbPage() {
     const data = {
         heading: ' What is the Services Selection Board (SSB)?',
         textTwo: `The Services Selection Board (SSB) is the official selection system used by the Indian Armed Forces to identify candidates with the personality, leadership potential, and officer-like qualities required to become commissioned officers. Unlike traditional examinations that primarily evaluate academic knowledge, the SSB interview is designed to assess a candidate’s behaviour, decision-making ability, emotional intelligence, communication skills, and leadership potential.
-Through a structured five-day evaluation process, candidates are observed across psychological tests, group tasks, and personal interviews. The aim is to identify individuals who demonstrate the mindset, responsibility, and character required to lead troops and operate effectively in challenging environments.
-`,
+Through a structured five-day evaluation process, candidates are observed across psychological tests, group tasks, and personal interviews. The aim is to identify individuals who demonstrate the mindset, responsibility, and character required to lead troops and operate effectively in challenging environments.`,
         banner: '/assets/website/Whatisssb_banner.webp'
     }
 
@@ -77,9 +76,7 @@ Through a structured five-day evaluation process, candidates are observed across
                     </p>
 
                     <p className="ssb-philosophy-text">
-                        Instead, the SSB evaluates how candidates think, act, communicate, and interact with others
-                        in different situations. By observing candidates across multiple activities, the board gains
-                        a comprehensive understanding of their personality and suitability for military leadership.
+                        Instead, the SSB evaluates how candidates think, act, communicate, and interact with others in different situations under pressure. By observing candidates across multiple activities, the board gains a comprehensive understanding of their personality and suitability for military leadership.
                     </p>
 
                     <p className="ssb-philosophy-text">
@@ -109,13 +106,13 @@ Through a structured five-day evaluation process, candidates are observed across
                     </ul>
 
                     <p className="ssb-philosophy-text">
-                        This multi-dimensional evaluation system ensures that a candidate’s personality is assessed
+                        This three-dimensional evaluation system ensures that a candidate’s personality is assessed
                         from different perspectives before the final recommendation is made.
                     </p>
 
                     {/* ===== IMPORTANCE ===== */}
                     <div className="sct-title mb-4 text-center mt-5">
-                        <h2>Why Understanding the SSB Process Matters</h2>
+                        <h2>Why does understanding the SSB process matter?</h2>
                     </div>
 
                     <p className="ssb-philosophy-text">
@@ -125,9 +122,8 @@ Through a structured five-day evaluation process, candidates are observed across
                     </p>
 
                     <p className="ssb-philosophy-text">
-                        Preparation for the SSB interview is not about memorizing answers or following shortcuts.
-                        Instead, it involves developing self-awareness, leadership behaviour, communication skills,
-                        and officer-like qualities expected from future leaders of the Armed Forces.
+                        Preparation for the SSB interview is not about memorizing answers or following shortcuts. Instead, it involves developing self-awareness, leadership behaviour, communication skills, and the officer-like qualities expected from future leaders of the Indian Armed Forces.
+
                     </p>
 
                 </div>
@@ -140,7 +136,7 @@ Through a structured five-day evaluation process, candidates are observed across
             <TipsToExcel />
             <SelectionMap />
 
-           
+
 
             <Faq data={faqData} />
 

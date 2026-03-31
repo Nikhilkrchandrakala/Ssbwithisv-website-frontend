@@ -19,7 +19,7 @@ function Courses() {
 
     const data = {
         heading: "Our Courses - SSB Coaching & Interview Preparation Program",
-        text: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
+        textTwo: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
         banner: '/assets/website/courses_banner.webp',
 
     };
@@ -69,7 +69,7 @@ function Courses() {
             </Helmet>
 
 
-            <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
+            <CustomHeader heading={data.heading} text={data.textTwo} banner={data.banner} />
 
             <section className="container sectionspace60">
                 <div className="course-intro">
@@ -107,8 +107,35 @@ function Courses() {
                             <li>Service entry candidates (CW Scheme, SD List Commission, ACC Entry, SCO & PC-SL commission)</li>
                             <li>SSC direct entries into various branches of the Navy (Executive, Law, Pilot, Naval Air Operations, Logistics, Engineering, Electrical, Naval Armament, Naval Constructor)</li>
                         </ul>
+                    </div>
+
+                    <div className="mvk-benefits">
 
                         <p style={{ margin: '20px' }}>With expert mentoring by professionals who understand the SSB assessment system, this program focuses on holistic personality development and officer-like qualities training, ensuring candidates are well prepared to face every stage of the SSB interview process.</p>
+
+
+                        <ul>
+                            {/* <li>NDA SSB Interview</li>
+                            <li>CDS SSB Interview</li> */}
+
+                            <li>
+                                1.⁠ ⁠10 day SSB hackathon - 12499 + 18% GST
+                            </li>
+                            <li>
+                                2.⁠ ⁠⁠IO + Mock Interview 2499 + 18%
+                            </li>
+                            <li>
+                                3.⁠ ⁠⁠PSych + Mock Psych test and feedback 3499 + 18%
+                            </li>
+                            <li>
+                                4.⁠ ⁠⁠Intro to SSB and PPDT/ Screening 1999+18%
+                            </li>
+                            <li>
+                                5.⁠ ⁠⁠GTO course on VTX - 7999+18%
+                            </li>
+
+
+                        </ul>
 
                     </div>
 
@@ -455,8 +482,8 @@ function Courses() {
 
                     </div>
 
-                    <div style={{marginTop:'40px'}}>
-                        <h3 style={{margin:'10px 0'}}>Important Notes</h3>
+                    <div style={{ marginTop: '40px'  }}>
+                        <h3 style={{ margin: '10px 0' , textAlign:'center' }}>Important Notes</h3>
 
                         {scheduleData.notes.map((note, index) => (
                             <p key={index}>
@@ -478,7 +505,7 @@ function Courses() {
 
                 <div className="mvk-benefits">
 
-                    <h3>Why Choose SSB with ISV for SSB Coaching</h3>
+                    <h3>Why choose SSB with ISV for SSB coaching?</h3>
                     <p>SSB with ISV focuses on authentic personality development rather than superficial coaching techniques.Our training philosophy is based on the principle of Manasa – Vacha – Karmana, emphasizing alignment between thought, communication, and action. Through structured mentoring, behavioural training, and realistic simulations, we help candidates develop the mindset and qualities required to succeed in the SSB interview and eventually serve as officers in the Indian Armed Forces.</p>
                 </div>
 
