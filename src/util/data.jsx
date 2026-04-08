@@ -56,6 +56,7 @@ export const coursesData = [
         hours: "60",
         description: `${""}`,
         image: "/assets/website/course5.webp",
+        price:" 12499 + 18% GST"
     },
 
     {
@@ -70,6 +71,7 @@ export const coursesData = [
         description:
             "Break your myths about SSB",
         image: "/assets/website/PPDTcoursethumbnail.webp",
+        price:" 2499 + 18% GST"
     },
 
     {
@@ -85,6 +87,7 @@ export const coursesData = [
             "Focused preparation for Psych Tests",
         // image: "/assets/course-3.jpg",
         image: "/assets/website/psychcoursethumbnail.webp",
+        price:" 3499 + 18% GST"
 
     },
 
@@ -99,6 +102,7 @@ export const coursesData = [
         hours: "04",
         description: "Learn how to present yourself",
         image: "/assets/website/Interviewcoursethumbnail.webp",
+        price:" 1999 + 18% GST"
     },
 
     {
@@ -115,6 +119,7 @@ export const coursesData = [
         // image: "/assets/98c7a7f50b4f84914d4384c7773d36774b2c9ad3.jpg",
 
         image: "/assets/website/10dayshackathon_thumbail.webp",
+        price:" 7999 + 18% GST"
 
     },
 ];
@@ -1092,7 +1097,7 @@ export const CoursesfaqData = [
     {
         id: "faq7",
         question: "Is online SSB coaching effective?",
-        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Xperience(VTX™) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
+        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Xperience(VTX™ ) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
         isOpen: false
     }
 ];
@@ -1101,21 +1106,21 @@ export const CoursesfaqData = [
 export const vtxFaqData = [
     {
         id: "vtxFaq1",
-        question: "What is VTX™ in SSB preparation?",
+        question: "What is VTX™  in SSB preparation?",
         answer:
-            "VTX™ (Virtual Training Xperience) is a virtual training environment designed to simulate the GTO ground used in the Services Selection Board interview. It helps aspirants understand how group tasks are structured and how behaviour is observed during the SSB assessment process.",
+            "VTX™  (Virtual Training Xperience) is a virtual training environment designed to simulate the GTO ground used in the Services Selection Board interview. It helps aspirants understand how group tasks are structured and how behaviour is observed during the SSB assessment process.",
         isOpen: true
     },
     {
         id: "vtxFaq2",
         question: "Can SSB preparation be done online?",
         answer:
-            "Yes. With structured mentoring programs and simulation platforms like VTX™, candidates can prepare effectively for the SSB interview remotely. Online preparation helps aspirants understand the selection process, psychological tests, and group task dynamics before appearing at the board.",
+            "Yes. With structured mentoring programs and simulation platforms like VTX™ , candidates can prepare effectively for the SSB interview remotely. Online preparation helps aspirants understand the selection process, psychological tests, and group task dynamics before appearing at the board.",
         isOpen: false
     },
     {
         id: "vtxFaq3",
-        question: "Does VTX™ help in understanding GTO tasks?",
+        question: "Does VTX™  help in understanding GTO tasks?",
         answer:
             " Yes. The platform helps aspirants understand how tasks such as PGT, HGT, FGT, Command Tasks, and group discussions are structured and evaluated.",
         isOpen: false
@@ -1124,14 +1129,14 @@ export const vtxFaqData = [
         id: "vtxFaq4",
         question: "Who should use virtual SSB training?",
         answer:
-            " Candidates preparing for NDA, CDS, AFCAT, and other defence entries online and do not have an access to physical GTO ground can benefit from virtual SSB preparation at SSB with ISV with VTX™.",
+            " Candidates preparing for NDA, CDS, AFCAT, and other defence entries online and do not have an access to physical GTO ground can benefit from virtual SSB preparation at SSB with ISV with VTX™ .",
         isOpen: false
     },
     {
         id: "vtxFaq5",
-        question: "Is VTX™ a shortcut for SSB preparation?",
+        question: "Is VTX™  a shortcut for SSB preparation?",
         answer:
-            "No. VTX™ (Virtual Training Xperience) is not a shortcut to clearing the SSB interview. VTX™ is “The GTO ground before the GTO ground”. VTX™gives a first hand exposure of a full-fledged GTO ground that the candidates will encounter during SSB/ AFSB. The Services Selection Board evaluates a candidate’s personality, leadership potential, decision-making ability, and officer-like qualities, which cannot be developed through shortcuts or memorized responses.",
+            "No. VTX™  (Virtual Training Xperience) is not a shortcut to clearing the SSB interview. VTX™  is “The GTO ground before the GTO ground”. VTX™ gives a first hand exposure of a full-fledged GTO ground that the candidates will encounter during SSB/ AFSB. The Services Selection Board evaluates a candidate’s personality, leadership potential, decision-making ability, and officer-like qualities, which cannot be developed through shortcuts or memorized responses.",
         isOpen: false
     }
 ];
@@ -1180,13 +1185,13 @@ export const scheduleData = {
 
         { day: 5, time: "7:30 - 11:00 AM", topic: "Progressive Group Task Theory", by: "GTO" },
 
-        { day: 6, time: "7:30 - 11:00 AM", topic: "Group Obstacle Race, Mock PGT practice on VTX - Virtual Training Experience", by: "GTO" },
+        { day: 6, time: "7:30 - 11:00 AM", topic: "Group Obstacle Race, Mock PGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
 
         { day: 7, time: "7:30 - 11:00 AM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task", by: "GTO" },
 
-        { day: 8, time: "7:30 - 11:00 AM", topic: "Mock HGT & FGT practice on VTX - Virtual Training Experience", by: "GTO" },
+        { day: 8, time: "7:30 - 11:00 AM", topic: "Mock HGT & FGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
 
-        { day: 9, time: "7:30 - 11:00 AM", topic: "Command Task practice on VTX - Virtual Training Experience", by: "GTO" },
+        { day: 9, time: "7:30 - 11:00 AM", topic: "Command Task practice on VTX™ - Virtual Training Experience", by: "GTO" },
         { day: 9, time: "7:00 - 8:00 PM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 10, time: "7:30 - 11:00 AM", topic: "Feedback by GTO", by: "GTO" }
@@ -1204,25 +1209,25 @@ export const scheduleData = {
         { day: 3, time: "7:00 - 8:00 AM", topic: "How to fill PIQ form & Interview Theory", by: "IO" },
 
         { day: 4, time: "7:30 - 11:00 PM", topic: "Group Planning Exercise, Mock GPE practice", by: "GTO" },
-        { day: 4, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 1", by: "Mentor-in-Residence & Principal Insights" },
+        { day: 4, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 1", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 5, time: "7:30 - 11:00 PM", topic: "Progressive Group Task Theory", by: "GTO" },
 
-        { day: 6, time: "7:30 - 11:00 PM", topic: "Group Obstacle Race, Mock PGT practice on VTX - Virtual Training Experience", by: "GTO" },
+        { day: 6, time: "7:30 - 11:00 PM", topic: "Group Obstacle Race, Mock PGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
 
         { day: 7, time: "7:30 - 11:00 PM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task", by: "GTO" },
 
-        { day: 8, time: "7:30 - 11:00 PM", topic: "Mock HGT & FGT practice on VTX - Virtual Training Experience", by: "GTO" },
+        { day: 8, time: "7:30 - 11:00 PM", topic: "Mock HGT & FGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
 
-        { day: 9, time: "7:30 - 11:00 PM", topic: "Command Task practice on VTX - Virtual Training Experience", by: "GTO" },
-        { day: 9, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights" },
+        { day: 9, time: "7:30 - 11:00 PM", topic: "Command Task practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 9, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 10, time: "7:30 - 11:00 PM", topic: "Feedback by GTO", by: "GTO" }
     ],
     notes: [
         "Story writing practice and evaluation will be done daily.",
 
-        "All GTO theory sessions and practices will be conducted on VTX (Virtual Training Experience) - India's first Virtual GTO Ground with ~250 structures of different difficulty levels. VTX is a proprietary asset of CS Joint Services Academy Private Limited, All Rights Reserved.",
+        "All GTO theory sessions and practices will be conducted on VTX™ (Virtual Training Experience) - India's first Virtual GTO Ground with ~250 structures of different difficulty levels. VTX™ is a proprietary asset of CS Joint Services Academy Private Limited, All Rights Reserved.",
 
         "Mock interview is conducted on the date mutually convenient for the Interviewing Officer and the student.",
 

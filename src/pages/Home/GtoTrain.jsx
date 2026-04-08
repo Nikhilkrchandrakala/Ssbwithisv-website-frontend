@@ -14,7 +14,7 @@ function GtoTrain() {
     const data = {
         heading: 'GTX',
         span: 'TM',
-        textTwo: `The Virtual Training Xperience(VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
+        textTwo: `The Virtual Training Xperience(VTX™ ) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
 `,
 
         text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the GTO tasks conducted during the Services Selection Board interview. ',
@@ -23,7 +23,7 @@ function GtoTrain() {
         banner: '/assets/website/GTOCourseThumbnail.webp',
 
         //     headingTwo: "Pedagogical intent",
-        //     preragraph: "The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.",
+        //     preragraph: "The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX™ platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.",
         //     preragraphTwo: `Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Group Planning Exercise, Command Task, and Group Discussions, enabling them to build confidence and clarity before appearing for the actual SSB interview.  
 
         // ${<br />}
@@ -58,7 +58,7 @@ function GtoTrain() {
 
                 <meta
                     name="description"
-                    content="XperienceIndia’s first Virtual Training Xperience(VTX™) for SSB preparation. Practice GTO tasks, group discussions, and leadership exercises in a simulated SSB environment designed by ex-GTO assessors."
+                    content="XperienceIndia’s first Virtual Training Xperience(VTX™ ) for SSB preparation. Practice GTO tasks, group discussions, and leadership exercises in a simulated SSB environment designed by ex-GTO assessors."
                 />
 
                 <link rel="canonical" href="https://ssbwithisv.in/ssbVirtualTrainingXperience" />
@@ -82,7 +82,7 @@ function GtoTrain() {
 
                         <div className="pedagogical-text-box">
                             <p>
-                                The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX™ platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.
+                                The SSB interview evaluates leadership, teamwork, problem-solving ability, and officer-like qualities through a series of structured group tasks. For many aspirants preparing remotely, access to a real GTO ground is limited. The VTX™  platform bridges this gap by providing a virtual SSB training environment where candidates can understand how GTO tasks are structured, executed, and evaluated.
                                 Through guided training sessions, candidates learn the principles behind tasks such as the Progressive Group Task, Half Group Task, Group Planning Exercise, Group Discussions, Command Task, and Final Group Task, enabling them to build confidence and clarity before appearing for the actual SSB interview.
                                 This program is part of the broader SSB mentoring and online coaching program offered by SSB with ISV, led by experienced assessors and defence professionals.
 
@@ -170,9 +170,9 @@ function GtoTrain() {
                         <div className="col-lg-5">
 
                             <div className="sct-title mb-3">
-                                {/* <h2>What You Learn in the Virtual Training Xperience (VTX™)</h2> */}
+                                {/* <h2>What You Learn in the Virtual Training Xperience (VTX™ )</h2> */}
                                 <h2>
-                                    What you learn in the Virtual Training Xperience (VTX™ )
+                                    What you learn in the Virtual Training Xperience (VTX™  )
                                 </h2>
 
                             </div>
@@ -268,7 +268,7 @@ function GtoTrain() {
                         <div className="col-lg-6 order-lg-2 order-1">
 
                             <div className="sct-title mb-3">
-                                <h2>Who should use  VTX™</h2>
+                                <h2>Who should use  VTX™ </h2>
                             </div>
 
                             <p className={styles.vtxAudienceText}>
@@ -363,7 +363,7 @@ function GtoTrain() {
 
                         <h3> Integrating Virtual Training with SSB coaching</h3>
                         <p className={styles.vtxIntegrationText}>
-                          The Virtual Training Xperience (VTX™) is integrated with the SSB mentoring
+                          The Virtual Training Xperience (VTX™ ) is integrated with the SSB mentoring
                             program offered by SSB with ISV.   Candidates combine:
                         </p>
 
@@ -400,7 +400,7 @@ function GtoTrain() {
                                 <div className="sct-title-section-gtx ">
                                     {/* <h1 className='sct-title-gtx' >
                                         <span>
-                                            VTX™ is a preparatory bridge —
+                                            VTX™  is a preparatory bridge —
                                         </span>
                                         <span>designed to support authentic performance.</span>
                                     </h1> */}
@@ -413,7 +413,7 @@ function GtoTrain() {
                                         </span> */}
 
                                         <span className='title-gtx shimmerText'>
-                                            VTX™ is a preparatory bridge —
+                                            VTX™  is a preparatory bridge —
                                             designed to support authentic performance
                                         </span>
                                     </h1>
@@ -440,7 +440,7 @@ function GtoTrain() {
                                     <h2>Built with experience, used with responsibility</h2>
                                 </div>
                                 <p className='text-center'>
-                                    Created by an ex-GTO, VTX™ blends real assessment insight with modern technology   <br />staying fully aligned with the spirit and integrity of the SSB process.
+                                    Created by an ex-GTO, VTX™  blends real assessment insight with modern technology   <br />staying fully aligned with the spirit and integrity of the SSB process.
                                 </p>
                             </div>
                         </div>

@@ -27,7 +27,7 @@ const UniquePedagogy = () => {
             <div className="pl mb">
 
 
-                <HeadingTwo h1={'Unique pedagogy:'} t1='VTX™' />
+                <HeadingTwo h1={'Unique pedagogy:'} t1='VTX™ ' />
             </div>
             {/* </div> */}
             {/* </div> */}
@@ -35,7 +35,7 @@ const UniquePedagogy = () => {
                 <div className={styles.left}>
 
                     <p >
-                        Our pedagogy includes VTX™ (Virtual Training Xperience); a first-of-its-kind virtual GTO ground, created to replicate the outdoor group tasks of a real GTO ground as they exist across Services Selection Boards and Air Force Selection Boards. This approach represents a capability not seen in conventional SSB preparation.
+                        Our pedagogy includes VTX™  (Virtual Training Xperience); a first-of-its-kind virtual GTO ground, created to replicate the outdoor group tasks of a real GTO ground as they exist across Services Selection Boards and Air Force Selection Boards. This approach represents a capability not seen in conventional SSB preparation.
                     </p>
                 </div>
 
@@ -48,7 +48,7 @@ const UniquePedagogy = () => {
 
                 <div className={styles.right}>
                     <p>
-                        VTX allows aspirants to see, understand, and mentally Xperiencethe structure of GTO tasks before they step onto the physical ground — how tasks are laid out, how groups move, how time pressure unfolds, and how observation happens in real conditions. It brings the unseen into view.
+                        VTX™ allows aspirants to see, understand, and mentally Xperiencethe structure of GTO tasks before they step onto the physical ground — how tasks are laid out, how groups move, how time pressure unfolds, and how observation happens in real conditions. It brings the unseen into view.
                     </p>
                 </div>
             </div>

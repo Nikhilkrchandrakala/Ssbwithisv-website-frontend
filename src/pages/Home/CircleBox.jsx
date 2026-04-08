@@ -71,7 +71,7 @@ function CircleBox() {
                     </div>
 
                     <p className={styles.titleOfSecondSection}>
-                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTX™). At SSB with ISV, we provide structured SSB coaching and interview preparation designed to help aspirants understand the assessment process and develop authentic leadership behaviour. Our mentoring programs cover psychology tests such as TAT, WAT, SRT, GTO tasks, PIQ analysis, and personal interview training. Led by DIPR certified ex-SSB assessors of the Indian Armed Forces, SSB with ISV comes with a promise to guide and prepare aspiring officers for success in the Services Selection Board.
+                        India’s first online SSB mentoring platform with a proprietary virtual training experience (VTX™ ). At SSB with ISV, we provide structured SSB coaching and interview preparation designed to help aspirants understand the assessment process and develop authentic leadership behaviour. Our mentoring programs cover psychology tests such as TAT, WAT, SRT, GTO tasks, PIQ analysis, and personal interview training. Led by DIPR certified ex-SSB assessors of the Indian Armed Forces, SSB with ISV comes with a promise to guide and prepare aspiring officers for success in the Services Selection Board.
 
 
                     </p>

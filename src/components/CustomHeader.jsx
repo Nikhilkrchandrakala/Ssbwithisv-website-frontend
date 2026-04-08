@@ -49,8 +49,15 @@ function CustomHeader({ heading, text, textTwo, span, textThree, color, banner, 
 
                         </div>
 
-                        <div className="col-xl-7">
-                            {textThree && <h1 className="breed-title">{textThree}</h1>}
+                        <div className="col-xl-8">
+                            {/* {textThree && <h1 className="breed-title">{textThree}</h1>} */}
+
+                            {textThree && (
+                                <h1 className="breed-title">
+                                    {textThree.split('by')[0]} <br />
+                                    by {textThree.split('by')[1]}
+                                </h1>
+                            )}
 
                             {text && <p className="breed-subtitle">
                                 {text}

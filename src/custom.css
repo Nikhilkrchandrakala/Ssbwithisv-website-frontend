@@ -246,7 +246,7 @@ p {
 }
 
 .breed-content .breed-subtitle {
-    font-size: 25px;
+    font-size: 18px;
     line-height: 28px;
     margin-bottom: 30px;
     color: var(--theme-white);
@@ -2279,11 +2279,11 @@ p {
 .schedule-table th {
     background: #d2a100;
     color: #000;
-    padding: 12px;
+    padding: 12px 6px;
 }
 
 .schedule-table td {
-    padding: 12px;
+    padding: 12px 6px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 

@@ -19,7 +19,7 @@ function Courses() {
 
     const data = {
         heading: "Our Courses - SSB Coaching & Interview Preparation Program",
-        textTwo: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
+        text: `Preparing for the Services Selection Board (SSB) interview requires much more than academic knowledge. The SSB selection process is designed to assess a candidate’s personality, leadership potential, decision-making ability, emotional intelligence, and officer-like qualities through a structured five-day evaluation system.`,
         banner: '/assets/website/courses_banner.webp',
 
     };
@@ -69,7 +69,7 @@ function Courses() {
             </Helmet>
 
 
-            <CustomHeader heading={data.heading} text={data.textTwo} banner={data.banner} />
+            <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
 
             <section className="container sectionspace60">
                 <div className="course-intro">
@@ -131,7 +131,7 @@ function Courses() {
                                 4.⁠ ⁠⁠Intro to SSB and PPDT/ Screening 1999+18%
                             </li>
                             <li>
-                                5.⁠ ⁠⁠GTO course on VTX - 7999+18%
+                                5.⁠ ⁠⁠GTO course on VTX™ - 7999+18%
                             </li>
 
 
@@ -208,9 +208,15 @@ function Courses() {
 
                         {activeTab === "c1" && (
                             <div className="course-tab-card">
-                                <h2 className="course-tab-card-title">
-                                    10 days Services Selection Board Hackathon
-                                </h2>
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+
+                                    <h2 className="course-tab-card-title">
+                                        10 days Services Selection Board Hackathon
+                                    </h2>
+
+                                    <p className="title-gtx shimmerText_sec" >Price -  12499 + 18% GST</p>
+
+                                </div>
 
                                 <h3 className="course-tab-card-hours">
                                     <strong>Total Sessions:</strong> 10 |{" "}
@@ -264,9 +270,16 @@ function Courses() {
 
                         {activeTab === "c2" && (
                             <div className="course-tab-card">
-                                <h3 className="course-tab-card-title">
-                                    Introduction to SSB & PPDT
-                                </h3>
+
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+
+                                    <h3 className="course-tab-card-title">
+                                        Introduction to SSB & PPDT
+                                    </h3>
+
+                                    <p className="title-gtx shimmerText_sec" >Price -  2499 + 18% GST</p>
+
+                                </div>
                                 <ul>
                                     <li>
                                         Introduction to SSB
@@ -289,9 +302,20 @@ function Courses() {
 
                         {activeTab === "c3" && (
                             <div className="course-tab-card">
-                                <h3 className="course-tab-card-title">
+                                {/* <h3 className="course-tab-card-title">
                                     Psych Theory Course
-                                </h3>
+                                </h3> */}
+
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+
+                                    <h3 className="course-tab-card-title">
+                                        Psych Theory Course
+
+                                    </h3>
+
+                                    <p className="title-gtx shimmerText_sec" >Price -  3499 + 18% GST</p>
+
+                                </div>
                                 <ul>
 
                                     {/* Introduction to SSB,
@@ -319,9 +343,16 @@ function Courses() {
 
                         {activeTab === "c4" && (
                             <div className="course-tab-card">
-                                <h3 className="course-tab-card-title">
-                                    Interview Theory Course
-                                </h3>
+
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+
+                                    <h3 className="course-tab-card-title">
+                                        Interview Theory Course
+                                    </h3>
+
+                                    <p className="title-gtx shimmerText_sec" >Price -  1999 + 18% GST</p>
+
+                                </div>
                                 <ul>
                                     {/* <li>PIQ Form</li>
                                     <li>Interview Techniques</li>
@@ -339,9 +370,16 @@ function Courses() {
 
                         {activeTab === "c5" && (
                             <div className="course-tab-card">
-                                <h3 className="course-tab-card-title">
-                                    Group Testing Course
-                                </h3>
+
+                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2">
+
+                                    <h3 className="course-tab-card-title">
+                                        Group Testing Course
+                                    </h3>
+
+                                    <p className="title-gtx shimmerText_sec" >Price -  7999 + 18% GST</p>
+
+                                </div>
                                 <ul>
                                     {/* <li>Group Discussion</li>
                                     <li>Group Planning Exercise</li>
@@ -482,8 +520,8 @@ function Courses() {
 
                     </div>
 
-                    <div style={{ marginTop: '40px'  }}>
-                        <h3 style={{ margin: '10px 0' , textAlign:'center' }}>Important Notes</h3>
+                    <div style={{ marginTop: '40px' }}>
+                        <h3 style={{ margin: '10px 0', textAlign: 'center' }}>Important Notes</h3>
 
                         {scheduleData.notes.map((note, index) => (
                             <p key={index}>

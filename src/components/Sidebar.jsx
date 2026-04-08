@@ -148,7 +148,7 @@ const Sidebar = ({ open, onClose }) => {
                                 isActive ? styles.active : ""
                             }
                         >
-                            VTX™
+                            VTX™ 
                         </NavLink>
 
                         <NavLink
