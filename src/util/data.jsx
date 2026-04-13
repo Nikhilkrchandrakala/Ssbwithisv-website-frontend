@@ -71,7 +71,7 @@ export const coursesData = [
         description:
             "Break your myths about SSB",
         image: "/assets/website/PPDTcoursethumbnail.webp",
-        price:" 2499 + 18% GST"
+        price:" 1999 + 18% GST"
     },
 
     {
@@ -102,7 +102,7 @@ export const coursesData = [
         hours: "04",
         description: "Learn how to present yourself",
         image: "/assets/website/Interviewcoursethumbnail.webp",
-        price:" 1999 + 18% GST"
+        price:" 2499 + 18% GST"
     },
 
     {

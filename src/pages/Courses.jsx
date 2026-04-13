@@ -114,28 +114,7 @@ function Courses() {
                         <p style={{ margin: '20px' }}>With expert mentoring by professionals who understand the SSB assessment system, this program focuses on holistic personality development and officer-like qualities training, ensuring candidates are well prepared to face every stage of the SSB interview process.</p>
 
 
-                        <ul>
-                            {/* <li>NDA SSB Interview</li>
-                            <li>CDS SSB Interview</li> */}
-
-                            <li>
-                                1.⁠ ⁠10 day SSB hackathon - 12499 + 18% GST
-                            </li>
-                            <li>
-                                2.⁠ ⁠⁠IO + Mock Interview 2499 + 18%
-                            </li>
-                            <li>
-                                3.⁠ ⁠⁠PSych + Mock Psych test and feedback 3499 + 18%
-                            </li>
-                            <li>
-                                4.⁠ ⁠⁠Intro to SSB and PPDT/ Screening 1999+18%
-                            </li>
-                            <li>
-                                5.⁠ ⁠⁠GTO course on VTX™ - 7999+18%
-                            </li>
-
-
-                        </ul>
+                     
 
                     </div>
 
