@@ -71,7 +71,7 @@ export const coursesData = [
         description:
             "Break your myths about SSB",
         image: "/assets/website/PPDTcoursethumbnail.webp",
-        price:" 1999 + 18% GST"
+        price:"1999 + 18% GST"
     },
 
     {
@@ -1231,7 +1231,7 @@ export const scheduleData = {
 
         "Mock interview is conducted on the date mutually convenient for the Interviewing Officer and the student.",
 
-        "The mock Psych test is a timed test that can be undertaken online at your own will. Link for the sPMe will be available on your SSB with ISV account. Upon attempting the test, you are required to upload your dossier on the portal. The Psych will give a firm date and time for 1:1 feedback after dossier assessment. The student needs to be present positively as per the sPMe. Please note that the students have to attempt the test within the 10 days of course completion so that the feedback can be scheduled at the earliest possible.",
+        "The mock Psych test is a timed test that can be undertaken online at your own will. Link for the same will be available on your SSB with ISV account. Upon attempting the test, you are required to upload your dossier on the portal. The Psych will give a firm date and time for 1:1 feedback after dossier assessment. The student needs to be present positively as per the sPMe. Please note that the students have to attempt the test within the 10 days of course completion so that the feedback can be scheduled at the earliest possible.",
 
         "We do consider requests to shift psych and IO sessions at times. This is strictly subject to the availability of the IO and the Psych."
     ]

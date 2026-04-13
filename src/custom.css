@@ -1692,6 +1692,13 @@ p {
         padding: 32px;
     }
 
+    .course-tab-card .course-tab-card-title {
+        font-size: 25px;
+        color: var(--theme-white);
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
 
 
 

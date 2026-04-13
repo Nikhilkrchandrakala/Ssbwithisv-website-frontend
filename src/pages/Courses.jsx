@@ -193,7 +193,7 @@ function Courses() {
                                         10 days Services Selection Board Hackathon
                                     </h2>
 
-                                    <p className="title-gtx shimmerText_sec" >Price -  12499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec  course-tab-card-title" >Price -  12499 + 18% GST</p>
 
                                 </div>
 
@@ -256,7 +256,7 @@ function Courses() {
                                         Introduction to SSB & PPDT
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec" >Price -  2499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  1999 + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -292,7 +292,7 @@ function Courses() {
 
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec" >Price -  3499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  3499 + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -329,7 +329,7 @@ function Courses() {
                                         Interview Theory Course
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec" >Price -  1999 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  2499 + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -356,7 +356,7 @@ function Courses() {
                                         Group Testing Course
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec" >Price -  7999 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  7999 + 18% GST</p>
 
                                 </div>
                                 <ul>
