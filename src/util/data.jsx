@@ -212,8 +212,8 @@ export const journeyData = [
     },
     {
         date: "30 September 2024",
-        title: "Virtual GTO Ground Rolled Out",
-        desc: "Launch of India’s first virtual training Xperiencefor remote SSB preparation.",
+        title: "Virtual GTO ground rolled out",
+        desc: "Launch of India’s first Virtual Training Xperience for remote SSB preparation.",
         image: "/assets/website/virtual.webp",
     },
 

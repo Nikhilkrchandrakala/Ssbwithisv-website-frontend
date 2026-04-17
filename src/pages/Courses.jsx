@@ -71,7 +71,10 @@ function Courses() {
 
             <CustomHeader heading={data.heading} text={data.text} banner={data.banner} />
 
-            <section className="container sectionspace60">
+           
+
+            <section className="container sectionspace80">
+
                 <div className="course-intro">
 
                     <p>
@@ -107,22 +110,15 @@ function Courses() {
                             <li>Service entry candidates (CW Scheme, SD List Commission, ACC Entry, SCO & PC-SL commission)</li>
                             <li>SSC direct entries into various branches of the Navy (Executive, Law, Pilot, Naval Air Operations, Logistics, Engineering, Electrical, Naval Armament, Naval Constructor)</li>
                         </ul>
-                    </div>
-
-                    <div className="mvk-benefits">
 
                         <p style={{ margin: '20px' }}>With expert mentoring by professionals who understand the SSB assessment system, this program focuses on holistic personality development and officer-like qualities training, ensuring candidates are well prepared to face every stage of the SSB interview process.</p>
-
-
-                     
-
                     </div>
 
-                </div>
-            </section>
 
-            <section className="container sectionspace80">
-                <div className="our-courses-section">
+
+                </div>
+
+                <div style={{marginTop:'60px'}} className="our-courses-section">
 
                     {/* ================= MOBILE SELECT ================= */}
                     <div className="course-mobile-select d-md-none mb-3">
@@ -198,7 +194,7 @@ function Courses() {
                                 </div>
 
                                 <h3 className="course-tab-card-hours">
-                                    <strong>Total Sessions:</strong> 10 |{" "}
+                                    <strong>Total Sessions:</strong> 17 |{" "}
                                     <strong>Total Learning Hours:</strong> 60
                                 </h3>
 

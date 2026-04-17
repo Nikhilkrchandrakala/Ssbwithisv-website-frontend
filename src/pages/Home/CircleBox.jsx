@@ -6,6 +6,7 @@ import HeadingTwo from '../../components/HeadingTwo';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfileQuery } from '../../redux/api';
+import PerCourses from '../PerCourses';
 
 function CircleBox() {
 
@@ -131,10 +132,15 @@ function CircleBox() {
 
 
 
-                    {!user && (<div style={{ marginTop: '30px' }}>
-                        <CustomButton text="Sign Up Now" onClick={handelLogin} />
-                    </div>)
-                    }
+                    <div style={{ marginTop: '30px' }} className='d-flex gap-4'>
+                        {!user &&
+                            (
+                                <CustomButton text="Sign Up Now" onClick={handelLogin} />
+                            )
+                        }
+                        <PerCourses />
+                    </div>
+
                 </div>
 
             </div>

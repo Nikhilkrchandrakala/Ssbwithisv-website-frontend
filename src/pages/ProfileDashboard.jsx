@@ -4,30 +4,24 @@ import {
     BiUser,
     BiLogOut,
     BiSave,
-    // BiCalendar,
     BiMap,
     BiPhone,
     BiEnvelope,
     BiChevronRight,
     BiX,
-    // BiCheck,
     BiEdit,
-    BiArrowBack
+    BiArrowBack,
+    BiBook,
+    BiRupee
 } from "react-icons/bi";
 import {
     FaCamera,
-    // FaMedal,
-    // FaGem
+    FaCheckCircle
 } from "react-icons/fa";
-// import { RiVipCrownFill } from "react-icons/ri";
-// import CustomButton from "../components/CustomButton";
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
-// import { IoMenu } from "react-icons/io5";
 import NavStyles from "../style/Navbar.module.css";
-// import Sidebar from "../components/Sidebar";
-// import OtpVerificationPopup from "../components/OtpVerificationPopup";
-import { useUpdateUserProfileMutation, useUserProfileQuery } from "../redux/api";
+import { useUpdateUserProfileMutation, useUserProfileQuery, useUserCoursesQuery } from "../redux/api";
 import toast from "react-hot-toast";
 import ImageUploadPopup from "../components/ImageUploadPopup";
 import axios from "axios";
@@ -38,7 +32,6 @@ const ProfileDashboard = () => {
     const [activeTab, setActiveTab] = useState('profile');
     const [isEditMode, setIsEditMode] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    // const [open, setOpen] = useState(false);
 
     // MSG91 Configuration
     const MSG91_CONFIG = {
@@ -56,7 +49,7 @@ const ProfileDashboard = () => {
 
     // OTP Verification states
     const [showOtpPopup, setShowOtpPopup] = useState(false);
-    const [otpField, setOtpField] = useState(null); // 'phone' or 'email'
+    const [otpField, setOtpField] = useState(null);
     const [oldValue, setOldValue] = useState('');
     const [newValue, setNewValue] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
@@ -65,11 +58,12 @@ const ProfileDashboard = () => {
     const [reqId, setReqId] = useState('');
     const [otpError, setOtpError] = useState('');
 
-    const { data } = useUserProfileQuery();
+    const { data: profileData } = useUserProfileQuery();
+    const { data: coursesData, isLoading: coursesLoading } = useUserCoursesQuery();
     const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
-    const [previewData, setPreviewData] = useState(data?.user);
+    const [previewData, setPreviewData] = useState(profileData?.user);
     const [formData, setFormData] = useState({ ...previewData });
     const [tempFormData, setTempFormData] = useState({});
 
@@ -101,21 +95,23 @@ const ProfileDashboard = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // const handleImageClick = () => {
-    //     fileInputRef.current.click();
-    // };
+    // Update preview data when profile data changes
+    useEffect(() => {
+        if (profileData?.user) {
+            setPreviewData(profileData.user);
+            setFormData(profileData.user);
+        }
+    }, [profileData]);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Validate file type
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
             if (!validTypes.includes(file.type)) {
                 toast.error('Please select a valid image file (JPEG, JPG, PNG, GIF, WEBP)');
                 return;
             }
 
-            // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
                 toast.error('File size should be less than 5MB');
                 return;
@@ -123,7 +119,6 @@ const ProfileDashboard = () => {
 
             setSelectedImage(file);
 
-            // Create preview URL
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
@@ -142,12 +137,9 @@ const ProfileDashboard = () => {
         try {
             const response = await updateProfile(formData).unwrap();
             setPreviewData(prev => ({ ...prev, profileImage: response.profileImage }));
-
-            // Close popup and reset states after successful upload
             setShowImagePopup(false);
             setSelectedImage(null);
             setImagePreview(null);
-
             toast.success('Profile image updated successfully!');
         } catch (error) {
             toast.error('Failed to upload image. Please try again.');
@@ -172,7 +164,6 @@ const ProfileDashboard = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        // Special handling for phone - only numbers and max 10 digits
         if (name === 'phone') {
             const numericValue = value.replace(/\D/g, "").slice(0, 10);
             setFormData(prev => ({ ...prev, [name]: numericValue }));
@@ -181,13 +172,12 @@ const ProfileDashboard = () => {
         }
     };
 
-    // Handle field click for OTP verification with old and new values
     const handleFieldClick = (field) => {
         if (field === 'phone' || field === 'email') {
             setTempFormData({ ...formData });
             setOtpField(field);
-            setOldValue(previewData?.[field] || ''); // Set the old value from preview data
-            setNewValue(''); // Clear new value for input
+            setOldValue(previewData?.[field] || '');
+            setNewValue('');
             setShowOtpPopup(true);
             setOtpSent(false);
             setOtp('');
@@ -196,7 +186,6 @@ const ProfileDashboard = () => {
         }
     };
 
-    // Send OTP using MSG91
     const handleSendOtp = async () => {
         if (!newValue) {
             setOtpError(`Please enter a valid ${otpField === 'phone' ? 'phone number' : 'email'}`);
@@ -225,9 +214,7 @@ const ProfileDashboard = () => {
         setOtpError('');
 
         try {
-            // 🔹 EMAIL OTP (Your Backend API)
             if (otpField === 'email') {
-
                 const res = await axios.post(
                     "https://api.ssbwithisv.in/api/send-otp",
                     { email: newValue }
@@ -239,11 +226,7 @@ const ProfileDashboard = () => {
                 } else {
                     setOtpError(res.data.message || "Failed to send OTP");
                 }
-
-            }
-            // 🔹 PHONE OTP (MSG91)
-            else {
-
+            } else {
                 const res = await axios.post(
                     "https://api.msg91.com/api/v5/widget/sendOtp",
                     {
@@ -262,7 +245,6 @@ const ProfileDashboard = () => {
                     setOtpError("Failed to send OTP");
                 }
             }
-
         } catch (error) {
             console.error("OTP ERROR:", error);
             setOtpError("Failed to send OTP. Please try again.");
@@ -271,7 +253,6 @@ const ProfileDashboard = () => {
         }
     };
 
-    // Verify OTP and update field
     const handleVerifyOtp = async () => {
         if (!otp || otp.length !== 6) {
             setOtpError('Please enter a valid 6-digit OTP');
@@ -282,10 +263,7 @@ const ProfileDashboard = () => {
         setOtpError('');
 
         try {
-
-            // 🔹 EMAIL OTP VERIFY (Your Backend)
             if (otpField === 'email') {
-
                 const otpRes = await axios.post(
                     "https://api.ssbwithisv.in/api/verify-otp",
                     {
@@ -299,11 +277,7 @@ const ProfileDashboard = () => {
                     setIsVerifying(false);
                     return;
                 }
-
-            }
-            // 🔹 PHONE OTP VERIFY (MSG91)
-            else {
-
+            } else {
                 const otpRes = await axios.post(
                     "https://api.msg91.com/api/v5/widget/verifyOtp",
                     {
@@ -322,9 +296,7 @@ const ProfileDashboard = () => {
                 }
             }
 
-            // ✅ If OTP Verified Successfully
             const updateData = { [otpField]: newValue };
-
             await updateProfile(updateData).unwrap();
 
             setPreviewData(prev => ({ ...prev, [otpField]: newValue }));
@@ -338,7 +310,6 @@ const ProfileDashboard = () => {
             setNewValue('');
             setOtp('');
             setReqId('');
-
         } catch (error) {
             console.error("Verification ERROR:", error);
             setOtpError("OTP verification failed. Please try again.");
@@ -347,7 +318,6 @@ const ProfileDashboard = () => {
         }
     };
 
-    // Close OTP popup
     const handleCloseOtpPopup = () => {
         setShowOtpPopup(false);
         setOtpField(null);
@@ -357,23 +327,18 @@ const ProfileDashboard = () => {
         setOtpSent(false);
         setReqId('');
         setOtpError('');
-        // Revert form data if cancelled
         if (tempFormData[otpField]) {
             setFormData(prev => ({ ...prev, [otpField]: tempFormData[otpField] }));
         }
         setTempFormData({});
     };
 
-    console.log(showOtpPopup)
-
     const handleSave = async () => {
-        // Check if email or phone were changed without verification
         if (formData.phone !== previewData?.phone || formData.email !== previewData?.email) {
             toast.error('Please verify phone and email changes before saving');
             return;
         }
 
-        // Only save name and address without verification
         const updateData = {
             name: formData.name,
             Address: formData.Address
@@ -397,22 +362,6 @@ const ProfileDashboard = () => {
         window.location.reload();
     };
 
-    // const getTierBadge = (tier) => {
-    //     const tierConfig = {
-    //         Gold: { icon: FaMedal, color: '#FFD700' },
-    //         Silver: { icon: FaMedal, color: '#C0C0C0' },
-    //         Platinum: { icon: FaGem, color: '#E5E4E2' }
-    //     };
-    //     const Icon = tierConfig[tier]?.icon || FaMedal;
-
-    //     return (
-    //         <span className={styles.tierBadge} style={{ backgroundColor: tierConfig[tier]?.color + '20', color: tierConfig[tier]?.color }}>
-    //             <Icon size={14} />
-    //             {tier}
-    //         </span>
-    //     );
-    // };
-
     const sidebarRef = useRef(null);
 
     useEffect(() => {
@@ -422,7 +371,6 @@ const ProfileDashboard = () => {
                 !sidebarRef.current.contains(event.target)
             ) {
                 setIsMobileMenuOpen(false);
-                // setOpen(false);
             }
         }
 
@@ -433,27 +381,27 @@ const ProfileDashboard = () => {
         };
     }, []);
 
-    // const navigate = useNavigate();
+    // Format date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+    };
 
     return (
         <>
             <section className={NavStyles.heroSection}>
                 <div className={NavStyles.topBar}>
                     <div onClick={() => navigate(-1)} className="arrow_button_two">
-
-
                         <BiArrowBack />
                     </div>
-
                 </div>
-
-                {/*  */}
-
-                {/* <Sidebar open={open} onClose={() => setOpen(false)} /> */}
 
                 <div className="">
                     <div className="container position-relative z-1">
-                        {/* Mobile Menu Toggle */}
                         <button
                             className={styles.mobileMenuToggle}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -468,7 +416,6 @@ const ProfileDashboard = () => {
                                 ref={sidebarRef}
                                 className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}
                             >
-                                {/* Profile Summary with Enhanced Design */}
                                 <div className={styles.profileSummary}>
                                     <div className={styles.profileHeader}>
                                         <div
@@ -491,24 +438,8 @@ const ProfileDashboard = () => {
                                             <p>{previewData?.email}</p>
                                         </div>
                                     </div>
-
-                                    {/* Membership Tier */}
-                                    {/* <div className={styles.membershipCard}>
-                                        <div className={styles.membershipHeader}>
-                                            <RiVipCrownFill className={styles.crownIcon} />
-                                            <span>Membership Tier</span>
-                                        </div>
-                                        <div className={styles.membershipBody}>
-                                            {getTierBadge(previewData?.membershipTier)}
-                                            <div className={styles.pointsProgress}>
-                                                <div className={styles.progressBar} style={{ width: '75%' }}></div>
-                                            </div>
-                                            <span className={styles.nextTier}>750 points to Platinum</span>
-                                        </div>
-                                    </div> */}
                                 </div>
 
-                                {/* Navigation Tabs with Icons */}
                                 <nav className={styles.navTabs}>
                                     <button
                                         className={`${styles.navTab} ${activeTab === 'profile' ? styles.active : ''}`}
@@ -521,9 +452,19 @@ const ProfileDashboard = () => {
                                         <span>Profile</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
+                                    <button
+                                        className={`${styles.navTab} ${activeTab === 'courses' ? styles.active : ''}`}
+                                        onClick={() => {
+                                            setActiveTab('courses');
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        <BiBook />
+                                        <span>My Courses</span>
+                                        <BiChevronRight className={styles.chevron} />
+                                    </button>
                                 </nav>
 
-                                {/* Logout Button */}
                                 <button className={styles.logoutBtn} onClick={handleLogout}>
                                     <BiLogOut /> Logout
                                 </button>
@@ -547,18 +488,10 @@ const ProfileDashboard = () => {
                                             >
                                                 <BiEdit />
                                             </button>
-                                            {/* {!isEditMode && (
-                                                <CustomButton
-                                                    className={styles.editBtn}
-                                                    onClick={() => setIsEditMode(true)}
-                                                    text={<BiEdit />}
-                                                />
-                                            )} */}
                                         </div>
 
                                         <div className={styles.profileContent}>
                                             {!isEditMode ? (
-                                                // Enhanced Preview Mode with Edit Icons for Phone and Email
                                                 <div className={styles.infoCards}>
                                                     <div className={styles.infoCard}>
                                                         <div className={styles.cardIcon}>
@@ -619,7 +552,6 @@ const ProfileDashboard = () => {
                                                     </div>
                                                 </div>
                                             ) : (
-                                                // Edit Mode
                                                 <div className={styles.editForm}>
                                                     <div className={styles.formGroup}>
                                                         <label>Full Name</label>
@@ -672,6 +604,89 @@ const ProfileDashboard = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {/* Courses Tab */}
+                                {activeTab === 'courses' && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.tabHeader}>
+                                            <h2>
+                                                <BiBook className={styles.tabIcon} />
+                                                My Purchased Courses
+                                            </h2>
+                                        </div>
+
+                                        <div className={styles.coursesContent}>
+                                            {coursesLoading ? (
+                                                <div className={styles.loadingState}>
+                                                    <div className={styles.spinner}></div>
+                                                    <p>Loading your courses...</p>
+                                                </div>
+                                            ) : coursesData?.orders?.length > 0 ? (
+                                                <div className={styles.coursesGrid}>
+                                                    {coursesData.orders.map((order) => (
+                                                        <div key={order._id} className={styles.courseCard}>
+                                                            <div className={styles.courseThumbnail}>
+                                                                <img
+                                                                    src={order.courseId?.thumbnail || '/assets/course-placeholder.jpg'}
+                                                                    alt={order.courseTitle}
+                                                                    onError={(e) => {
+                                                                        e.target.src = '/assets/course-placeholder.jpg';
+                                                                    }}
+                                                                />
+                                                                <div className={styles.courseStatus}>
+                                                                    <FaCheckCircle />
+                                                                    <span>Purchased</span>
+                                                                </div>
+                                                            </div>
+                                                            <div className={styles.courseDetails}>
+                                                                <h3>{order.courseTitle}</h3>
+                                                                <div className={styles.courseMeta}>
+                                                                    <div className={styles.coursePrice}>
+                                                                        <BiRupee />
+                                                                        <span>{order.price}</span>
+                                                                    </div>
+                                                                    <div className={styles.courseDate}>
+                                                                        Purchased on {formatDate(order.createdAt)}
+                                                                    </div>
+                                                                </div>
+                                                                <div className={styles.courseOrderInfo}>
+                                                                    <span className={styles.orderIdLabel}>Order ID:</span>
+                                                                    <span className={styles.orderIdValue}>{order.orderId}</span>
+                                                                </div>
+                                                                {/* <div className={styles.courseActions}>
+                                                                    <button
+                                                                        className={styles.watchNowBtn}
+                                                                        onClick={() => navigate(`/course/${order.courseId?._id}`)}
+                                                                    >
+                                                                        Watch Now
+                                                                    </button>
+                                                                    <button
+                                                                        className={styles.viewInvoiceBtn}
+                                                                        onClick={() => navigate(`/invoice/${order.orderId}`)}
+                                                                    >
+                                                                        View Invoice
+                                                                    </button>
+                                                                </div> */}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <div className={styles.emptyState}>
+                                                    <BiBook className={styles.emptyIcon} />
+                                                    <h3>No Courses Purchased Yet</h3>
+                                                    <p>You haven't purchased any courses. Browse our courses and start learning today!</p>
+                                                    <button
+                                                        className={styles.browseCoursesBtn}
+                                                        onClick={() => navigate('/courses')}
+                                                    >
+                                                        Browse Courses
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -689,7 +704,7 @@ const ProfileDashboard = () => {
                             />
                         )}
 
-                        {/* OTP Verification Popup - Updated with Old and New Value Fields */}
+                        {/* OTP Verification Popup */}
                         {showOtpPopup && ReactDOM.createPortal(
                             <div className={styles.overlay}>
                                 <div className={styles.popup}>
@@ -709,13 +724,11 @@ const ProfileDashboard = () => {
                                             Please verify your new {otpField === 'phone' ? 'phone number' : 'email address'}
                                         </p>
 
-                                        {/* Old Value Display */}
                                         <div className={styles.valueDisplay}>
                                             <span className={styles.label}>Current {otpField === 'phone' ? 'Phone' : 'Email'}</span>
                                             <span className={styles.value}>{oldValue}</span>
                                         </div>
 
-                                        {/* New Value Input */}
                                         <div className={styles.formGroup}>
                                             <label>New {otpField === 'phone' ? 'Phone Number' : 'Email Address'}</label>
                                             <input

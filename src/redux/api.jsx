@@ -9,8 +9,8 @@ export const api = createApi({
     ],
 
     baseQuery: fetchBaseQuery({
-        // baseUrl: "http://localhost:5001/api/",
-        baseUrl: "https://api.ssbwithisv.in/api/",
+        baseUrl: "http://localhost:5001/api/",
+        // baseUrl: "https://api.ssbwithisv.in/api/",
         // baseUrl: "https://learning-admin-panel-backend.onrender.com/api/v1/",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("authToken");
@@ -73,6 +73,11 @@ export const api = createApi({
             providesTags: ["Profile"],
         }),
 
+        userCourses: builder.query({
+            query: () => "user/purchasedCourses",
+            providesTags: ["Profile"],
+        }),
+
         updateUserProfile: builder.mutation({
             query: (body) => ({
                 url: "user/profile",
@@ -98,9 +103,68 @@ export const api = createApi({
             providesTags: ["Profile"],
         }),
 
+        getGallery: builder.query({
+            query: () => "allGalleryImages",
+            providesTags: ["Profile"],
+        }),
+
+        getAllCourses: builder.query({
+            query: () => "allCourses",
+            providesTags: ["Profile"],
+        }),
+
+        getAllNumberMonitors: builder.query({
+            query: () => "allNumberMonitors",
+            providesTags: ["Profile"],
+        }),
+
+
+        checkPurchase: builder.query({
+            query: (id) => `checkPurchase/:${id}`,
+            providesTags: ["Profile"],
+        }),
+
         // ==================== 🔐 PERMISSIONS ====================
 
         /** ✨ Create new permission (Superadmin only) */
+
+        // RazerPay Payment
+
+
+        createOrder: builder.mutation({
+            query: (body) => ({
+                url: "createOrder",
+                method: "POST",
+                body
+            }),
+
+            invalidatesTags: ["Auth", "Profile"],
+        }),
+
+        verifyPayment: builder.mutation({
+            query: (body) => ({
+                url: "verifyPayment",
+                method: "POST",
+                body
+            }),
+
+            invalidatesTags: ["Auth", "Profile"],
+        }),
+
+
+        applyCoupon: builder.mutation({
+            query: (body) => ({
+                url: "applyCoupon",
+                method: "POST",
+                body
+            }),
+
+            invalidatesTags: ["Auth", "Profile"],
+        }),
+
+
+
+
 
 
 
@@ -118,12 +182,28 @@ export const {
     useAddLeadMutation,
     useVerifyOtpMutation,
     useUserProfileQuery,
+    useUserCoursesQuery,
 
     useGetAllMagazineQuery,
     useUpdateUserProfileMutation,
 
     useAllBlogsQuery,
-    useAllBlogsByIdQuery
+    useAllBlogsByIdQuery,
+
+    useGetGalleryQuery,
+    useGetAllCoursesQuery,
+
+    useCreateOrderMutation,
+    useVerifyPaymentMutation,
+    useGetAllNumberMonitorsQuery,
+
+    useApplyCouponMutation,
+    useCheckPurchaseQuery
+    
+
+
+
+
 
 
 

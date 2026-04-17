@@ -35,6 +35,9 @@ import ProfilePage from './pages/profile/ProfilePage';
 import OrderHistory from './pages/OrderHistory';
 import PaymentHistory from './pages/PaymentHistory';
 import ProfileDashboard from './pages/ProfileDashboard';
+import Gallery from './pages/Gallery';
+import PerCourses from './pages/PerCourses';
+import SuccessPage from './components/SuccessPage';
 
 function App() {
 
@@ -78,6 +81,12 @@ function App() {
         <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
         <Route path="/OrderHistory" element={<OrderHistory />} />
         <Route path="/PaymentHistory" element={<PaymentHistory />} />
+        <Route path="/Gallery" element={<Gallery />} />
+        <Route path="/PerCourses" element={<PerCourses />} />
+        <Route path="/Success" element={<SuccessPage />} />
+
+
+
         <Route element={<AuthRoute />}>
           <Route path="/SignIn" element={<SignIn />} />
           <Route path="/SignUp" element={<SignUp />} />

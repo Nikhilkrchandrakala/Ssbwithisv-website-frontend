@@ -22,7 +22,7 @@ function Footer() {
                     />
                 </div>
 
-                <div class="bottom-contact-box-wrapper">
+                <div className="bottom-contact-box-wrapper">
 
 
                     <a

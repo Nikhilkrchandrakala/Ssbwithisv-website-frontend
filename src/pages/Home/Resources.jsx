@@ -68,7 +68,7 @@ const Resources = () => {
 
 
                     {resourcesData?.map((item , index) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={index}>
 
                             <div key={index} className={styles.card}>
                                 <div className={styles.imageBox}>

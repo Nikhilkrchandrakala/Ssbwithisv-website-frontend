@@ -1,12 +1,4 @@
-// import React from 'react'
 
-// function SwiperComponents() {
-//     return (
-//         <div>SwiperComponents</div>
-//     )
-// }
-
-// export default SwiperComponents
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Mousewheel } from "swiper/modules";

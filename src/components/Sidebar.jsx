@@ -131,6 +131,17 @@ const Sidebar = ({ open, onClose }) => {
                         >
                             Home
                         </NavLink>
+
+                        <NavLink
+                            to="/Gallery"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Gallery
+                        </NavLink>
+
                         <NavLink
                             to="/Courses"
                             onClick={onClose}

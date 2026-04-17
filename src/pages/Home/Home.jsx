@@ -1,10 +1,11 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
 import CircleBox from "./CircleBox";
 import { Helmet } from "react-helmet-async";
 import Faq from "../../components/Faq";
 import { faqDataHome } from "../../util/data";
+import { useParams } from "react-router-dom";
 
 const OurMentor = lazy(() => import("./OurMentor"));
 const Philosophy = lazy(() => import("./Philosophy"));
@@ -16,6 +17,20 @@ const AllYouNeed = lazy(() => import("./AllYouNeed"));
 const From = lazy(() => import("../From"));
 
 function Home() {
+
+
+    
+
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get("ref");
+
+        if (ref) {
+            localStorage.setItem("referralCode", ref);
+        }
+    }, []);
+
 
     // {}
     return (
