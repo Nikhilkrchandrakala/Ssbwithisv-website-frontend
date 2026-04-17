@@ -326,9 +326,9 @@ function PerCourses() {
                         </div> */}
 
                         {/* Courses Grid */}
-                        <div className="courses-grid">
-                            {filteredCourses.length > 0 ? (
-                                filteredCourses.map((course) => (
+                        {filteredCourses.length > 0 ? (
+                            <div className="courses-grid">
+                                {filteredCourses.map((course) => (
                                     <div
                                         key={course._id}
                                         className="course-card-enhanced"
@@ -336,7 +336,11 @@ function PerCourses() {
                                     >
                                         <div className="course-card-image-wrapper">
                                             <img
-                                                src={course.thumbnail || course.images?.[0]?.imageUrl || "/assets/placeholder-course.jpg"}
+                                                src={
+                                                    course.thumbnail ||
+                                                    course.images?.[0]?.imageUrl ||
+                                                    "/assets/placeholder-course.jpg"
+                                                }
                                                 alt={course.title}
                                                 onError={(e) => {
                                                     e.target.src = "/assets/placeholder-course.jpg";
@@ -353,18 +357,23 @@ function PerCourses() {
 
                                         <div className="course-card-content-enhanced">
                                             {course.category && (
-                                                <span className="course-category-badge">{course.category}</span>
+                                                <span className="course-category-badge">
+                                                    {course.category}
+                                                </span>
                                             )}
                                             <h3 className="course-title">{course.title}</h3>
+
                                             {course.duration && (
                                                 <div className="course-duration">
                                                     <FaClock />
                                                     <span>{course.duration}</span>
                                                 </div>
                                             )}
+
                                             <p className="course-description-preview">
                                                 {course.description?.substring(0, 70)}...
                                             </p>
+
                                             <div className="course-card-footer">
                                                 <button className="enroll-preview-btn">
                                                     Learn More <FaArrowRight />
@@ -372,17 +381,22 @@ function PerCourses() {
                                             </div>
                                         </div>
                                     </div>
-                                ))
-                            ) : (
-                                <div className="no-results">
-                                    <FaSearch />
-                                    <p>No courses found matching your criteria</p>
-                                    <button onClick={() => { setSearchTerm(""); setActiveCategory("all"); }}>
-                                        Clear Filters
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="no-results">
+                                <FaSearch />
+                                <p>No courses found matching your criteria</p>
+                                <button
+                                    onClick={() => {
+                                        setSearchTerm("");
+                                        setActiveCategory("all");
+                                    }}
+                                >
+                                    Clear Filters
+                                </button>
+                            </div>
+                        )}
 
                         {/* Results Count */}
                         {filteredCourses.length > 0 && (

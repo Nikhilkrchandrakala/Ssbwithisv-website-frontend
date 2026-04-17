@@ -83,7 +83,7 @@ function Gallery() {
                 {/* ✅ Empty State */}
                 {images.length === 0 && (
                     <div className="gallery-empty">
-                        <p>No images found.</p>
+                        <div style={{textAlign:'center'}}>No images found.</div>
                     </div>
                 )}
             </section>

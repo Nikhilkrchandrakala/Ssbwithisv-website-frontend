@@ -11,35 +11,12 @@ const Sidebar = ({ open, onClose }) => {
 
 
     const [openContact, setOpenContact] = useState(false);
-    
-    // const [blogs, setBlogs] = useState([])
-    // const [loading, setLoading] = useState(true)
-    // const [error, setError] = useState(null)
+
+
 
     const { data: blogs } = useUserProfileQuery()
 
-    // useEffect(() => {
-    //     const fetchBlogs = async () => {
-    //         try {
-    //             const token = localStorage.getItem("authToken"); // 🔑 JWT token
 
-    //             const res = await axios.get(
-    //                 'https://api.ssbwithisv.in/api/user/profile',
-    //                 {
-    //                     headers: {
-    //                         Authorization: `Bearer ${token}`
-    //                     }
-    //                 }
-    //             );
-
-
-    //             setBlogs(res.data);
-
-    //         } 
-    //     };
-
-    //     fetchBlogs();
-    // }, []);
 
 
     const handleLogout = () => {
@@ -69,7 +46,7 @@ const Sidebar = ({ open, onClose }) => {
 
 
 
-    // console.log(blogs?.user?.name)
+
 
 
     return (
@@ -159,7 +136,7 @@ const Sidebar = ({ open, onClose }) => {
                                 isActive ? styles.active : ""
                             }
                         >
-                            VTX™ 
+                            VTX™
                         </NavLink>
 
                         <NavLink
@@ -240,33 +217,6 @@ const Sidebar = ({ open, onClose }) => {
 
 
 
-                        {/* <NavLink
-                            to="/profile"
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                isActive ? styles.active : ""
-                            }
-                        >
-                            Order
-                        </NavLink>
-
-
-                        <NavLink
-                            to="/profile"
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                isActive ? styles.active : ""
-                            }
-                        >
-                            Payment
-                        </NavLink> */}
-
-                        {/* <button
-                            onClick={handleLogout}
-                            className={styles.logoutBtn}
-                        >
-                            Log Out
-                        </button>} */}
 
                         {blogs?.user?.name &&
                             <CustomButton text={'Log Out'} onClick={handleLogout} />}
@@ -275,23 +225,13 @@ const Sidebar = ({ open, onClose }) => {
 
                     </nav>
 
-                    {/* Bottom line */}
-                    {/* <div className={styles.bottomLine}>
-                        <span className={styles.line}></span>
-                        <span className={styles.dot}></span>
-                    </div> */}
-
+                   
                     <div className={styles.bottomLine}>
                         <span className={`${styles.dot} ${styles.dotRightToLeft}`}></span>
                         <span className={styles.line}></span>
                     </div>
 
 
-                    {/* Contact */}
-                    {/* <div className={styles.contact}>
-                        <div> <i className="fa fa-whatsapp"></i> +91 84204 22821</div>
-                        <div> <i className="fa fa-phone"></i> +91 70046 15277</div>
-                    </div> */}
 
                     <div className={styles.contact}>
                         {/* WhatsApp */}

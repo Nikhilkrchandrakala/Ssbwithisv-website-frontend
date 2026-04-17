@@ -124,7 +124,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 20px;
 }
 
 /* Base link */
@@ -133,7 +133,7 @@
     z-index: 2;
     /* color: #d2a100; */
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 /* 🔥 Active Link */

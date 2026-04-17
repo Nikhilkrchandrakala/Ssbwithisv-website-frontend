@@ -2575,6 +2575,8 @@ p {
 
 /* Empty State */
 .gallery-empty {
+
+    width: 100%;
     text-align: center;
     padding: 60px 20px;
     border: 2px dashed rgba(255, 255, 255, 0.2);
