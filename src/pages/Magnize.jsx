@@ -17,7 +17,7 @@ function Magnize() {
         // textTwo: ` We’re not just an academy, we’re a close-knit mentoring community. At CSJSA, every aspirant is personally guided by Lt Cdr Nikhil, whose Xperienceassessing over 12,500 SSB candidates shapes our focused,
         //                         psychology-driven approach to SSB preparation. Our goal is simple yet powerful: to help every deserving young aspirant realise the dream of becoming a commissioned officer in the Indian Armed Forces.`
 
-        textTwo: "Roger That Magazine is a curated current affairs and perspective platform created to support aspirants preparing for the Services Selection Board (SSB) interview. One of the most important aspects of the SSB selection process is the ability to demonstrate awareness of global developments, clarity of thought, and the ability to articulate informed opinions during group discussions, lecturette and personal interviews. Roger That is your go-to resource for in-depth insights, real-world perspectives and expert analysis tailored to the SSB process.",
+        textTwo: "",
 
         banner: '/assets/website/rogerthat_banner.webp'
 
@@ -152,6 +152,15 @@ function Magnize() {
                 <div className="row justify-content-center">
                     <div className="">
 
+
+                        <p className="magazine-intro-text">
+
+                            Roger That Magazine is a curated current affairs and perspective platform created to support aspirants preparing for the Services Selection Board (SSB) interview. One of the most important aspects of the SSB selection process is the ability to demonstrate awareness of global developments, clarity of thought, and the ability to articulate informed opinions during group discussions, lecturette and personal interviews. Roger That is your go-to resource for in-depth insights, real-world perspectives and expert analysis tailored to the SSB process.
+
+
+                        </p>
+                        <br/>
+
                         <p className="magazine-intro-text">
                             Our monthly magazine brings together insights on global news, geopolitics,
                             defence developments, social issues, technology, and leadership, helping
@@ -169,7 +178,7 @@ function Magnize() {
                             <h3> Through carefully selected articles, opinion pieces, and discussions on contemporary issues, Roger That magazine helps candidates:</h3>
 
                             <ul>
-                               
+
 
 
                                 <li>
@@ -292,7 +301,7 @@ function Magnize() {
 
 
 
-            </section>
+            </section >
 
 
 

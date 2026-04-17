@@ -43,17 +43,7 @@ function App() {
 
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 2000); // ⏳ splash screen duration (2 sec)
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // if (loading) {
-  //   return <LoadingScreen />;
-  // }
+  
 
   return (
     <BrowserRouter>

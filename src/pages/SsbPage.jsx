@@ -14,7 +14,7 @@ function SsbPage() {
 
     const data = {
         heading: ' What is the Services Selection Board (SSB)?',
-        textTwo: `The Services Selection Board (SSB) is the official selection system used by the Indian Armed Forces to identify candidates with the personality, leadership potential, and officer-like qualities required to become commissioned officers. Unlike traditional examinations that primarily evaluate academic knowledge, the SSB interview is designed to assess a candidate’s behaviour, decision-making ability, emotional intelligence, communication skills, and leadership potential.
+        text: `The Services Selection Board (SSB) is the official selection system used by the Indian Armed Forces to identify candidates with the personality, leadership potential, and officer-like qualities required to become commissioned officers. Unlike traditional examinations that primarily evaluate academic knowledge, the SSB interview is designed to assess a candidate’s behaviour, decision-making ability, emotional intelligence, communication skills, and leadership potential.
 Through a structured five-day evaluation process, candidates are observed across psychological tests, group tasks, and personal interviews. The aim is to identify individuals who demonstrate the mindset, responsibility, and character required to lead troops and operate effectively in challenging environments.`,
         banner: '/assets/website/Whatisssb_banner.webp'
     }
@@ -58,7 +58,7 @@ Through a structured five-day evaluation process, candidates are observed across
                 <link rel="canonical" href="https://ssbwithisv.in/aboutSSB" />
             </Helmet>
 
-            <CustomHeader heading={data.heading} textTwo={data.textTwo} banner={data?.banner} />
+            <CustomHeader heading={data.heading} text={data.text} banner={data?.banner} />
 
 
             <section className="container sectionspace80">

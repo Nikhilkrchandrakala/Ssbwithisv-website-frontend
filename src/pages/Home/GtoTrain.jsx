@@ -14,11 +14,11 @@ function GtoTrain() {
     const data = {
         heading: 'GTX',
         span: 'TM',
-        textTwo: `The Virtual Training Xperience(VTX™ ) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
+        textTwo: `
 `,
 
-        text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the GTO tasks conducted during the Services Selection Board interview. ',
-        textThree: 'Virtual Training Xperience by SSB with ISV',
+        text: 'India’s first online GTO ground simulation designed to help defence aspirants understand and practice the GTO tasks conducted during the Services Selection Board interview. The Virtual Training Xperience(VTX™ ) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.',
+        textThree: 'Virtual Training Xperience by SSB with ISV  ',
         color: true,
         banner: '/assets/website/GTOCourseThumbnail.webp',
 
@@ -67,7 +67,7 @@ function GtoTrain() {
 
 
 
-            <CustomHeader text={data.text} textTwo={data.textTwo} textThree={data.textThree} color={data?.color} banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} preragraphTwo={data.preragraphTwo} />
+            <CustomHeader text={data.text}  textThree={data.textThree} color={data?.color} banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} preragraphTwo={data.preragraphTwo} />
 
             <section className="GTO-pedagogical-section sectionspace80">
                 <div className="container">
@@ -363,7 +363,7 @@ function GtoTrain() {
 
                         <h3> Integrating Virtual Training with SSB coaching</h3>
                         <p className={styles.vtxIntegrationText}>
-                          The Virtual Training Xperience (VTX™ ) is integrated with the SSB mentoring
+                            The Virtual Training Xperience (VTX™ ) is integrated with the SSB mentoring
                             program offered by SSB with ISV.   Candidates combine:
                         </p>
 

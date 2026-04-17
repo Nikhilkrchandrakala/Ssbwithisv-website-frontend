@@ -27,10 +27,9 @@ function About() {
     {
         // heading: 'About us',
 
-        text: 'SSB Coaching & Mentoring for Services Selection Board Preparation',
-        textTwo: `SSB with ISV is a mentoring platform dedicated to helping defence aspirants understand and prepare for the Services Selection Board (SSB) interview through authentic guidance, leadership development, and behavioural insight.
-What makes SSB with ISV different from conventional coaching institutes is that the mentoring is delivered by DIPR certified ex-SSB assessors who have had direct experience with the SSB selection system itself. Candidates receive SSB coaching by an Ex Group Testing Officer (GTO), an Ex Interviewing Officer (IO) and an Ex Psychologist (Psych) along with guidance from former regular armed forces officers (veterans), providing insights that go far beyond theoretical preparation. This unique perspective helps aspirants understand how candidates are evaluated during the SSB interview and how officer-like qualities are observed in real situations.
-`,
+        text: `SSB Coaching & Mentoring for Services Selection Board Preparation  SSB with ISV is a mentoring platform dedicated to helping defence aspirants understand and prepare for the Services Selection Board (SSB) interview through authentic guidance, leadership development, and behavioural insight.
+What makes SSB with ISV different from conventional coaching institutes is that the mentoring is delivered by DIPR certified ex-SSB assessors who have had direct experience with the SSB selection system itself. Candidates receive SSB coaching by an Ex Group Testing Officer (GTO), an Ex Interviewing Officer (IO) and an Ex Psychologist (Psych) along with guidance from former regular armed forces officers (veterans), providing insights that go far beyond theoretical preparation. This unique perspective helps aspirants understand how candidates are evaluated during the SSB interview and how officer-like qualities are observed in real situations. `,
+        
         banner: '/assets/website/about_us_banner.webp',
 
         heading: "About SSB with ISV ",
@@ -169,7 +168,7 @@ What makes SSB with ISV different from conventional coaching institutes is that 
                 <link rel="canonical" href="https://ssbwithisv.in/aboutssbwithisv" />
             </Helmet>
 
-            <CustomHeader heading={data?.heading} text={data?.text} textTwo={data.textTwo} banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} />
+            <CustomHeader heading={data?.heading} text={data?.text}  banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} />
 
 
 
