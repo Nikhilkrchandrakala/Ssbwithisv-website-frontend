@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useCreateOrderMutation, useGetAllCoursesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation, useCheckPurchaseQuery } from "../redux/api";
+import React, { useState } from "react";
+import { useCreateOrderMutation, useGetAllCoursesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation } from "../redux/api";
 import CustomButton from "../components/CustomButton";
 import {
     FaSearch,
@@ -7,11 +7,11 @@ import {
     FaClock,
     FaArrowRight,
     FaCheckCircle,
-    FaCheckDouble,
+    // FaCheckDouble,
     FaUsers,
     FaSignal,
     FaBookOpen,
-    FaImages,
+    // FaImages,
     FaInfinity,
     FaTicketAlt,
     FaTrash,
@@ -40,7 +40,7 @@ function PerCourses() {
     const [couponSuccess, setCouponSuccess] = useState("");
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
-    
+
 
     const [createOrder] = useCreateOrderMutation();
     const [verifyPayment] = useVerifyPaymentMutation();
@@ -52,7 +52,7 @@ function PerCourses() {
 
     // Get unique categories
     const courses = coursesData || [];
-    const categories = ["all", ...new Set(courses.map(course => course.category).filter(Boolean))];
+    // const categories = ["all", ...new Set(courses.map(course => course.category).filter(Boolean))];
 
     // Filter courses
     const filteredCourses = courses.filter(course => {
@@ -254,12 +254,12 @@ function PerCourses() {
         return getCourseTotalWithGST(selectedCourse);
     };
 
-    const getDisplayAmount = () => {
-        if (appliedCoupon && finalAmount > 0) {
-            return finalAmount;
-        }
-        return getOriginalPrice();
-    };
+    // const getDisplayAmount = () => {
+    //     if (appliedCoupon && finalAmount > 0) {
+    //         return finalAmount;
+    //     }
+    //     return getOriginalPrice();
+    // };
 
     if (isLoading) {
         return (
