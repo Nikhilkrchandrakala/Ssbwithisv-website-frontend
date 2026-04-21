@@ -3,6 +3,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/Footer.module.css";
 import VisitorCounter from "../components/VisitorCounter";
+import PerCourses from "../pages/PerCourses";
+import CustomButton from "../components/CustomButton";
 
 function Footer() {
     const navigate = useNavigate();
@@ -20,6 +22,11 @@ function Footer() {
                         alt="Joint Services Academy"
                         className={styles.logo}
                     />
+                </div>
+
+                <div className="bottom-contact-box-wrapper-join">
+                    {/* <PerCourses /> */}
+                    <CustomButton text={"Join SSB Batch"} onClick={() => navigate('/Batches')} />
                 </div>
 
                 <div className="bottom-contact-box-wrapper">

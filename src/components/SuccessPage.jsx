@@ -16,7 +16,16 @@ const SuccessPage = () => {
     // Get payment details from location state or localStorage
     const paymentDetails = location.state || JSON.parse(localStorage.getItem('lastPaymentDetails') || '{}');
 
-  
+    useEffect(() => {
+
+        setTimeout(() => {
+            navigate('/')
+        }, 3000)
+
+    }, [])
+
+
+
 
     useEffect(() => {
         // Trigger confetti animation
@@ -88,14 +97,14 @@ const SuccessPage = () => {
                     Thank you for your purchase. Your transaction has been completed successfully.
                 </p>
 
-                
-               
+
+
 
                 {/* Action Buttons */}
-               
+
 
                 {/* Countdown Timer */}
-               
+
             </div>
         </div>
     );

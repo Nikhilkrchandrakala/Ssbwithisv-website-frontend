@@ -1,35 +1,45 @@
-import React, { useState } from "react";
-import { useCreateOrderMutation, useGetAllCoursesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation } from "../redux/api";
-import CustomButton from "../components/CustomButton";
+import React, { useState, useEffect } from "react";
 import {
     FaSearch,
     FaTimes,
     FaClock,
     FaArrowRight,
     FaCheckCircle,
-    // FaCheckDouble,
     FaUsers,
-    FaSignal,
     FaBookOpen,
-    // FaImages,
     FaInfinity,
     FaTicketAlt,
     FaTrash,
-    FaPercent
+    FaPercent,
+    FaCalendarAlt,
+    FaRupeeSign,
+    FaUserGraduate,
+    FaSun,
+    FaMoon,
+    FaFilter,
+    FaChevronLeft,
+    FaChevronRight,
+    FaArrowLeft
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useCreateOrderMutation, useGetAllSlotesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation } from "../redux/api";
+import styles from "../style/BatchPage.module.css";
 
-function PerCourses() {
-    const { data: coursesData, isLoading, isError } = useGetAllCoursesQuery();
-    // const {data} = useCheckPurchaseQuery()
+function BatchPage() {
+    const { data: slotsData, isLoading, isError } = useGetAllSlotesQuery();
+    const [createOrder] = useCreateOrderMutation();
+    const [verifyPayment] = useVerifyPaymentMutation();
+    const [applyCoupon] = useApplyCouponMutation();
+    const { data: user } = useUserProfileQuery();
+    const navigate = useNavigate();
 
-
-    // states
-    const [isCoursesPopupOpen, setIsCoursesPopupOpen] = useState(false);
-    const [selectedCourse, setSelectedCourse] = useState(null);
+    // States
+    const [selectedBatch, setSelectedBatch] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [activeCategory, setActiveCategory] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedBatchType, setSelectedBatchType] = useState("all");
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
     // Coupon states
     const [couponCode, setCouponCode] = useState("");
@@ -40,31 +50,126 @@ function PerCourses() {
     const [couponSuccess, setCouponSuccess] = useState("");
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
+    const slots = slotsData || [];
 
+    // Group slots by month
+    const groupSlotsByMonth = (slots) => {
+        const grouped = {};
 
-    const [createOrder] = useCreateOrderMutation();
-    const [verifyPayment] = useVerifyPaymentMutation();
-    const [applyCoupon] = useApplyCouponMutation();
+        slots.forEach(slot => {
+            if (!slot.startTime) return;
+            const date = new Date(slot.startTime);
+            const month = date.getMonth();
+            const year = date.getFullYear();
+            const monthKey = `${year}-${month}`;
 
-    const { data: user } = useUserProfileQuery()
+            if (!grouped[monthKey]) {
+                grouped[monthKey] = {
+                    year,
+                    month,
+                    monthName: date.toLocaleString('default', { month: 'long' }),
+                    slots: []
+                };
+            }
 
-    const navigate = useNavigate()
+            grouped[monthKey].slots.push(slot);
+        });
 
-    // Get unique categories
-    const courses = coursesData || [];
-    // const categories = ["all", ...new Set(courses.map(course => course.category).filter(Boolean))];
+        Object.keys(grouped).forEach(key => {
+            grouped[key].slots.sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+        });
 
-    // Filter courses
-    const filteredCourses = courses.filter(course => {
-        const matchesCategory = activeCategory === "all" || course.category?.toLowerCase() === activeCategory;
-        const matchesSearch = course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            course.description?.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCategory && matchesSearch;
+        return grouped;
+    };
+
+    // Filter slots
+    const filteredSlots = slots?.filter(slot => {
+        const matchesSearch = slot.title?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesBatchType = selectedBatchType === "all" || slot.title === selectedBatchType;
+        const slotDate = new Date(slot.startTime);
+        const matchesMonth = slotDate.getMonth() === selectedMonth && slotDate.getFullYear() === selectedYear;
+        return matchesSearch && matchesBatchType && matchesMonth;
     });
 
-    const openModal = (course) => {
-        setSelectedCourse(course);
-        // Reset coupon states when opening new course modal
+    const groupedSlots = groupSlotsByMonth(filteredSlots);
+    const currentMonthSlots = groupedSlots[`${selectedYear}-${selectedMonth}`] || { slots: [] };
+
+    // Get unique months from all slots for navigation
+    const availableMonths = [...new Set(slots.map(slot => {
+        if (!slot.startTime) return null;
+        const date = new Date(slot.startTime);
+        return `${date.getFullYear()}-${date.getMonth()}`;
+    }).filter(Boolean))].sort();
+
+    const canGoPrev = availableMonths.length > 0 &&
+        availableMonths.some(m => {
+            const [year, month] = m.split('-');
+            return parseInt(year) < selectedYear ||
+                (parseInt(year) === selectedYear && parseInt(month) < selectedMonth);
+        });
+
+    const canGoNext = availableMonths.length > 0 &&
+        availableMonths.some(m => {
+            const [year, month] = m.split('-');
+            return parseInt(year) > selectedYear ||
+                (parseInt(year) === selectedYear && parseInt(month) > selectedMonth);
+        });
+
+    const goToPrevMonth = () => {
+        const prevMonths = availableMonths.filter(m => {
+            const [year, month] = m.split('-');
+            return parseInt(year) < selectedYear ||
+                (parseInt(year) === selectedYear && parseInt(month) < selectedMonth);
+        });
+        if (prevMonths.length > 0) {
+            const lastPrev = prevMonths[prevMonths.length - 1];
+            const [year, month] = lastPrev.split('-');
+            setSelectedYear(parseInt(year));
+            setSelectedMonth(parseInt(month));
+        }
+    };
+
+    const goToNextMonth = () => {
+        const nextMonths = availableMonths.filter(m => {
+            const [year, month] = m.split('-');
+            return parseInt(year) > selectedYear ||
+                (parseInt(year) === selectedYear && parseInt(month) > selectedMonth);
+        });
+        if (nextMonths.length > 0) {
+            const firstNext = nextMonths[0];
+            const [year, month] = firstNext.split('-');
+            setSelectedYear(parseInt(year));
+            setSelectedMonth(parseInt(month));
+        }
+    };
+
+    const formatDateTime = (isoString) => {
+        if (!isoString) return 'N/A';
+        const date = new Date(isoString);
+        return date.toLocaleString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const isSlotFull = (slot) => {
+        if (!slot.maxStudents) return false;
+        const bookedCount = slot.bookedStudents?.length || 0;
+        return bookedCount >= slot.maxStudents;
+    };
+
+    const getAvailableSpots = (slot) => {
+        if (!slot.maxStudents) return "Unlimited";
+        const bookedCount = slot.bookedStudents?.length || 0;
+        const available = slot.maxStudents - bookedCount;
+        return available > 0 ? available : 0;
+    };
+
+    const openModal = (slot) => {
+        setSelectedBatch(slot);
         resetCouponState();
         setIsModalOpen(true);
         document.body.style.overflow = "hidden";
@@ -72,12 +177,11 @@ function PerCourses() {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedCourse(null);
+        setSelectedBatch(null);
         resetCouponState();
         document.body.style.overflow = "auto";
     };
 
-    // Reset coupon states
     const resetCouponState = () => {
         setCouponCode("");
         setAppliedCoupon(null);
@@ -88,29 +192,26 @@ function PerCourses() {
         setIsApplyingCoupon(false);
     };
 
-    // Calculate total amount with GST
-    const getCourseTotalWithGST = (course) => {
-        if (!course) return 0;
-        const price = course.price || 0;
+    const getBatchTotalWithGST = (batch) => {
+        if (!batch) return 0;
+        const price = batch.price || 0;
         const gst = price * 0.18;
         return price + gst;
     };
 
-    // Handle coupon application
     const handleApplyCoupon = async () => {
         if (!couponCode.trim()) {
             setCouponError("Please enter a coupon code");
             return;
         }
 
-        if (!selectedCourse) {
-            setCouponError("No course selected");
+        if (!selectedBatch) {
+            setCouponError("No batch selected");
             return;
         }
 
-        const originalAmount = getCourseTotalWithGST(selectedCourse);
+        const originalAmount = getBatchTotalWithGST(selectedBatch);
 
-        // If already applied same coupon, don't re-apply
         if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
             setCouponError("This coupon is already applied");
             return;
@@ -125,8 +226,6 @@ function PerCourses() {
                 code: couponCode,
                 amount: originalAmount
             }).unwrap();
-
-            console.log("Coupon response:", response);
 
             setAppliedCoupon({
                 code: response.couponCode,
@@ -148,7 +247,6 @@ function PerCourses() {
         }
     };
 
-    // Remove applied coupon
     const handleRemoveCoupon = () => {
         resetCouponState();
     };
@@ -156,85 +254,68 @@ function PerCourses() {
     const handlePayment = async () => {
         if (user) {
             try {
-                if (!selectedCourse) return alert("No course selected");
+                if (!selectedBatch) return alert("No batch selected");
+
+                if (isSlotFull(selectedBatch)) {
+                    alert("This batch is already full! Please select another batch.");
+                    return;
+                }
 
                 const referralCode = localStorage.getItem("referralCode");
+                const basePrice = selectedBatch.price || 0;
 
-                // Get the base course price (without GST)
-                // Backend will add 18% GST automatically
-                const basePrice = selectedCourse.price || 0;
-
-                let amountToSend = basePrice; // Send base price, backend adds GST
+                let amountToSend = basePrice;
                 let couponCodeToSend = null;
 
-                // If coupon is applied, we still send base price
-                // Backend will calculate GST first, then apply discount
                 if (appliedCoupon) {
                     couponCodeToSend = appliedCoupon.code;
                 }
 
-                console.log("Sending to backend:", {
-                    amount: amountToSend,
-                    courseId: selectedCourse._id,
-                    courseTitle: selectedCourse.title,
-                    referralCode,
-                    couponCode: couponCodeToSend,
-                });
-
-                // ✅ 1. Create order
                 const order = await createOrder({
                     amount: amountToSend,
-                    courseId: selectedCourse._id,
-                    courseTitle: selectedCourse.title,
+                    slotId: selectedBatch._id,
+                    slotTitle: selectedBatch.title,
                     ...(referralCode && { referralCode }),
                     ...(couponCodeToSend && { couponCode: couponCodeToSend })
                 }).unwrap();
 
-                // ✅ 2. Load Razorpay script if not loaded
                 if (!window.Razorpay) {
                     const script = document.createElement("script");
                     script.src = "https://checkout.razorpay.com/v1/checkout.js";
                     script.async = true;
                     document.body.appendChild(script);
-
-                    await new Promise((resolve) => {
-                        script.onload = resolve;
-                    });
+                    await new Promise((resolve) => { script.onload = resolve; });
                 }
 
-                // ✅ 3. Razorpay options
                 const options = {
                     key: "rzp_live_SdgMS7X9M3RZSi",
                     amount: order.amount,
                     currency: "INR",
                     order_id: order.orderId,
-
                     name: "SSB Academy",
-                    description: selectedCourse.title,
-
+                    description: selectedBatch.title,
                     handler: async function (response) {
                         try {
-                            await verifyPayment(response).unwrap();
-                            navigate('/Success')
+                            await verifyPayment({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                            }).unwrap();
+                            navigate('/Success');
                             closeModal();
                         } catch (err) {
                             console.error(err);
                             alert("Verification failed ❌");
                         }
                     },
-
                     prefill: {
                         name: user?.name || "Student",
                         email: user?.email || "test@gmail.com",
                         contact: user?.phone || "9999999999",
                     },
-
-                    theme: {
-                        color: "#0f172a",
-                    },
+                    theme: { color: "#0f172a" },
                 };
 
-                // ✅ 4. Open Razorpay
                 const rzp = new window.Razorpay(options);
                 rzp.open();
 
@@ -242,341 +323,316 @@ function PerCourses() {
                 console.error("Payment error:", err);
                 alert(err?.data?.message || err?.message || "Payment failed ❌");
             }
-
         } else {
             navigate('/SignIn');
         }
     };
 
-    // Get original price with GST for display
     const getOriginalPrice = () => {
-        if (!selectedCourse) return 0;
-        return getCourseTotalWithGST(selectedCourse);
+        if (!selectedBatch) return 0;
+        return getBatchTotalWithGST(selectedBatch);
     };
-
-    // const getDisplayAmount = () => {
-    //     if (appliedCoupon && finalAmount > 0) {
-    //         return finalAmount;
-    //     }
-    //     return getOriginalPrice();
-    // };
 
     if (isLoading) {
         return (
-            <div className="per-courses-loader">
-                <div className="spinner"></div>
-                <p>Loading amazing courses...</p>
+            <div className={styles.loaderContainer}>
+                <div className={styles.spinner}></div>
+                <p>Loading batches...</p>
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className="per-courses-error">
+            <div className={styles.errorContainer}>
                 <i className="fas fa-exclamation-triangle"></i>
-                <p>Unable to load courses. Please try again.</p>
+                <p>Unable to load batches. Please try again.</p>
                 <button onClick={() => window.location.reload()}>Retry</button>
             </div>
         );
     }
 
     return (
-        <>
-            <CustomButton text="Join US" onClick={() => setIsCoursesPopupOpen(true)} />
+        <div className={styles.container}>
+            {/* Header Section */}
+            <div className={styles.header}>
+                <button className={styles.backButton} onClick={() => navigate(-1)}>
+                    <FaArrowLeft /> 
+                </button>
+                <h1 className={styles.title}>
+                    10 days online SSB Hackathon Courses
+                </h1>
+            </div>
 
-            {/* ===================== COURSES POPUP ===================== */}
-            {isCoursesPopupOpen && (
-                <div className="courses-popup-overlay" onClick={() => setIsCoursesPopupOpen(false)}>
-                    <div className="courses-popup-container" onClick={(e) => e.stopPropagation()}>
-                        <button className="popup-close" onClick={() => setIsCoursesPopupOpen(false)}>
+            {/* Filter Bar */}
+            <div className={styles.filterBar}>
+                <div className={styles.searchWrapper}>
+                    <FaSearch className={styles.searchIcon} />
+                    <input
+                        type="text"
+                        placeholder="Search batches..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className={styles.searchInput}
+                    />
+                    {searchTerm && (
+                        <button onClick={() => setSearchTerm("")} className={styles.clearSearch}>
                             <FaTimes />
                         </button>
+                    )}
+                </div>
 
-                        <div className="popup-header">
-                            <h2 className="popup-title">Our Premium Courses</h2>
-                        </div>
-
-                        {/* Search Bar */}
-                        <div className="popup-search">
-                            <FaSearch />
-                            <input
-                                type="text"
-                                placeholder="Search courses..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            {searchTerm && (
-                                <button onClick={() => setSearchTerm("")}>
-                                    <FaTimes />
-                                </button>
-                            )}
-                        </div>
-
-                        {/* Categories */}
-                        {/* <div className="popup-categories">
-                            {categories.map((category) => (
-                                <button
-                                    key={category}
-                                    className={`category-chip ${activeCategory === category ? "active" : ""}`}
-                                    onClick={() => setActiveCategory(category)}
-                                >
-                                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                                </button>
-                            ))}
-                        </div> */}
-
-                        {/* Courses Grid */}
-                        {filteredCourses.length > 0 ? (
-                            <div className="courses-grid">
-                                {filteredCourses.map((course) => (
-                                    <div
-                                        key={course._id}
-                                        className="course-card-enhanced"
-                                        onClick={() => openModal(course)}
-                                    >
-                                        <div className="course-card-image-wrapper">
-                                            <img
-                                                src={
-                                                    course.thumbnail ||
-                                                    course.images?.[0]?.imageUrl ||
-                                                    "/assets/placeholder-course.jpg"
-                                                }
-                                                alt={course.title}
-                                                onError={(e) => {
-                                                    e.target.src = "/assets/placeholder-course.jpg";
-                                                }}
-                                            />
-                                            <div className="course-card-overlay">
-                                                <span className="view-details">View Details</span>
-                                            </div>
-                                            <div className="course-card-price-tag">
-                                                ₹{course.price}
-                                                <small>+ GST</small>
-                                            </div>
-                                        </div>
-
-                                        <div className="course-card-content-enhanced">
-                                            {course.category && (
-                                                <span className="course-category-badge">
-                                                    {course.category}
-                                                </span>
-                                            )}
-                                            <h3 className="course-title">{course.title}</h3>
-
-                                            {course.duration && (
-                                                <div className="course-duration">
-                                                    <FaClock />
-                                                    <span>{course.duration}</span>
-                                                </div>
-                                            )}
-
-                                            <p className="course-description-preview">
-                                                {course.description?.substring(0, 70)}...
-                                            </p>
-
-                                            <div className="course-card-footer">
-                                                <button className="enroll-preview-btn">
-                                                    Learn More <FaArrowRight />
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="no-results">
-                                <FaSearch />
-                                <p>No courses found matching your criteria</p>
-                                <button
-                                    onClick={() => {
-                                        setSearchTerm("");
-                                        setActiveCategory("all");
-                                    }}
-                                >
-                                    Clear Filters
-                                </button>
-                            </div>
-                        )}
-
-                        {/* Results Count */}
-                        {filteredCourses.length > 0 && (
-                            <div className="results-count">
-                                Showing {filteredCourses.length} of {courses.length} courses
-                            </div>
-                        )}
+                <div className={styles.filterRight}>
+                    <div className={styles.batchTypeFilter}>
+                        <FaFilter className={styles.filterIcon} />
+                        <select
+                            value={selectedBatchType}
+                            onChange={(e) => setSelectedBatchType(e.target.value)}
+                            className={styles.batchTypeSelect}
+                        >
+                            <option value="all">All Batches</option>
+                            <option value="Morning Batch">Morning Batch</option>
+                            <option value="Evening Batch">Evening Batch</option>
+                        </select>
                     </div>
                 </div>
-            )}
+            </div>
 
-            {/* ===================== DETAIL MODAL ENHANCED ===================== */}
-            {isModalOpen && selectedCourse && (
-                <div className="course-modal-overlay-enhanced" onClick={closeModal}>
-                    <div className="course-modal-container-enhanced" onClick={(e) => e.stopPropagation()}>
-                        <button className="course-modal-close-enhanced" onClick={closeModal}>
-                            <FaTimes />
-                        </button>
+            {/* Month Navigation */}
+            <div className={styles.monthNavigation}>
+                <button
+                    onClick={goToPrevMonth}
+                    disabled={!canGoPrev}
+                    className={styles.navBtn}
+                >
+                    <FaChevronLeft /> Previous
+                </button>
+                <h2 className={styles.currentMonth}>
+                    {new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long' })} {selectedYear}
+                </h2>
+                <button
+                    onClick={goToNextMonth}
+                    disabled={!canGoNext}
+                    className={styles.navBtn}
+                >
+                    Next <FaChevronRight />
+                </button>
+            </div>
 
-                        <div className="course-modal-grid">
-                            <div className="course-modal-image-section">
-                                <img
-                                    src={selectedCourse.thumbnail || selectedCourse.images?.[0]?.imageUrl || "/assets/placeholder-course.jpg"}
-                                    alt={selectedCourse.title}
-                                    onError={(e) => {
-                                        e.target.src = "/assets/placeholder-course.jpg";
-                                    }}
-                                />
-                                <div className="course-modal-price-badge-enhanced">
-                                    <span className="price-label">Price</span>
-                                    <span className="price-value">₹{selectedCourse.price}</span>
-                                    <span className="price-gst">+18% GST</span>
+            {/* Batches Grid */}
+            {currentMonthSlots.slots.length > 0 ? (
+                <div className={styles.batchesGrid}>
+                    {currentMonthSlots.slots.map((batch) => {
+                        const isFull = isSlotFull(batch);
+                        const availableSpots = getAvailableSpots(batch);
+                        const bookedCount = batch.bookedStudents?.length || 0;
+                        const batchTypeClass = batch.batchType === 'morning' ? styles.morning : styles.evening;
+                        const batchIcon = batch.batchType === 'morning' ? <FaSun /> : <FaMoon />;
+
+                        return (
+                            <div
+                                key={batch._id}
+                                className={`${styles.batchCard} ${isFull ? styles.batchFull : ''}`}
+                                onClick={() => !isFull && openModal(batch)}
+                            >
+                                <h3 className={styles.batchTitle}>
+                                    {batchIcon} {batch.title}
+                                </h3>
+
+                                <div className={styles.batchTime}>
+                                    <FaClock />
+                                    <span>{formatDateTime(batch.startTime)}</span>
                                 </div>
-                            </div>
 
-                            <div className="course-modal-info-section">
-                                <div className="course-modal-header-enhanced">
-                                    {selectedCourse.category && (
-                                        <span className="modal-category">{selectedCourse.category}</span>
-                                    )}
-                                    <h2 className="course-modal-title-enhanced">{selectedCourse.title}</h2>
-
-                                    <div className="course-meta-stats">
-                                        {selectedCourse.duration && (
-                                            <div className="meta-item">
-                                                <FaClock />
-                                                <span>{selectedCourse.duration}</span>
-                                            </div>
-                                        )}
-                                        {selectedCourse.level && (
-                                            <div className="meta-item">
-                                                <FaSignal />
-                                                <span>{selectedCourse.level}</span>
-                                            </div>
-                                        )}
-                                        {selectedCourse.studentsEnrolled && (
-                                            <div className="meta-item">
-                                                <FaUsers />
-                                                <span>{selectedCourse.studentsEnrolled}+ enrolled</span>
-                                            </div>
-                                        )}
+                                <div className={styles.batchStats}>
+                                    <div className={styles.stat}>
+                                        <FaUsers />
+                                        <span>Capacity: {batch.maxStudents || '∞'}</span>
                                     </div>
-                                </div>
-
-                                <div className="course-modal-description-enhanced">
-                                    <h4>
-                                        <FaBookOpen />
-                                        About This Course
-                                    </h4>
-                                    <p>{selectedCourse.description || "Comprehensive SSB preparation program designed to help you succeed in the Services Selection Board interview."}</p>
-                                </div>
-
-                                {/* Coupon Section */}
-                                <div className="course-modal-coupon-section">
-                                    <h4>
-                                        <FaTicketAlt />
-                                        Apply Coupon
-                                    </h4>
-                                    <div className="coupon-input-wrapper">
-                                        <div className="coupon-input-group">
-                                            <input
-                                                type="text"
-                                                placeholder="Enter coupon code"
-                                                value={couponCode}
-                                                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                                disabled={!!appliedCoupon}
-                                                className="coupon-input"
-                                            />
-                                            {!appliedCoupon ? (
-                                                <button
-                                                    onClick={handleApplyCoupon}
-                                                    disabled={isApplyingCoupon || !couponCode.trim()}
-                                                    className="apply-coupon-btn"
-                                                >
-                                                    {isApplyingCoupon ? "Applying..." : "Apply"}
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    onClick={handleRemoveCoupon}
-                                                    className="remove-coupon-btn"
-                                                >
-                                                    <FaTrash /> Remove
-                                                </button>
-                                            )}
-                                        </div>
+                                    <div className={styles.stat}>
+                                        <FaUserGraduate />
+                                        <span>Booked: {bookedCount}</span>
                                     </div>
-
-                                    {couponError && (
-                                        <div className="coupon-error-message">
-                                            <FaTimes />
-                                            <span>{couponError}</span>
-                                        </div>
-                                    )}
-
-                                    {couponSuccess && (
-                                        <div className="coupon-success-message">
+                                    {!isFull && batch.maxStudents && (
+                                        <div className={`${styles.stat} ${styles.available}`}>
                                             <FaCheckCircle />
-                                            <span>{couponSuccess}</span>
-                                        </div>
-                                    )}
-
-                                    {appliedCoupon && (
-                                        <div className="applied-coupon-info">
-                                            <div className="applied-coupon-badge">
-                                                <FaPercent />
-                                                <span>Coupon <strong>{appliedCoupon.code}</strong> applied</span>
-                                            </div>
-                                            <div className="saved-amount">
-                                                You saved <strong>₹{appliedCoupon.discount.toFixed(2)}</strong>!
-                                            </div>
+                                            <span>Available: {availableSpots}</span>
                                         </div>
                                     )}
                                 </div>
 
-                                {/* Enroll Section */}
-                                <div className="course-modal-footer-enhanced">
-                                    <div className="price-summary">
-                                        {appliedCoupon ? (
-                                            <>
-                                                <div className="original-price-row">
-                                                    <span>Original Price:</span>
-                                                    <span className="strikethrough">₹{getOriginalPrice().toFixed(2)}</span>
-                                                </div>
-                                                <div className="discount-row">
-                                                    <span>Discount:</span>
-                                                    <span className="discount-amount">- ₹{couponDiscount.toFixed(2)}</span>
-                                                </div>
-                                                <div className="total-price">
-                                                    <span>Total Amount</span>
-                                                    <strong>₹{finalAmount.toFixed(2)}</strong>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <div className="total-price">
-                                                    <span>Total Amount</span>
-                                                    <strong>₹{getOriginalPrice().toFixed(2)}</strong>
-                                                </div>
-                                                <div className="price-breakdown">
-                                                    <span>Course Fee: ₹{selectedCourse.price}</span>
-                                                    <span>GST (18%): ₹{(selectedCourse.price * 0.18).toFixed(2)}</span>
-                                                </div>
-                                            </>
-                                        )}
+                                <div className={styles.batchPrice}>
+                                    <FaRupeeSign />
+                                    <span>{batch.price || 0}</span>
+                                    <small>+ GST</small>
+                                </div>
+
+                                <button
+                                    className={`${styles.bookBtn} ${isFull ? styles.disabled : ''}`}
+                                    disabled={isFull}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        !isFull && openModal(batch);
+                                    }}
+                                >
+                                    {isFull ? 'Batch Full' : 'Book Now'} <FaArrowRight />
+                                </button>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : (
+                <div className={styles.noBatches}>
+                    <FaCalendarAlt className={styles.noBatchesIcon} />
+                    <h3>No batches available</h3>
+                    <p>No batches found for {new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long' })} {selectedYear}</p>
+                </div>
+            )}
+
+            {/* Booking Detail Modal */}
+            {isModalOpen && selectedBatch && (
+                <div className={styles.modalOverlay} onClick={closeModal}>
+                    <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
+                        <button className={styles.modalClose} onClick={closeModal}>
+                            <FaTimes />
+                        </button>
+
+                        <div className={styles.modalContent}>
+                            <div className={styles.modalHeader}>
+                                <h2 className={styles.modalTitle}>{selectedBatch.title}</h2>
+                                <div className={styles.modalMeta}>
+                                    <div className={styles.metaItem}>
+                                        <FaCalendarAlt />
+                                        <span>Start: {formatDateTime(selectedBatch.startTime)}</span>
                                     </div>
-                                    <button onClick={handlePayment} className="enroll-now-btn">
-                                        Enroll Now <FaArrowRight />
-                                    </button>
-                                    <div className="modal-note">
-                                        <FaInfinity />
-                                        <span>Lifetime access • Instant delivery</span>
+                                    <div className={styles.metaItem}>
+                                        <FaClock />
+                                        <span>End: {formatDateTime(selectedBatch.endTime)}</span>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.modalAvailability}>
+                                <h4><FaUsers /> Seat Availability</h4>
+                                <div className={styles.availabilityStats}>
+                                    <div className={styles.statRow}>
+                                        <span>Maximum Capacity:</span>
+                                        <strong>{selectedBatch.maxStudents || 'Unlimited'}</strong>
+                                    </div>
+                                    <div className={styles.statRow}>
+                                        <span>Already Booked:</span>
+                                        <strong>{selectedBatch.bookedStudents?.length || 0}</strong>
+                                    </div>
+                                    <div className={`${styles.statRow} ${styles.highlight}`}>
+                                        <span>Seats Available:</span>
+                                        <strong className={styles.availableCount}>{getAvailableSpots(selectedBatch)}</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className={styles.modalCoupon}>
+                                <h4><FaTicketAlt /> Apply Coupon</h4>
+                                <div className={styles.couponInputGroup}>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter coupon code"
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                        disabled={!!appliedCoupon}
+                                        className={styles.couponInput}
+                                    />
+                                    {!appliedCoupon ? (
+                                        <button
+                                            onClick={handleApplyCoupon}
+                                            disabled={isApplyingCoupon || !couponCode.trim()}
+                                            className={styles.applyCouponBtn}
+                                        >
+                                            {isApplyingCoupon ? "Applying..." : "Apply"}
+                                        </button>
+                                    ) : (
+                                        <button onClick={handleRemoveCoupon} className={styles.removeCouponBtn}>
+                                            <FaTrash /> Remove
+                                        </button>
+                                    )}
+                                </div>
+
+                                {couponError && (
+                                    <div className={styles.couponError}>
+                                        <FaTimes />
+                                        <span>{couponError}</span>
+                                    </div>
+                                )}
+
+                                {couponSuccess && (
+                                    <div className={styles.couponSuccess}>
+                                        <FaCheckCircle />
+                                        <span>{couponSuccess}</span>
+                                    </div>
+                                )}
+
+                                {appliedCoupon && (
+                                    <div className={styles.appliedCoupon}>
+                                        <div className={styles.couponBadge}>
+                                            <FaPercent />
+                                            <span>Coupon <strong>{appliedCoupon.code}</strong> applied</span>
+                                        </div>
+                                        <div className={styles.savedAmount}>
+                                            You saved <strong>₹{appliedCoupon.discount.toFixed(2)}</strong>!
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className={styles.modalFooter}>
+                                <div className={styles.priceSummary}>
+                                    {appliedCoupon ? (
+                                        <>
+                                            <div className={styles.priceRow}>
+                                                <span>Original Price:</span>
+                                                <span className={styles.strikethrough}>₹{getOriginalPrice().toFixed(2)}</span>
+                                            </div>
+                                            <div className={`${styles.priceRow} ${styles.discount}`}>
+                                                <span>Discount:</span>
+                                                <span className={styles.discountAmount}>- ₹{couponDiscount.toFixed(2)}</span>
+                                            </div>
+                                            <div className={`${styles.priceRow} ${styles.total}`}>
+                                                <span>Total Amount</span>
+                                                <strong>₹{finalAmount.toFixed(2)}</strong>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className={`${styles.priceRow} ${styles.total}`}>
+                                                <span>Total Amount</span>
+                                                <strong>₹{getOriginalPrice().toFixed(2)}</strong>
+                                            </div>
+                                            <div className={styles.priceBreakdown}>
+                                                <span>Batch Fee: ₹{selectedBatch.price}</span>
+                                                <span>GST (18%): ₹{(selectedBatch.price * 0.18).toFixed(2)}</span>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+
+                                <button
+                                    onClick={handlePayment}
+                                    className={styles.confirmBookBtn}
+                                    disabled={isSlotFull(selectedBatch)}
+                                >
+                                    {isSlotFull(selectedBatch) ? 'Batch Full' : 'Confirm Booking'} <FaArrowRight />
+                                </button>
+
+                                <div className={styles.modalNote}>
+                                    <FaInfinity />
+                                    <span>Secure your seat • Limited slots available</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-        </>
+        </div>
     );
 }
 
-export default PerCourses;
+export default BatchPage;

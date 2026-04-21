@@ -2200,3 +2200,39 @@
         gap: 5px;
     }
 }
+
+
+/* Batch Schedule Styles */
+.batchSchedule {
+    margin: 15px 0;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(210, 161, 0, 0.2);
+}
+
+.scheduleItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    color: #c6c5af;
+    font-size: 0.85rem;
+}
+
+.scheduleIcon {
+    color: #d2a100;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* Mobile Responsive for Batch Schedule */
+@media (max-width: 768px) {
+    .batchSchedule {
+        padding: 10px;
+    }
+
+    .scheduleItem {
+        font-size: 0.8rem;
+    }
+}

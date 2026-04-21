@@ -109,15 +109,6 @@ const Sidebar = ({ open, onClose }) => {
                             Home
                         </NavLink>
 
-                        <NavLink
-                            to="/Gallery"
-                            onClick={onClose}
-                            className={({ isActive }) =>
-                                isActive ? styles.active : ""
-                            }
-                        >
-                            Gallery
-                        </NavLink>
 
                         <NavLink
                             to="/Courses"
@@ -182,6 +173,17 @@ const Sidebar = ({ open, onClose }) => {
                         </NavLink>
 
                         <NavLink
+                            to="/Gallery"
+                            onClick={onClose}
+                            className={({ isActive }) =>
+                                isActive ? styles.active : ""
+                            }
+                        >
+                            Gallery
+                        </NavLink>
+
+
+                        <NavLink
                             to="/blogs"
                             onClick={onClose}
                             className={({ isActive }) =>
@@ -225,7 +227,7 @@ const Sidebar = ({ open, onClose }) => {
 
                     </nav>
 
-                   
+
                     <div className={styles.bottomLine}>
                         <span className={`${styles.dot} ${styles.dotRightToLeft}`}></span>
                         <span className={styles.line}></span>

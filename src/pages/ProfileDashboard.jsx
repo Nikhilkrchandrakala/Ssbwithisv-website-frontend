@@ -12,7 +12,10 @@ import {
     BiEdit,
     BiArrowBack,
     BiBook,
-    BiRupee
+    BiRupee,
+    BiCalendar,
+    BiTime,
+    BiDollar
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -59,7 +62,7 @@ const ProfileDashboard = () => {
     const [otpError, setOtpError] = useState('');
 
     const { data: profileData } = useUserProfileQuery();
-    const { data: coursesData, isLoading: coursesLoading } = useUserCoursesQuery();
+    const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery(); // API now returns batch orders
     const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
@@ -391,6 +394,16 @@ const ProfileDashboard = () => {
         });
     };
 
+    // Format time
+    const formatTime = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
+
     return (
         <>
             <section className={NavStyles.heroSection}>
@@ -453,14 +466,14 @@ const ProfileDashboard = () => {
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
                                     <button
-                                        className={`${styles.navTab} ${activeTab === 'courses' ? styles.active : ''}`}
+                                        className={`${styles.navTab} ${activeTab === 'batches' ? styles.active : ''}`}
                                         onClick={() => {
-                                            setActiveTab('courses');
+                                            setActiveTab('batches');
                                             setIsMobileMenuOpen(false);
                                         }}
                                     >
                                         <BiBook />
-                                        <span>My Courses</span>
+                                        <span>My Batches</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
                                 </nav>
@@ -605,41 +618,41 @@ const ProfileDashboard = () => {
                                     </div>
                                 )}
 
-                                {/* Courses Tab */}
-                                {activeTab === 'courses' && (
+                                {/* Batches Tab */}
+                                {activeTab === 'batches' && (
                                     <div className={styles.tabContent}>
                                         <div className={styles.tabHeader}>
                                             <h2>
                                                 <BiBook className={styles.tabIcon} />
-                                                My Purchased Courses
+                                                My Purchased Batches
                                             </h2>
                                         </div>
 
                                         <div className={styles.coursesContent}>
-                                            {coursesLoading ? (
+                                            {batchesLoading ? (
                                                 <div className={styles.loadingState}>
                                                     <div className={styles.spinner}></div>
-                                                    <p>Loading your courses...</p>
+                                                    <p>Loading your batches...</p>
                                                 </div>
-                                            ) : coursesData?.orders?.length > 0 ? (
+                                            ) : batchesData?.orders?.length > 0 ? (
                                                 <div className={styles.coursesGrid}>
-                                                    {coursesData.orders.map((order) => (
+                                                    {batchesData.orders.map((order) => (
                                                         <div key={order._id} className={styles.courseCard}>
-                                                            <div className={styles.courseThumbnail}>
+                                                            {/* <div className={styles.courseThumbnail}>
                                                                 <img
-                                                                    src={order.courseId?.thumbnail || '/assets/course-placeholder.jpg'}
-                                                                    alt={order.courseTitle}
+                                                                    src={order.slotId?.thumbnail || '/assets/batch-placeholder.jpg'}
+                                                                    alt={order.slotId?.title || 'Batch'}
                                                                     onError={(e) => {
-                                                                        e.target.src = '/assets/course-placeholder.jpg';
+                                                                        e.target.src = '/assets/batch-placeholder.jpg';
                                                                     }}
                                                                 />
                                                                 <div className={styles.courseStatus}>
                                                                     <FaCheckCircle />
-                                                                    <span>Purchased</span>
+                                                                    <span>{order.status === 'paid' ? 'Paid' : order.status}</span>
                                                                 </div>
-                                                            </div>
+                                                            </div> */}
                                                             <div className={styles.courseDetails}>
-                                                                <h3>{order.courseTitle}</h3>
+                                                                <h3>{order.slotId?.title || 'Batch Session'}</h3>
                                                                 <div className={styles.courseMeta}>
                                                                     <div className={styles.coursePrice}>
                                                                         <BiRupee />
@@ -649,16 +662,56 @@ const ProfileDashboard = () => {
                                                                         Purchased on {formatDate(order.createdAt)}
                                                                     </div>
                                                                 </div>
+                                                                
+                                                                {/* Batch Schedule Information */}
+                                                                {order.slotId && (
+                                                                    <div className={styles.batchSchedule}>
+                                                                        <div className={styles.scheduleItem}>
+                                                                            <BiCalendar className={styles.scheduleIcon} />
+                                                                            <span>
+                                                                                Start: {formatDate(order.slotId.startTime)}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className={styles.scheduleItem}>
+                                                                            <BiCalendar className={styles.scheduleIcon} />
+                                                                            <span>
+                                                                                End: {formatDate(order.slotId.endTime)}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className={styles.scheduleItem}>
+                                                                            <BiTime className={styles.scheduleIcon} />
+                                                                            <span>
+                                                                                Time: {formatTime(order.slotId.startTime)} - {formatTime(order.slotId.endTime)}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                
                                                                 <div className={styles.courseOrderInfo}>
                                                                     <span className={styles.orderIdLabel}>Order ID:</span>
                                                                     <span className={styles.orderIdValue}>{order.orderId}</span>
                                                                 </div>
+                                                                
+                                                                {order.paymentId && (
+                                                                    <div className={styles.courseOrderInfo}>
+                                                                        <span className={styles.orderIdLabel}>Payment ID:</span>
+                                                                        <span className={styles.orderIdValue}>{order.paymentId}</span>
+                                                                    </div>
+                                                                )}
+                                                                
+                                                                {order.referralCode && (
+                                                                    <div className={styles.courseOrderInfo}>
+                                                                        <span className={styles.orderIdLabel}>Referral Code:</span>
+                                                                        <span className={styles.orderIdValue}>{order.referralCode}</span>
+                                                                    </div>
+                                                                )}
+
                                                                 {/* <div className={styles.courseActions}>
                                                                     <button
                                                                         className={styles.watchNowBtn}
-                                                                        onClick={() => navigate(`/course/${order.courseId?._id}`)}
+                                                                        onClick={() => navigate(`/batch/${order.slotId?._id}`)}
                                                                     >
-                                                                        Watch Now
+                                                                        View Batch Details
                                                                     </button>
                                                                     <button
                                                                         className={styles.viewInvoiceBtn}
@@ -674,13 +727,13 @@ const ProfileDashboard = () => {
                                             ) : (
                                                 <div className={styles.emptyState}>
                                                     <BiBook className={styles.emptyIcon} />
-                                                    <h3>No Courses Purchased Yet</h3>
-                                                    <p>You haven't purchased any courses. Browse our courses and start learning today!</p>
+                                                    <h3>No Batches Purchased Yet</h3>
+                                                    <p>You haven't purchased any batches. Browse our batches and start learning today!</p>
                                                     <button
                                                         className={styles.browseCoursesBtn}
-                                                        onClick={() => navigate('/courses')}
+                                                        onClick={() => navigate('/batches')}
                                                     >
-                                                        Browse Courses
+                                                        Browse Batches
                                                     </button>
                                                 </div>
                                             )}

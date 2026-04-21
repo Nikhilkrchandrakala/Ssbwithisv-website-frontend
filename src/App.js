@@ -38,6 +38,7 @@ import ProfileDashboard from './pages/ProfileDashboard';
 import Gallery from './pages/Gallery';
 import PerCourses from './pages/PerCourses';
 import SuccessPage from './components/SuccessPage';
+import BatchPage from './pages/PerCourses';
 
 function App() {
 
@@ -74,6 +75,7 @@ function App() {
         <Route path="/Gallery" element={<Gallery />} />
         <Route path="/PerCourses" element={<PerCourses />} />
         <Route path="/Success" element={<SuccessPage />} />
+        <Route path="/Batches" element={<BatchPage />} />
 
 
 

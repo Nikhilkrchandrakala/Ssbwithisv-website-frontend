@@ -138,7 +138,7 @@ function CircleBox() {
                                 <CustomButton text="Sign Up Now" onClick={handelLogin} />
                             )
                         }
-                        <PerCourses />
+                       
                     </div>
 
                 </div>

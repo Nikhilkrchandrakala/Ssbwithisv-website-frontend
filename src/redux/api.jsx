@@ -124,6 +124,10 @@ export const api = createApi({
             providesTags: ["Profile"],
         }),
 
+        getAllSlotes: builder.query({
+            query: () => "allSlots",
+            providesTags: ["Profile"],
+        }),
         // ==================== 🔐 PERMISSIONS ====================
 
         /** ✨ Create new permission (Superadmin only) */
@@ -194,12 +198,13 @@ export const {
     useGetAllCoursesQuery,
 
     useCreateOrderMutation,
+    useGetAllSlotesQuery,
     useVerifyPaymentMutation,
     useGetAllNumberMonitorsQuery,
 
     useApplyCouponMutation,
     useCheckPurchaseQuery
-    
+
 
 
 
