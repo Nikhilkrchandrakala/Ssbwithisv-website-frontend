@@ -144,14 +144,15 @@ function BatchPage() {
     };
 
     const formatDateTime = (isoString) => {
+        console.log(isoString)
         if (!isoString) return 'N/A';
         const date = new Date(isoString);
         return date.toLocaleString('en-IN', {
             day: '2-digit',
             month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            year: 'numeric'
+            // hour: '2-digit',
+            // minute: '2-digit'
         });
     };
 
@@ -357,7 +358,7 @@ function BatchPage() {
             {/* Header Section */}
             <div className={styles.header}>
                 <button className={styles.backButton} onClick={() => navigate(-1)}>
-                    <FaArrowLeft /> 
+                    <FaArrowLeft />
                 </button>
                 <h1 className={styles.title}>
                     10 days online SSB Hackathon Courses
@@ -435,14 +436,21 @@ function BatchPage() {
                                 className={`${styles.batchCard} ${isFull ? styles.batchFull : ''}`}
                                 onClick={() => !isFull && openModal(batch)}
                             >
-                                <h3 className={styles.batchTitle}>
-                                    {batchIcon} {batch.title}
-                                </h3>
 
-                                <div className={styles.batchTime}>
-                                    <FaClock />
-                                    <span>{formatDateTime(batch.startTime)}</span>
+
+                                <div className={styles.batchHeader}>
+                                    <div className={styles.batchTime}>
+                                        <FaClock />
+                                        <span>{formatDateTime(batch.startTime)}</span>
+                                    </div>
+
+                                    <p className={styles.batchTitle}>
+                                        {batchIcon} {batch.title}
+                                    </p>
+
                                 </div>
+
+
 
                                 <div className={styles.batchStats}>
                                     <div className={styles.stat}>
@@ -505,10 +513,10 @@ function BatchPage() {
                                         <FaCalendarAlt />
                                         <span>Start: {formatDateTime(selectedBatch.startTime)}</span>
                                     </div>
-                                    <div className={styles.metaItem}>
+                                    {/* <div className={styles.metaItem}>
                                         <FaClock />
                                         <span>End: {formatDateTime(selectedBatch.endTime)}</span>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
 

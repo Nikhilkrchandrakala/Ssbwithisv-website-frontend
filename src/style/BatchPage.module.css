@@ -207,8 +207,17 @@
     cursor: not-allowed;
 }
 
+.batchHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 20px ;
+    justify-content: space-between;
+    border-bottom: var(--secondary-color, #d2a100) 1px solid;
+}
+
 .batchTitle {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     color: var(--theme-white, #c6c5af);
     padding: 15px 20px 10px;
@@ -221,11 +230,14 @@
 .batchTime {
     display: flex;
     align-items: center;
+    font-size: 20px;
+
+
     gap: 10px;
-    padding: 0 20px 15px;
+    /* padding: 0 20px 15px;/ */
     color: rgba(255, 255, 255, 0.6);
-    font-size: 13px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    /* font-size: 13px; */
+    /* border-bottom: 1px solid rgba(255, 255, 255, 0.05); */
 }
 
 .batchTime svg {
