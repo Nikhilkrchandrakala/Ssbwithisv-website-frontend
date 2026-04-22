@@ -211,7 +211,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 5px 20px ;
+    padding: 5px 20px;
     justify-content: space-between;
     border-bottom: var(--secondary-color, #d2a100) 1px solid;
 }
@@ -837,7 +837,7 @@
 
     .batchTime,
     .batchStats {
-        padding: 0 15px 12px;
+        padding: 10px 15px 12px;
     }
 
     .stat {
@@ -917,5 +917,84 @@
 
     .batchPrice {
         font-size: 16px;
+    }
+}
+
+.cutoffMessage {
+    color: #ff4d4f;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+/* Today Batch Styles */
+.todayBatch {
+    border: 2px solid #ff6b35;
+    position: relative;
+    overflow: hidden;
+}
+
+.todayBadge {
+    position: absolute;
+    top: 10px;
+    right: -30px;
+    background: linear-gradient(90deg, #ff6b35, #ff8c42);
+    color: white;
+    padding: 5px 40px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    transform: rotate(45deg);
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.cutoffMessageUrgent {
+    background: rgba(255, 107, 53, 0.15);
+    border-left: 3px solid #ff6b35;
+    padding: 8px 12px;
+    /* margin: 0 ; */
+    margin: 10px ;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #ff8c42;
+    font-weight: 600;
+    animation: pulse 1.5s infinite;
+}
+
+.cutoffMessageClosed {
+    background: rgba(220, 53, 69, 0.15);
+    border-left: 3px solid #dc3545;
+    padding: 8px 12px;
+    margin: 10px ;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.todayModalBadge {
+    background: linear-gradient(90deg, #ff6b35, #ff8c42);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    display: inline-block;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+        background: rgba(255, 107, 53, 0.25);
+    }
+
+    100% {
+        opacity: 0.7;
     }
 }

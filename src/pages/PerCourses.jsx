@@ -151,8 +151,6 @@ function BatchPage() {
             day: '2-digit',
             month: 'short',
             year: 'numeric'
-            // hour: '2-digit',
-            // minute: '2-digit'
         });
     };
 
@@ -169,87 +167,111 @@ function BatchPage() {
         return available > 0 ? available : 0;
     };
 
-    const openModal = (slot) => {
-        setSelectedBatch(slot);
-        resetCouponState();
-        setIsModalOpen(true);
-        document.body.style.overflow = "hidden";
+    // NEW FUNCTION: Check if batch start date is today
+    const isStartDateToday = (startTime) => {
+        if (!startTime) return false;
+        const startDate = new Date(startTime);
+        const today = new Date();
+
+        return startDate.getDate() === today.getDate() &&
+            startDate.getMonth() === today.getMonth() &&
+            startDate.getFullYear() === today.getFullYear();
     };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedBatch(null);
-        resetCouponState();
-        document.body.style.overflow = "auto";
-    };
+    // NEW FUNCTION: Get cutoff time for same-day batches
+    const getSameDayCutoffMessage = (startTime) => {
+        if (!startTime) return "";
 
-    const resetCouponState = () => {
-        setCouponCode("");
-        setAppliedCoupon(null);
-        setCouponDiscount(0);
-        setFinalAmount(0);
-        setCouponError("");
-        setCouponSuccess("");
-        setIsApplyingCoupon(false);
-    };
+        // Set cutoff time to 10:00 AM on the same day (you can change this time)
+        const cutoffTime = new Date(startTime);
+        cutoffTime.setHours(10, 0, 0, 0); // 10:00 AM cutoff
 
-    const getBatchTotalWithGST = (batch) => {
-        if (!batch) return 0;
-        const price = batch.price || 0;
-        const gst = price * 0.18;
-        return price + gst;
-    };
+        const now = new Date();
 
-    const handleApplyCoupon = async () => {
-        if (!couponCode.trim()) {
-            setCouponError("Please enter a coupon code");
-            return;
+        if (now > cutoffTime) {
+            return "Booking closed for today's batch";
         }
 
-        if (!selectedBatch) {
-            setCouponError("No batch selected");
-            return;
+        const hoursLeft = Math.ceil((cutoffTime - now) / (1000 * 60 * 60));
+        const minutesLeft = Math.ceil((cutoffTime - now) / (1000 * 60));
+
+        if (hoursLeft < 1) {
+            return `Last chance! Only ${minutesLeft} minutes left to book`;
         }
 
-        const originalAmount = getBatchTotalWithGST(selectedBatch);
-
-        if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
-            setCouponError("This coupon is already applied");
-            return;
-        }
-
-        setIsApplyingCoupon(true);
-        setCouponError("");
-        setCouponSuccess("");
-
-        try {
-            const response = await applyCoupon({
-                code: couponCode,
-                amount: originalAmount
-            }).unwrap();
-
-            setAppliedCoupon({
-                code: response.couponCode,
-                discount: response.discount,
-                finalAmount: response.finalAmount
-            });
-            setCouponDiscount(response.discount);
-            setFinalAmount(response.finalAmount);
-            setCouponSuccess(`Coupon applied! You saved ₹${response.discount.toFixed(2)}`);
-            setCouponCode("");
-        } catch (error) {
-            console.error("Coupon error:", error);
-            setCouponError(error?.data?.message || "Invalid or expired coupon");
-            setAppliedCoupon(null);
-            setCouponDiscount(0);
-            setFinalAmount(0);
-        } finally {
-            setIsApplyingCoupon(false);
-        }
+        return `Book before ${cutoffTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} today`;
     };
 
-    const handleRemoveCoupon = () => {
-        resetCouponState();
+    // NEW FUNCTION: Check if booking is still available for same-day batch
+    const isSameDayBookingOpen = (startTime) => {
+        if (!isStartDateToday(startTime)) return true;
+
+        const cutoffTime = new Date(startTime);
+        cutoffTime.setHours(10, 0, 0, 0); // 10:00 AM cutoff
+        const now = new Date();
+
+        return now <= cutoffTime;
+    };
+
+    // UPDATED: Check if booking is closed (includes same-day cutoff)
+    const isBookingClosed = (startTime) => {
+        if (!startTime) return true;
+
+        const startDate = new Date(startTime);
+        const now = new Date();
+
+        // Last booking date = same day (aaj)
+        const lastBookingDate = new Date(startDate);
+        lastBookingDate.setHours(23, 59, 59, 999); // 👉 raat 12 baje tak
+
+        const isToday =
+            startDate.getDate() === now.getDate() &&
+            startDate.getMonth() === now.getMonth() &&
+            startDate.getFullYear() === now.getFullYear();
+
+        if (isToday) {
+            // 👉 Aaj hai → midnight tak booking open
+            return now > lastBookingDate;
+        }
+
+        // Future batch → ek din pehle midnight tak
+        const cutoffDate = new Date(startDate);
+        cutoffDate.setDate(cutoffDate.getDate() - 1);
+        cutoffDate.setHours(23, 59, 59, 999);
+
+        return now > cutoffDate;
+    };
+
+    // UPDATED: Get booking message based on date type
+    const getBookingMessage = (startTime) => {
+        const startDate = new Date(startTime);
+        const now = new Date();
+
+        const isToday =
+            startDate.getDate() === now.getDate() &&
+            startDate.getMonth() === now.getMonth() &&
+            startDate.getFullYear() === now.getFullYear();
+
+        if (isToday) {
+            return "⏰ Booking is open until midnight today";
+        }
+
+        const formattedDate = startDate.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short'
+        });
+
+        return `⏰ Booking is open until midnight on ${formattedDate}`;
+    };
+
+    const getLastBookingDate = (startTime) => {
+        const date = new Date(startTime);
+        date.setDate(date.getDate());
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
     };
 
     const handlePayment = async () => {
@@ -259,6 +281,12 @@ function BatchPage() {
 
                 if (isSlotFull(selectedBatch)) {
                     alert("This batch is already full! Please select another batch.");
+                    return;
+                }
+
+                // Check if booking is closed (including same-day cutoff)
+                if (isBookingClosed(selectedBatch.startTime)) {
+                    alert("Booking is no longer available for this batch.");
                     return;
                 }
 
@@ -332,6 +360,94 @@ function BatchPage() {
     const getOriginalPrice = () => {
         if (!selectedBatch) return 0;
         return getBatchTotalWithGST(selectedBatch);
+    };
+
+    const getBatchTotalWithGST = (batch) => {
+        if (!batch) return 0;
+        const price = batch.price || 0;
+        const gst = price * 0.18;
+        return price + gst;
+    };
+
+    const openModal = (slot) => {
+        // Check if booking is allowed before opening modal
+        if (isBookingClosed(slot.startTime)) {
+            alert("Booking is no longer available for this batch.");
+            return;
+        }
+        setSelectedBatch(slot);
+        resetCouponState();
+        setIsModalOpen(true);
+        document.body.style.overflow = "hidden";
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedBatch(null);
+        resetCouponState();
+        document.body.style.overflow = "auto";
+    };
+
+    const resetCouponState = () => {
+        setCouponCode("");
+        setAppliedCoupon(null);
+        setCouponDiscount(0);
+        setFinalAmount(0);
+        setCouponError("");
+        setCouponSuccess("");
+        setIsApplyingCoupon(false);
+    };
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) {
+            setCouponError("Please enter a coupon code");
+            return;
+        }
+
+        if (!selectedBatch) {
+            setCouponError("No batch selected");
+            return;
+        }
+
+        const originalAmount = getBatchTotalWithGST(selectedBatch);
+
+        if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
+            setCouponError("This coupon is already applied");
+            return;
+        }
+
+        setIsApplyingCoupon(true);
+        setCouponError("");
+        setCouponSuccess("");
+
+        try {
+            const response = await applyCoupon({
+                code: couponCode,
+                amount: originalAmount
+            }).unwrap();
+
+            setAppliedCoupon({
+                code: response.couponCode,
+                discount: response.discount,
+                finalAmount: response.finalAmount
+            });
+            setCouponDiscount(response.discount);
+            setFinalAmount(response.finalAmount);
+            setCouponSuccess(`Coupon applied! You saved ₹${response.discount.toFixed(2)}`);
+            setCouponCode("");
+        } catch (error) {
+            console.error("Coupon error:", error);
+            setCouponError(error?.data?.message || "Invalid or expired coupon");
+            setAppliedCoupon(null);
+            setCouponDiscount(0);
+            setFinalAmount(0);
+        } finally {
+            setIsApplyingCoupon(false);
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        resetCouponState();
     };
 
     if (isLoading) {
@@ -429,14 +545,22 @@ function BatchPage() {
                         const bookedCount = batch.bookedStudents?.length || 0;
                         const batchTypeClass = batch.batchType === 'morning' ? styles.morning : styles.evening;
                         const batchIcon = batch.batchType === 'morning' ? <FaSun /> : <FaMoon />;
+                        const isClosed = isBookingClosed(batch.startTime);
+                        const isToday = isStartDateToday(batch.startTime);
+                        const disableBooking = isFull || isClosed;
 
                         return (
                             <div
                                 key={batch._id}
-                                className={`${styles.batchCard} ${isFull ? styles.batchFull : ''}`}
-                                onClick={() => !isFull && openModal(batch)}
+                                className={`${styles.batchCard} ${isFull ? styles.batchFull : ''} ${isToday && !isClosed ? styles.todayBatch : ''}`}
+                                onClick={() => !isFull && !isClosed && openModal(batch)}
                             >
-
+                                {/* Today Badge */}
+                                {/* {isToday && !isClosed && (
+                                    <div className={styles.todayBadge}>
+                                        🔥 TODAY'S BATCH
+                                    </div>
+                                )} */}
 
                                 <div className={styles.batchHeader}>
                                     <div className={styles.batchTime}>
@@ -447,10 +571,28 @@ function BatchPage() {
                                     <p className={styles.batchTitle}>
                                         {batchIcon} {batch.title}
                                     </p>
-
                                 </div>
 
+                                {/* Show cutoff message for today's batch */}
+                                {isToday && !isClosed && (
+                                    <div className={styles.cutoffMessageUrgent}>
+                                        {getSameDayCutoffMessage(batch.startTime)}
+                                    </div>
+                                )}
 
+                                {/* Show regular message for future batches */}
+                                {!isToday && !isClosed && (
+                                    <div className={styles.cutoffMessageUrgent}>
+                                        {getBookingMessage(batch.startTime)}
+                                    </div>
+                                )}
+
+                                {/* Show closed message */}
+                                {isClosed && (
+                                    <div className={styles.cutoffMessageClosed}>
+                                        ❌ Booking Closed
+                                    </div>
+                                )}
 
                                 <div className={styles.batchStats}>
                                     <div className={styles.stat}>
@@ -476,14 +618,20 @@ function BatchPage() {
                                 </div>
 
                                 <button
-                                    className={`${styles.bookBtn} ${isFull ? styles.disabled : ''}`}
-                                    disabled={isFull}
+                                    className={`${styles.bookBtn} ${disableBooking ? styles.disabled : ''}`}
+                                    disabled={disableBooking}
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        !isFull && openModal(batch);
+                                        !disableBooking && openModal(batch);
                                     }}
                                 >
-                                    {isFull ? 'Batch Full' : 'Book Now'} <FaArrowRight />
+                                    {isFull
+                                        ? 'Batch Full'
+                                        : isClosed
+                                            ? 'Booking Closed'
+                                            : isToday
+                                                ? 'Book Now (Today\'s Batch)'
+                                                : 'Book Now'} <FaArrowRight />
                                 </button>
                             </div>
                         );
@@ -508,15 +656,16 @@ function BatchPage() {
                         <div className={styles.modalContent}>
                             <div className={styles.modalHeader}>
                                 <h2 className={styles.modalTitle}>{selectedBatch.title}</h2>
+                                {/* {isStartDateToday(selectedBatch.startTime) && !isBookingClosed(selectedBatch.startTime) && (
+                                    <div className={styles.todayModalBadge}>
+                                        🔥 Today's Batch - Book Now!
+                                    </div>
+                                )} */}
                                 <div className={styles.modalMeta}>
                                     <div className={styles.metaItem}>
                                         <FaCalendarAlt />
                                         <span>Start: {formatDateTime(selectedBatch.startTime)}</span>
                                     </div>
-                                    {/* <div className={styles.metaItem}>
-                                        <FaClock />
-                                        <span>End: {formatDateTime(selectedBatch.endTime)}</span>
-                                    </div> */}
                                 </div>
                             </div>
 
@@ -625,9 +774,13 @@ function BatchPage() {
                                 <button
                                     onClick={handlePayment}
                                     className={styles.confirmBookBtn}
-                                    disabled={isSlotFull(selectedBatch)}
+                                    disabled={isSlotFull(selectedBatch) || isBookingClosed(selectedBatch.startTime)}
                                 >
-                                    {isSlotFull(selectedBatch) ? 'Batch Full' : 'Confirm Booking'} <FaArrowRight />
+                                    {isSlotFull(selectedBatch)
+                                        ? 'Batch Full'
+                                        : isBookingClosed(selectedBatch.startTime)
+                                            ? 'Booking Closed'
+                                            : 'Confirm Booking'} <FaArrowRight />
                                 </button>
 
                                 <div className={styles.modalNote}>
