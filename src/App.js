@@ -77,6 +77,8 @@ function App() {
         <Route path="/Success" element={<SuccessPage />} />
         <Route path="/Batches" element={<BatchPage />} />
 
+        
+
 
 
         <Route element={<AuthRoute />}>

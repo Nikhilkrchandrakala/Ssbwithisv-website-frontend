@@ -299,6 +299,7 @@ function BatchPage() {
                 if (appliedCoupon) {
                     couponCodeToSend = appliedCoupon.code;
                 }
+                
 
                 const order = await createOrder({
                     amount: amountToSend,
