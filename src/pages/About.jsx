@@ -388,11 +388,11 @@ What makes SSB with ISV different from conventional coaching institutes is that 
 
                     <div className="mvk-benefits">
 
-                        <h3>A Unique Advantage: The Virtual Training Xperience( VTX™ )</h3>
+                        <h3>A Unique Advantage: The Virtual Training Xperience (VTX™)</h3>
 
                         <p className={'aboutIntroText'}>
 
-                            One of the biggest challenges for many defence aspirants preparing for the SSB interview is the lack of exposure to the Group Testing Officer (GTO) ground. To bridge this gap, SSB with ISV has developed the Virtual Training Xperience (VTX™ ) - a one-of-a-kind platform that provides aspirants with a virtual representation of the SSB/ AFSB GTO ground and task environment from any part of the globe.
+                            One of the biggest challenges for many defence aspirants preparing for the SSB interview is the lack of exposure to the Group Testing Officer (GTO) ground. To bridge this gap, SSB with ISV has developed the Virtual Training Xperience (VTX™) - a one-of-a-kind platform that provides aspirants with a virtual representation of the SSB/ AFSB GTO ground and task environment from any part of the globe.
 
 
                             Through VTX™ , candidates can:
@@ -577,7 +577,7 @@ What makes SSB with ISV different from conventional coaching institutes is that 
                         </p>
 
                         <p className={styles.aboutIntroText}>
-                            Through mentoring sessions, structured courses, the Virtual Training Xperience (VTX™ )  platform, and initiatives like Roger That Magazine,
+                            Through mentoring sessions, structured courses, the Virtual Training Xperience (VTX™)  platform, and initiatives like Roger That Magazine,
                             aspirants expand their awareness of global issues, leadership principles, and responsibilities of military officers.
                         </p>
 

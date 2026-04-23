@@ -46,7 +46,7 @@ function Gallery() {
     }, [lightboxOpen, images.length]);
 
     const headerData = {
-        heading: "Our Gallery - Moments of Excellence",
+        heading: "Moments of Excellence",
         text: "Explore our journey through images capturing training sessions, successful candidates, and memorable moments.",
         banner: "/assets/website/gallery_banner.webp",
     };

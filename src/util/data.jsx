@@ -56,7 +56,7 @@ export const coursesData = [
         hours: "60",
         description: `${""}`,
         image: "/assets/website/course5.webp",
-        price:" 12499 + 18% GST"
+        price: " 12499 + 18% GST"
     },
 
     {
@@ -71,7 +71,7 @@ export const coursesData = [
         description:
             "Break your myths about SSB",
         image: "/assets/website/PPDTcoursethumbnail.webp",
-        price:"1999 + 18% GST"
+        price: "1999 + 18% GST"
     },
 
     {
@@ -87,7 +87,7 @@ export const coursesData = [
             "Focused preparation for Psych Tests",
         // image: "/assets/course-3.jpg",
         image: "/assets/website/psychcoursethumbnail.webp",
-        price:" 3499 + 18% GST"
+        price: " 3499 + 18% GST"
 
     },
 
@@ -102,7 +102,7 @@ export const coursesData = [
         hours: "04",
         description: "Learn how to present yourself",
         image: "/assets/website/Interviewcoursethumbnail.webp",
-        price:" 2499 + 18% GST"
+        price: " 2499 + 18% GST"
     },
 
     {
@@ -119,7 +119,7 @@ export const coursesData = [
         // image: "/assets/98c7a7f50b4f84914d4384c7773d36774b2c9ad3.jpg",
 
         image: "/assets/website/10dayshackathon_thumbail.webp",
-        price:" 7999 + 18% GST"
+        price: " 7999 + 18% GST"
 
     },
 ];
@@ -929,15 +929,15 @@ export const faqDataHome = [
     {
         id: "faq2",
         question: "How to choose the best SSB coaching institute for me?",
-        answer: "Choose an institute that provides guidance from DIPR qualified experienced ex-SSB assessors and offers structured preparation for psych tests, GTO tasks and personal interviews focused on deepening self awareness and enhancing leadership skills.  Can SSB be cleared without coaching?",
+        answer: "Choose an institute that provides guidance from DIPR qualified experienced ex-SSB assessors and offers structured preparation for psych tests, GTO tasks and personal interviews focused on deepening self awareness and enhancing leadership skills.",
         isOpen: false
     },
-    // {
-    //     id: "faq3",
-    //     question: "Can SSB be cleared without coaching?",
-    //     answer: "Yes, SSB can be cleared without coaching if a candidate understands the process well, works on personality development and practices the required tests. However, professional guidance can help avoid common mistakes and myths.",
-    //     isOpen: false
-    // },
+    {
+        id: "faq3",
+        question: "Can SSB be cleared without coaching?",
+        answer: "Yes, it is very much possible to clear SSB/ AFSB without coaching. One must have a high degree of practical intelligence, deep self insight, good reading habits and a decent physical fitness and mental robustness boosting regime.",
+        isOpen: false
+    },
     {
         id: "faq4",
         question: "What are the psychology tests in SSB?",
@@ -1097,7 +1097,7 @@ export const CoursesfaqData = [
     {
         id: "faq7",
         question: "Is online SSB coaching effective?",
-        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Xperience(VTX™ ) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
+        answer: `Online SSB coaching can be highly effective when combined with structured mentoring, practical exercises, and detailed feedback. Programs such as the Virtual Training Xperience (VTX™) allow aspirants to understand GTO tasks, leadership exercises, and group dynamics through simulated learning environments, helping candidates prepare even if they do not have access to a physical training ground.`,
         isOpen: false
     }
 ];
@@ -1291,7 +1291,7 @@ Candidates learn how interview questions are derived from the PIQ form and how t
             "SRT situations",
             "Self description evaluation"
         ],
-        content2: `These exercises allow candidates to Xperiencethe time pressure and psychological evaluation format used during the SSB interview. After the test, a DIPR certified psychologist provides individual feedback, helping candidates understand how their responses reflect personality traits such as responsibility, initiative, emotional stability, and leadership potential. This structured feedback helps aspirants improve their thinking patterns and strengthen their psychological responses.`
+        content2: `These exercises allow candidates to experiencethe time pressure and psychological evaluation format used during the SSB interview. After the test, a DIPR certified psychologist provides individual feedback, helping candidates understand how their responses reflect personality traits such as responsibility, initiative, emotional stability, and leadership potential. This structured feedback helps aspirants improve their thinking patterns and strengthen their psychological responses.`
 
     },
     {
@@ -1302,8 +1302,8 @@ Candidates learn how interview questions are derived from the PIQ form and how t
             "Group Discussion",
             "Group Planning Exercise",
             "Progressive Group Task",
-            "Half Group Task",
             "Group Obstacle Race",
+            "Half Group Task",
             "Lecturette",
             "Individual Obstacles",
             "Command Task",
