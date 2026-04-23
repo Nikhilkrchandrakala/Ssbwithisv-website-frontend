@@ -167,7 +167,7 @@ function BatchPage() {
         return available > 0 ? available : 0;
     };
 
-    // NEW FUNCTION: Check if batch start date is today
+    // Check if batch start date is today
     const isStartDateToday = (startTime) => {
         if (!startTime) return false;
         const startDate = new Date(startTime);
@@ -178,11 +178,35 @@ function BatchPage() {
             startDate.getFullYear() === today.getFullYear();
     };
 
-    // NEW FUNCTION: Get cutoff time for same-day batches
+    // NEW FUNCTION: Check if booking message should be shown (1 day before or on the day)
+    const shouldShowBookingMessage = (startTime) => {
+        if (!startTime) return false;
+
+        const startDate = new Date(startTime);
+        const today = new Date();
+
+        // Reset time to midnight for accurate date comparison
+        const startDateMidnight = new Date(startDate);
+        startDateMidnight.setHours(0, 0, 0, 0);
+
+        const todayMidnight = new Date(today);
+        todayMidnight.setHours(0, 0, 0, 0);
+
+        // Calculate difference in days
+        const diffTime = startDateMidnight - todayMidnight;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        // Show message only if:
+        // 1. It's today (diffDays === 0) OR
+        // 2. It's exactly 1 day before (diffDays === 1)
+        // 3. And booking is not closed yet
+        return diffDays === 0 || diffDays === 1;
+    };
+
+    // Get cutoff time for same-day batches
     const getSameDayCutoffMessage = (startTime) => {
         if (!startTime) return "";
 
-        // Set cutoff time to 10:00 AM on the same day (you can change this time)
         const cutoffTime = new Date(startTime);
         cutoffTime.setHours(10, 0, 0, 0); // 10:00 AM cutoff
 
@@ -202,7 +226,7 @@ function BatchPage() {
         return `Book before ${cutoffTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} today`;
     };
 
-    // NEW FUNCTION: Check if booking is still available for same-day batch
+    // Check if booking is still available for same-day batch
     const isSameDayBookingOpen = (startTime) => {
         if (!isStartDateToday(startTime)) return true;
 
@@ -213,7 +237,7 @@ function BatchPage() {
         return now <= cutoffTime;
     };
 
-    // UPDATED: Check if booking is closed (includes same-day cutoff)
+    // Check if booking is closed (includes same-day cutoff)
     const isBookingClosed = (startTime) => {
         if (!startTime) return true;
 
@@ -222,7 +246,7 @@ function BatchPage() {
 
         // Last booking date = same day (aaj)
         const lastBookingDate = new Date(startDate);
-        lastBookingDate.setHours(23, 59, 59, 999); // 👉 raat 12 baje tak
+        lastBookingDate.setHours(23, 59, 59, 999);
 
         const isToday =
             startDate.getDate() === now.getDate() &&
@@ -230,7 +254,6 @@ function BatchPage() {
             startDate.getFullYear() === now.getFullYear();
 
         if (isToday) {
-            // 👉 Aaj hai → midnight tak booking open
             return now > lastBookingDate;
         }
 
@@ -242,8 +265,10 @@ function BatchPage() {
         return now > cutoffDate;
     };
 
-    // UPDATED: Get booking message based on date type
+    // UPDATED: Get booking message based on date type (only shows 1 day before or on the day)
     const getBookingMessage = (startTime) => {
+        if (!shouldShowBookingMessage(startTime)) return null;
+
         const startDate = new Date(startTime);
         const now = new Date();
 
@@ -256,7 +281,9 @@ function BatchPage() {
             return "⏰ Booking is open until midnight today";
         }
 
-        const formattedDate = startDate.toLocaleDateString('en-IN', {
+        // It's exactly 1 day before
+        const tomorrowDate = new Date(startDate);
+        const formattedDate = tomorrowDate.toLocaleDateString('en-IN', {
             day: '2-digit',
             month: 'short'
         });
@@ -284,7 +311,6 @@ function BatchPage() {
                     return;
                 }
 
-                // Check if booking is closed (including same-day cutoff)
                 if (isBookingClosed(selectedBatch.startTime)) {
                     alert("Booking is no longer available for this batch.");
                     return;
@@ -299,7 +325,7 @@ function BatchPage() {
                 if (appliedCoupon) {
                     couponCodeToSend = appliedCoupon.code;
                 }
-                
+
 
                 const order = await createOrder({
                     amount: amountToSend,
@@ -371,7 +397,6 @@ function BatchPage() {
     };
 
     const openModal = (slot) => {
-        // Check if booking is allowed before opening modal
         if (isBookingClosed(slot.startTime)) {
             alert("Booking is no longer available for this batch.");
             return;
@@ -550,19 +575,15 @@ function BatchPage() {
                         const isToday = isStartDateToday(batch.startTime);
                         const disableBooking = isFull || isClosed;
 
+                        // Get booking message (only shows 1 day before or on the day)
+                        const bookingMessage = getBookingMessage(batch.startTime);
+
                         return (
                             <div
                                 key={batch._id}
                                 className={`${styles.batchCard} ${isFull ? styles.batchFull : ''} ${isToday && !isClosed ? styles.todayBatch : ''}`}
                                 onClick={() => !isFull && !isClosed && openModal(batch)}
                             >
-                                {/* Today Badge */}
-                                {/* {isToday && !isClosed && (
-                                    <div className={styles.todayBadge}>
-                                        🔥 TODAY'S BATCH
-                                    </div>
-                                )} */}
-
                                 <div className={styles.batchHeader}>
                                     <div className={styles.batchTime}>
                                         <FaClock />
@@ -574,17 +595,17 @@ function BatchPage() {
                                     </p>
                                 </div>
 
-                                {/* Show cutoff message for today's batch */}
+                                {/* Show cutoff message for today's batch (always shows for today) */}
                                 {isToday && !isClosed && (
                                     <div className={styles.cutoffMessageUrgent}>
                                         {getSameDayCutoffMessage(batch.startTime)}
                                     </div>
                                 )}
 
-                                {/* Show regular message for future batches */}
-                                {!isToday && !isClosed && (
+                                {/* Show regular message only for 1 day before or on the day */}
+                                {!isToday && !isClosed && bookingMessage && (
                                     <div className={styles.cutoffMessageUrgent}>
-                                        {getBookingMessage(batch.startTime)}
+                                        {bookingMessage}
                                     </div>
                                 )}
 
@@ -657,11 +678,6 @@ function BatchPage() {
                         <div className={styles.modalContent}>
                             <div className={styles.modalHeader}>
                                 <h2 className={styles.modalTitle}>{selectedBatch.title}</h2>
-                                {/* {isStartDateToday(selectedBatch.startTime) && !isBookingClosed(selectedBatch.startTime) && (
-                                    <div className={styles.todayModalBadge}>
-                                        🔥 Today's Batch - Book Now!
-                                    </div>
-                                )} */}
                                 <div className={styles.modalMeta}>
                                     <div className={styles.metaItem}>
                                         <FaCalendarAlt />
