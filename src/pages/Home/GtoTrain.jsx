@@ -8,6 +8,7 @@ import styles from '../../style/UniquePedagogy.module.css'
 import { Helmet } from 'react-helmet-async'
 import Faq from '../../components/Faq'
 import { vtxFaqData } from '../../util/data'
+import Navbar from '../Navbar'
 
 function GtoTrain() {
 
@@ -44,6 +45,29 @@ function GtoTrain() {
     const [isMuted, setIsMuted] = useState(true);
 
 
+    const navbarData = {
+        video: {
+            src: "/assets/video/0422.mp4",
+            type: "video/mp4"
+        },
+        // img:
+        banner: 'assets/logo/VTXlogo.png',
+
+        logo: "/assets/logo/ISV.webp",
+
+        subtitle: " VIRTUAL TRAINING XPERIENCE",
+
+        title: "",
+        title1: "",
+
+        subtitleTwo: "THE GTO GROUND, BEFORE THE GTO GROUND.",
+
+
+        text: '',
+
+    };
+
+
 
     return (
         <>
@@ -65,12 +89,27 @@ function GtoTrain() {
 
             </Helmet>
 
+            <Navbar
+                video={navbarData.video}
+                subtitle={navbarData.subtitle}
+                title={navbarData.title}
+                title1={navbarData.title1}
+                subtitleTwo={navbarData.subtitleTwo}
+                banner={navbarData.banner}
+                text={navbarData.text}
+            />
 
 
-            <CustomHeader text={data.text}  textThree={data.textThree} color={data?.color} banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} preragraphTwo={data.preragraphTwo} />
+
+            {/* <CustomHeader text={data.text}  textThree={data.textThree} color={data?.color} banner={data?.banner} headingTwo={data.headingTwo} preragraph={data.preragraph} preragraphTwo={data.preragraphTwo} /> */}
 
             <section className="GTO-pedagogical-section sectionspace80">
+
+
                 <div className="container">
+                    <p>
+                        India’s first online GTO ground simulation designed to help defence aspirants understand and practice the GTO tasks conducted during the Services Selection Board interview. The Virtual Training Xperience (VTX™) is an innovative online SSB training platform designed to simulate the outdoor Group Testing Officer’s (GTO) ground used in the Services Selection Board interview process.
+                    </p>
                     <div className="sct-title">
                         <h2>The pedagogical intent</h2>
                     </div>

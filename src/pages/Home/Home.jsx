@@ -19,7 +19,7 @@ const From = lazy(() => import("../From"));
 function Home() {
 
 
-    
+
 
 
     useEffect(() => {
@@ -30,6 +30,23 @@ function Home() {
             localStorage.setItem("referralCode", ref);
         }
     }, []);
+
+
+    const navbarData = {
+        video: {
+            src: "/assets/video/BannerVideo.mp4",
+            type: "video/mp4"
+        },
+        logo: "/assets/logo/ISV.webp",
+
+        subtitle: "CRAFTING THE FUTURE OF",
+
+        title: "Indian Military",
+        title1: "Leadership",
+
+        subtitleTwo: "Integrated SSB Virtuosos"
+
+    };
 
 
     // {}
@@ -110,7 +127,12 @@ function Home() {
                 <link rel="canonical" href="https://ssbwithisv.in/" />
             </Helmet>
 
-            <Navbar />
+            <Navbar video={navbarData.video}
+                subtitle={navbarData.subtitle}
+                title={navbarData.title}
+                title1={navbarData.title1}
+                subtitleTwo={navbarData.subtitleTwo}
+            />
             <CircleBox />
 
             <Suspense fallback={<div>Loading...</div>}>

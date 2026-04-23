@@ -3,10 +3,14 @@ import styles from "../style/Navbar.module.css";
 import { IoMenu } from "react-icons/io5";
 
 import Sidebar from "../components/Sidebar";
+import { useNavigate } from "react-router-dom";
 // import VisitorCounter from "../components/VisitorCounter";
 
-function Navbar() {
+function Navbar({ video, subtitle, title, title1, subtitleTwo, banner, text }) {
+
+    console.log(video)
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate()
 
     return (
         <div className={styles.pageWrapper}>
@@ -21,17 +25,10 @@ function Navbar() {
                 preload="auto"
                 fetchpriority="high"
             >
-                <source src="/assets/video/BannerVideo.mp4" type="video/mp4" />
+                <source src={video?.src} />
             </video>
 
 
-            {/* <video
-                src={item.video}
-                controls
-                preload="none"
-                loading="lazy"
-                poster="/assets/images/video-thumb.jpg"
-            /> */}
 
 
             {/* CONTENT ABOVE VIDEO */}
@@ -43,6 +40,7 @@ function Navbar() {
                             src="/assets/logo/ISV.webp"
                             alt="Logo"
                             className={styles.logo}
+                            onClick={() => navigate('/')}
                         />
                         <IoMenu
                             className={styles.menuIcon}
@@ -52,17 +50,28 @@ function Navbar() {
 
                     <header className={styles.header}>
                         <div className={styles.subtitle}>
-                            CRAFTING THE FUTURE OF
+                            {subtitle}
                         </div>
 
+                        {banner && <div style={{ display: 'flex', justifyContent: 'center' }}>
+
+                            <img src={banner} alt="banner" style={{width:'250px'}} />
+                        </div>}
+
                         <h1 className={styles.title}>
-                            <span className={styles.military}>Indian Military</span>{" "}
-                            <span className={styles.leadership}>Leadership</span>
+                            <span className={styles.military}>{title}</span>{" "}
+                            <span className={styles.leadership}>{title1}</span>
                         </h1>
 
                         <div className={styles.subtitleTwo}>
-                            Integrated SSB Virtuosos
+                            {subtitleTwo}
                         </div>
+
+                        {text && (
+                            <div  className={styles.text}>
+                                {text}
+                            </div>
+                        )}
                     </header>
                 </section>
 
