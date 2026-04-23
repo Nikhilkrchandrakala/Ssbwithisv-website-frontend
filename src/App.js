@@ -59,8 +59,9 @@ function App() {
         <Route path="/Magazine" element={<Magnize />} />
         <Route path="/HalfOfFame" element={<HalfOfFame />} />
         <Route path="/Courses" element={<Courses />} />
-        <Route path="/ssbVirtualTrainingXperience" element={<GtoTrain />} />
         
+        <Route path="/ssbVirtualTrainingXperience" element={<GtoTrain />} />
+
         <Route path="/aboutSSB" element={<SsbPage />} />
         <Route path="/Contactus" element={<Contact />} />
         {/* <Route path="/login" element={<Login />} /> */}
