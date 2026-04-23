@@ -59,6 +59,8 @@ function App() {
         <Route path="/Magazine" element={<Magnize />} />
         <Route path="/HalfOfFame" element={<HalfOfFame />} />
         <Route path="/Courses" element={<Courses />} />
+
+        
         
         <Route path="/ssbVirtualTrainingXperience" element={<GtoTrain />} />
 
