@@ -652,7 +652,12 @@ const ProfileDashboard = () => {
                                                                 </div>
                                                             </div> */}
                                                             <div className={styles.courseDetails}>
-                                                                <h3>{order.slotId?.title || 'Batch Session'}</h3>
+                                                                <div className={styles.courseTitle}>
+                                                                    <h3>
+                                                                        Start: {formatDate(order?.slotId?.startTime)}
+                                                                    </h3>
+                                                                    <h3>{order.slotId?.title || 'Batch Session'}</h3>
+                                                                </div>
                                                                 <div className={styles.courseMeta}>
                                                                     <div className={styles.coursePrice}>
                                                                         <BiRupee />
@@ -662,43 +667,24 @@ const ProfileDashboard = () => {
                                                                         Purchased on {formatDate(order.createdAt)}
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                                 {/* Batch Schedule Information */}
-                                                                {order.slotId && (
-                                                                    <div className={styles.batchSchedule}>
-                                                                        <div className={styles.scheduleItem}>
-                                                                            <BiCalendar className={styles.scheduleIcon} />
-                                                                            <span>
-                                                                                Start: {formatDate(order.slotId.startTime)}
-                                                                            </span>
-                                                                        </div>
-                                                                        <div className={styles.scheduleItem}>
-                                                                            <BiCalendar className={styles.scheduleIcon} />
-                                                                            <span>
-                                                                                End: {formatDate(order.slotId.endTime)}
-                                                                            </span>
-                                                                        </div>
-                                                                        <div className={styles.scheduleItem}>
-                                                                            <BiTime className={styles.scheduleIcon} />
-                                                                            <span>
-                                                                                Time: {formatTime(order.slotId.startTime)} - {formatTime(order.slotId.endTime)}
-                                                                            </span>
-                                                                        </div>
+
+
+                                                                {order?.orderId &&
+                                                                    <div className={styles.courseOrderInfo}>
+                                                                        <span className={styles.orderIdLabel}>Order ID:</span>
+                                                                        <span className={styles.orderIdValue}>{order.orderId}</span>
                                                                     </div>
-                                                                )}
-                                                                
-                                                                <div className={styles.courseOrderInfo}>
-                                                                    <span className={styles.orderIdLabel}>Order ID:</span>
-                                                                    <span className={styles.orderIdValue}>{order.orderId}</span>
-                                                                </div>
-                                                                
+                                                                }
+
                                                                 {order.paymentId && (
                                                                     <div className={styles.courseOrderInfo}>
                                                                         <span className={styles.orderIdLabel}>Payment ID:</span>
                                                                         <span className={styles.orderIdValue}>{order.paymentId}</span>
                                                                     </div>
                                                                 )}
-                                                                
+
                                                                 {order.referralCode && (
                                                                     <div className={styles.courseOrderInfo}>
                                                                         <span className={styles.orderIdLabel}>Referral Code:</span>

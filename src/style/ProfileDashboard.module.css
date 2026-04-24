@@ -1935,6 +1935,12 @@
     transition: all 0.3s ease;
 }
 
+
+.courseTitle{
+    display: flex;
+    justify-content: space-between;
+}
+
 .courseCard:hover {
     transform: translateY(-5px);
     border-color: #d2a100;

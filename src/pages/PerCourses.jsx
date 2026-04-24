@@ -19,7 +19,8 @@ import {
     FaFilter,
     FaChevronLeft,
     FaChevronRight,
-    FaArrowLeft
+    FaArrowLeft,
+    FaStar
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useCreateOrderMutation, useGetAllSlotesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation } from "../redux/api";
@@ -807,14 +808,19 @@ function BatchPage() {
 
                                 <button
                                     onClick={handlePayment}
-                                    disabled={isPaying}
+                                    className={styles.confirmBookBtn}
+                                    disabled={isSlotFull(selectedBatch) || isBookingClosed(selectedBatch.startTime)}
                                 >
-                                    {isPaying ? "Processing..." : "Confirm Booking"}
+                                    {isSlotFull(selectedBatch)
+                                        ? 'Batch Full'
+                                        : isBookingClosed(selectedBatch.startTime)
+                                            ? 'Booking Closed'
+                                            : 'Confirm Booking'} <FaArrowRight />
                                 </button>
 
                                 <div className={styles.modalNote}>
-                                    <FaInfinity />
-                                    <span>Secure your seat • Limited slots available</span>
+                                    {/* <FaInfinity /> */}
+                                    <span><FaStar /> Booking Confirmation will prompt you to create an account. Account creation is mandatory to see your course progress, access Psych Test and VTXTM.</span>
                                 </div>
                             </div>
                         </div>
