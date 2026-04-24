@@ -48,7 +48,7 @@ function Gallery() {
     const headerData = {
         heading: "Moments of Excellence",
         text: "Explore our journey through images capturing training sessions, successful candidates, and memorable moments.",
-        banner: "/assets/website/gallery_banner.webp",
+        banner: "/assets/website/GTOCourseThumbnail.webp",
     };
 
     return (
@@ -75,7 +75,10 @@ function Gallery() {
                                     alt="gallery"
                                     loading="lazy"
                                 />
+
+
                             </div>
+                                <p style={{ textAlign: "center", marginTop: "10px" }}>{images[currentImageIndex]?.imageText || "Image description not available."}</p>
                         </div>
                     ))}
                 </div>
@@ -83,7 +86,7 @@ function Gallery() {
                 {/* ✅ Empty State */}
                 {images.length === 0 && (
                     <div className="gallery-empty">
-                        <div style={{textAlign:'center'}}>No images found.</div>
+                        <div style={{ textAlign: 'center' }}>No images found.</div>
                     </div>
                 )}
             </section>
@@ -106,6 +109,7 @@ function Gallery() {
                             src={images[currentImageIndex]?.imageUrl}
                             alt="preview"
                         />
+                        <p style={{ textAlign: "center", marginTop: "10px" }}>{images[currentImageIndex]?.imageText || "Image description not available."}</p>
 
                         <div className="lightbox-counter">
                             {currentImageIndex + 1} / {images.length}

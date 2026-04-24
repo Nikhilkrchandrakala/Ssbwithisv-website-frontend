@@ -77,7 +77,7 @@ function App() {
         <Route path="/OrderHistory" element={<OrderHistory />} />
         <Route path="/PaymentHistory" element={<PaymentHistory />} />
         <Route path="/Gallery" element={<Gallery />} />
-        <Route path="/PerCourses" element={<PerCourses />} />
+        {/* <Route path="/PerCourses" element={<PerCourses />} /> */}
         <Route path="/Success" element={<SuccessPage />} />
         <Route path="/Batches" element={<BatchPage />} />
 

@@ -49,6 +49,7 @@ function BatchPage() {
     const [couponError, setCouponError] = useState("");
     const [couponSuccess, setCouponSuccess] = useState("");
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+    const [isPaying, setIsPaying] = useState(false);
 
     const slots = slotsData || [];
 
@@ -301,86 +302,102 @@ function BatchPage() {
         });
     };
 
-    const handlePayment = async () => {
-        if (user) {
-            try {
-                if (!selectedBatch) return alert("No batch selected");
-
-                if (isSlotFull(selectedBatch)) {
-                    alert("This batch is already full! Please select another batch.");
-                    return;
-                }
-
-                if (isBookingClosed(selectedBatch.startTime)) {
-                    alert("Booking is no longer available for this batch.");
-                    return;
-                }
-
-                const referralCode = localStorage.getItem("referralCode");
-                const basePrice = selectedBatch.price || 0;
-
-                let amountToSend = basePrice;
-                let couponCodeToSend = null;
-
-                if (appliedCoupon) {
-                    couponCodeToSend = appliedCoupon.code;
-                }
-
-
-                const order = await createOrder({
-                    amount: amountToSend,
-                    slotId: selectedBatch._id,
-                    slotTitle: selectedBatch.title,
-                    ...(referralCode && { referralCode }),
-                    ...(couponCodeToSend && { couponCode: couponCodeToSend })
-                }).unwrap();
-
-                if (!window.Razorpay) {
-                    const script = document.createElement("script");
-                    script.src = "https://checkout.razorpay.com/v1/checkout.js";
-                    script.async = true;
-                    document.body.appendChild(script);
-                    await new Promise((resolve) => { script.onload = resolve; });
-                }
-
-                const options = {
-                    key: "rzp_live_SdgMS7X9M3RZSi",
-                    amount: order.amount,
-                    currency: "INR",
-                    order_id: order.orderId,
-                    name: "SSB Academy",
-                    description: selectedBatch.title,
-                    handler: async function (response) {
-                        try {
-                            await verifyPayment({
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_signature: response.razorpay_signature,
-                            }).unwrap();
-                            navigate('/Success');
-                            closeModal();
-                        } catch (err) {
-                            console.error(err);
-                            alert("Verification failed ❌");
-                        }
-                    },
-                    prefill: {
-                        name: user?.name || "Student",
-                        email: user?.email || "test@gmail.com",
-                        contact: user?.phone || "9999999999",
-                    },
-                    theme: { color: "#0f172a" },
-                };
-
-                const rzp = new window.Razorpay(options);
-                rzp.open();
-
-            } catch (err) {
-                console.error("Payment error:", err);
-                alert(err?.data?.message || err?.message || "Payment failed ❌");
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            // ✅ already loaded
+            if (window.Razorpay) {
+                return resolve(true);
             }
-        } else {
-            navigate('/SignIn');
+
+            // ✅ prevent duplicate script
+            const existingScript = document.getElementById("razorpay-script");
+            if (existingScript) {
+                existingScript.onload = () => resolve(true);
+                return;
+            }
+
+            const script = document.createElement("script");
+            script.id = "razorpay-script";
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.async = true;
+
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+
+            document.body.appendChild(script);
+        });
+    };
+
+    const handlePayment = async () => {
+        if (isPaying) return; // 🛑 STOP multiple calls
+        setIsPaying(true);
+
+        try {
+            if (!user) {
+                navigate('/SignIn');
+                return;
+            }
+
+            if (!selectedBatch) return alert("No batch selected");
+
+            if (isSlotFull(selectedBatch)) {
+                alert("Batch full");
+                return;
+            }
+
+            if (isBookingClosed(selectedBatch.startTime)) {
+                alert("Booking closed");
+                return;
+            }
+
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                alert("Razorpay load failed");
+                return;
+            }
+
+            const order = await createOrder({
+                amount: selectedBatch.price,
+                slotId: selectedBatch._id,
+            }).unwrap();
+
+            const options = {
+                key: "rzp_live_SdgMS7X9M3RZSi",
+                amount: order.amount,
+                currency: "INR",
+                order_id: order.orderId,
+
+                handler: async (response) => {
+                    try {
+                        await verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        }).unwrap();
+
+                        navigate("/Success");
+                        closeModal();
+                    } catch (err) {
+                        alert("Verification failed");
+                    } finally {
+                        setIsPaying(false); // ✅ reset
+                    }
+                },
+
+                modal: {
+                    ondismiss: () => {
+                        setIsPaying(false); // ✅ user closed popup
+                    }
+                }
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.open();
+
+        } catch (err) {
+            console.error(err);
+            alert("Payment failed");
+            setIsPaying(false);
         }
     };
 
@@ -790,14 +807,9 @@ function BatchPage() {
 
                                 <button
                                     onClick={handlePayment}
-                                    className={styles.confirmBookBtn}
-                                    disabled={isSlotFull(selectedBatch) || isBookingClosed(selectedBatch.startTime)}
+                                    disabled={isPaying}
                                 >
-                                    {isSlotFull(selectedBatch)
-                                        ? 'Batch Full'
-                                        : isBookingClosed(selectedBatch.startTime)
-                                            ? 'Booking Closed'
-                                            : 'Confirm Booking'} <FaArrowRight />
+                                    {isPaying ? "Processing..." : "Confirm Booking"}
                                 </button>
 
                                 <div className={styles.modalNote}>
