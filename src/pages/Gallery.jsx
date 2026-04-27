@@ -48,7 +48,7 @@ function Gallery() {
     const headerData = {
         heading: "Moments of Excellence",
         text: "Explore our journey through images capturing training sessions, successful candidates, and memorable moments.",
-        banner: "/assets/website/GTOCourseThumbnail.webp",
+        banner: "/assets/website/gal.webp",
     };
 
     return (
