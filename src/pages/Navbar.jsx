@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 function Navbar({ video, subtitle, title, title1, subtitleTwo, banner, text }) {
 
-    console.log(video)
+
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
 

@@ -70,14 +70,11 @@ function Blogs() {
 
             <Helmet>
                 <title>
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
-                    {/* Best online SSB Coaching in India with over 50% recommendation rate */}
-                    SSB Podcast | Leadership & SSB Insights by Veterans
+                    SSB Preparation Blog | Expert SSB Interview Tips & Guides | SSB with ISV
                 </title>
-
                 <meta
                     name="description"
-                    content="Listen to expert discussions on military leadership and Armed Forces careers hosted by a veteran with real selection board experience."
+                    content="Read expert SSB preparation guides, tips and insights on SSB psychology tests, GTO tasks, interview preparation and officer-like qualities. Written by ex-SSB assessors."
                 />
 
                 {/* *BLOG PAGE* */}

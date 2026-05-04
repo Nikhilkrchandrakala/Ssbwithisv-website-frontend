@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import styles from '../../style/OurCourses.module.css';
 import CustomButton from '../../components/CustomButton';
 import { coursesData } from '../../util/data';
-import Heading from '../../components/Heading';
+import HeadingTwo from '../../components/HeadingTwo';
 import { useNavigate } from 'react-router-dom';
 
 const Courses = () => {
@@ -108,7 +108,7 @@ const Courses = () => {
             <section className={styles.coursesSection}>
                 {/* Header */}
                 <div className={styles.header}>
-                    <Heading h1='Our Courses' />
+                    <HeadingTwo h1='Our' t1='Courses' />
                     <CustomButton
                         text='Know More'
                         onClick={() => navigate('/Courses')}

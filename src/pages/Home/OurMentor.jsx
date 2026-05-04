@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "../../style/OurMentor.module.css";
 import { mentorsData } from '../../util/data'
-import Heading from "../../components/Heading";
+import HeadingTwo from "../../components/HeadingTwo";
 
 const Mentors = () => {
     return (
         <section className={styles.mentorsSection}>
             <div className="">
                 <div className={styles.headingContainer}>
-                    <Heading h1='Our mentors' />
+                    <HeadingTwo h1='Our' t1='mentors' />
                     <div className={styles.headingContainerImg}>
                         <img src="/assets/Group16.png" alt="Decoration" />
                     </div>
@@ -22,7 +22,7 @@ const Mentors = () => {
                                 <div className={styles.imageMask}>
                                     <img
                                         src={mentor.image}
-                                        alt={mentor.role}
+                                        alt={`${mentor.name} - ${mentor.role} - SSB with ISV`}
                                         className={styles.mentorImage}
                                     />
                                 </div>
@@ -37,7 +37,7 @@ const Mentors = () => {
                                 ))}
                             </p>
 
-                            <div class="d-flex gap-3">
+                            <div className="d-flex gap-3">
 
 
                                 {mentor.instagram &&

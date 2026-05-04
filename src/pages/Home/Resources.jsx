@@ -9,7 +9,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination"
 import CustomButton from "../../components/CustomButton";
-import Heading from "../../components/Heading";
+import HeadingTwo from "../../components/HeadingTwo";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -37,7 +37,7 @@ const Resources = () => {
             </h2> */}
 
             <div style={{ marginTop: '0' }} className="headingOfMargin  pl">
-                <Heading h1='Resources for' t1='SSB preparation' />
+                <HeadingTwo h1='Resources for' t1='SSB preparation' />
 
             </div>
             {/* SCROLL LIST */}

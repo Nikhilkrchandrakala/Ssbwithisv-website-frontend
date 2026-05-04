@@ -1,8 +1,10 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow: courses.html
-Disallow: courses/course-1.html
-Disallow: courses/course-2.html
-Disallow: courses/course-3.html
-Disallow: courses/course-4.html
-Disallow: courses/course-5.html
+Disallow: /SignIn
+Disallow: /SignUp
+Disallow: /AccountRecovery
+Disallow: /ProfileDashboard
+Disallow: /OrderHistory
+Disallow: /PaymentHistory
+Disallow: /Successful
+
+Sitemap: https://ssbwithisv.in/sitemap.xml

@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../../components/CustomButton";
-import Heading from "../../components/Heading";
 import styles from "../../style/UniquePedagogy.module.css";
 import HeadingTwo from "../../components/HeadingTwo";
 import { useRef, useState } from "react";
@@ -27,7 +26,7 @@ const UniquePedagogy = () => {
             <div className="pl mb">
 
 
-                <HeadingTwo h1={'Unique pedagogy:'} t1='VTX™ ' />
+                <HeadingTwo h1='Unique pedagogy:' t1='VTX™' />
             </div>
             {/* </div> */}
             {/* </div> */}
@@ -88,8 +87,11 @@ const UniquePedagogy = () => {
 
             <div className='d-flex justify-content-end  '>
                 <button className={styles.MuteBtn} onClick={() => {
-                    setIsMuted(!isMuted);
-                    videoRef.current.muted = !isMuted;
+                    const newMuted = !isMuted;
+                    setIsMuted(newMuted);
+                    if (videoRef.current) {
+                        videoRef.current.muted = newMuted;
+                    }
                 }}>
                     {!isMuted ? <VscUnmute /> : <IoVolumeMuteSharp />}
                 </button>

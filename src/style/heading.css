@@ -9,35 +9,28 @@
     gap: 12px;
     /* Base color jo background se match kare (Dark Gray) */
     color: rgba(255, 255, 255, 0.15);
+    line-height: 1.3;
+    padding-bottom: 8px;
 }
 
 /* ================= THE LIGHT BEAM SWEEP ================= */
 .play-sweep .highlight {
     background: linear-gradient(to right,
             #ffffff 0%,
-            /* Jo area cross ho chuka hai (White) */
-            #ffffff 45%,
-            /* Beam ka start */
+            #ffffff 40%,
             rgba(255, 255, 255, 1) 50%,
-            /* Brightest Point (The Beam) */
-            rgba(255, 255, 255, 0.15) 55%,
-            /* Beam ka end */
+            rgba(255, 255, 255, 0.15) 60%,
             rgba(255, 255, 255, 0.15) 100%
-            /* Aage ka hissa jo abhi gray hai */
         );
 
-    background-size: 250% 100%;
-    /* Size badhaya taaki beam travel kare */
+    background-size: 300% 100%;
     background-position: 100% 0;
-    /* Start from right */
 
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
-    /* Text transparent rahega taaki gradient dikhe */
+    -webkit-text-fill-color: transparent;
 
-    /* Animation speed thodi slow rakhi hai premium feel ke liye */
-    transition: background-position 2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background-position 2.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Trigger State */
@@ -64,9 +57,7 @@
     background-clip: initial;
 }
 
-.play-sweep .highlight {
-    transition: background-position 2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+
 
 @media (max-width: 1024px) {
     .headingOfSSb {

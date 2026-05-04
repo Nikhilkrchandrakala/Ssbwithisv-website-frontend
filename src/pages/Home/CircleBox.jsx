@@ -6,7 +6,6 @@ import HeadingTwo from '../../components/HeadingTwo';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserProfileQuery } from '../../redux/api';
-import PerCourses from '../PerCourses';
 
 function CircleBox() {
 
@@ -68,6 +67,7 @@ function CircleBox() {
 
                 <div>
                     <div className='headingOfMargin'>
+                        <h1 style={{ fontSize: '1px', opacity: 0, position: 'absolute' }}>Best SSB Coaching in India | Coached by Ex-SSB Assessors</h1>
                         <HeadingTwo h1='What is' t1='SSB with ISV?' />
                     </div>
 
@@ -102,7 +102,11 @@ function CircleBox() {
 
                     <div className="mvk-benefits">
 
-                        <h3>  Why SSB with ISV is one of the best SSB coaching institutes in India?</h3>
+                        <HeadingTwo 
+                            h1="Why SSB with ISV is one of the" 
+                            t1="best SSB coaching institutes in India?" 
+                            style={{ fontSize: '18px', fontWeight: '500', marginBottom: '16px' }}
+                        />
 
                         <ul>
                             <li>Mentoring by DIPR certified former SSB officers (GTOs, IOs, Psychologists)</li>

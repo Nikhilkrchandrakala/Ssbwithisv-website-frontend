@@ -11,6 +11,7 @@ import { BiArrowBack } from "react-icons/bi";
 // import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useAllBlogsByIdQuery } from '../../redux/api'
+import { Helmet } from 'react-helmet-async'
 
 // import "swiper/css";
 
@@ -69,6 +70,15 @@ function BlogsDetails() {
 
     return (
         <>
+            <Helmet>
+                <title>{blog?.data?.title ? `${blog?.data?.title} | SSB Preparation Blog | SSB with ISV` : 'Blog Details | SSB with ISV'}</title>
+                <meta
+                    name="description"
+                    content={blog?.data?.shortDescription || "Read expert SSB preparation guides, tips and insights on SSB psychology tests, GTO tasks, and interview preparation."}
+                />
+                <link rel="canonical" href={`https://ssbwithisv.in/blogs/${blog?.data?._id || ''}`} />
+            </Helmet>
+
             <CustomHeader
                 heading="Blog Details"
                 text="Detailed view of the selected blog post."

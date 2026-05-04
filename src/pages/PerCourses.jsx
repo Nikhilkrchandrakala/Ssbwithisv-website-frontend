@@ -587,8 +587,11 @@ function BatchPage() {
                         const isFull = isSlotFull(batch);
                         const availableSpots = getAvailableSpots(batch);
                         const bookedCount = batch.bookedStudents?.length || 0;
-                        const batchTypeClass = batch.batchType === 'morning' ? styles.morning : styles.evening;
-                        const batchIcon = batch.batchType === 'morning' ? <FaSun /> : <FaMoon />;
+                        
+                        const isMorning = batch.title?.toLowerCase().includes("morning");
+                        const batchIcon = isMorning ? <FaSun /> : <FaMoon />;
+                        const batchClass = isMorning ? styles.morningBatch : styles.eveningBatch;
+
                         const isClosed = isBookingClosed(batch.startTime);
                         const isToday = isStartDateToday(batch.startTime);
                         const disableBooking = isFull || isClosed;
@@ -608,7 +611,7 @@ function BatchPage() {
                                         <span>{formatDateTime(batch.startTime)}</span>
                                     </div>
 
-                                    <p className={styles.batchTitle}>
+                                    <p className={`${styles.batchTitle} ${batchClass}`}>
                                         {batchIcon} {batch.title}
                                     </p>
                                 </div>

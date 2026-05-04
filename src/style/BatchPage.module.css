@@ -227,6 +227,14 @@
     gap: 8px;
 }
 
+.morningBatch {
+    color: #00BFFF !important; /* Sky Blue */
+}
+
+.eveningBatch {
+    color: #BF40BF !important; /* Purple */
+}
+
 .batchTime {
     display: flex;
     align-items: center;

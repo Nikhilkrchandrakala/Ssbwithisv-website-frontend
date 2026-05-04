@@ -55,6 +55,39 @@ Through a structured five-day evaluation process, candidates are observed across
                         ]
                     })}
                 </script>
+
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": [
+                            {
+                                "@type": "Question",
+                                "name": "What is the best way to prepare for SSB interview?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "The best way to prepare for the SSB interview is to understand the assessment process, work on officer-like qualities, practice psychology tests such as TAT, WAT and SRT, and participate in group discussions and leadership activities."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "How to choose the best SSB coaching institute for me?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Choose an institute that provides guidance from DIPR qualified experienced ex-SSB assessors and offers structured preparation for psych tests, GTO tasks and personal interviews."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": "What are the psychology tests in SSB?",
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "The psychology tests in SSB include Thematic Apperception Test (TAT), Word Association Test (WAT), Situation Reaction Test (SRT) and Self Description Test (SDT)."
+                                }
+                            }
+                        ]
+                    })}
+                </script>
                 <link rel="canonical" href="https://ssbwithisv.in/aboutSSB" />
             </Helmet>
 

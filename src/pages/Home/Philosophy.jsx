@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../style/PhilosophySection.css";
-import Heading from "../../components/Heading";
+import HeadingTwo from "../../components/HeadingTwo";
 import { circles } from '../../util/data';
 
 const PhilosophySection = () => {
@@ -39,7 +39,7 @@ const PhilosophySection = () => {
             <div className="top-text">
                 <div style={{ marginTop: '0' }} className="d-flex justify-content-center headingOfMargin">
 
-                    <Heading h1={'Mentoring'} t1='philosophy' />
+                    <HeadingTwo h1='Mentoring' t1='philosophy' />
                 </div>
                 <p className="ConceptofManasa">Concept of Manasa - Vacha – Karmana</p>
                 {/* <h2>

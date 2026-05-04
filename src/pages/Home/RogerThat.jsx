@@ -7,7 +7,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { IoIosArrowForward } from "react-icons/io";
 import { useRef, useState } from "react";
 import CustomButton from "../../components/CustomButton";
-import Heading from "../../components/Heading";
+import HeadingTwo from "../../components/HeadingTwo";
 import { Helmet } from "react-helmet-async";
 
 const RogerThat = () => {
@@ -51,7 +51,7 @@ const RogerThat = () => {
                     <div>
 
                         <div style={{ marginTop: '0' }} className="headingOfMargin">
-                            <Heading h1={'Roger That'} t1='with NKC' />
+                            <HeadingTwo h1='Roger That' t1='with NKC' />
                         </div>
                         <p className={styles.subTitle}>Our Official Podcast channel</p>
                         <p style={{ fontWeight: 'lighter' }} className={styles.description}>
