@@ -1,8 +1,4 @@
 import React from 'react';
-// Force HTTPS redirect
-if (window.location.protocol === 'http:' && !window.location.hostname.includes('localhost')) {
-    window.location.replace(`https://${window.location.hostname}${window.location.pathname}${window.location.search}`);
-}
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -11,6 +7,11 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 
+// Force HTTPS redirect
+if (window.location.protocol === 'http:' && !window.location.hostname.includes('localhost')) {
+    window.location.replace(`https://${window.location.hostname}${window.location.pathname}${window.location.search}`);
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <HelmetProvider>
@@ -18,8 +19,6 @@ root.render(
       < App />
     </Provider>
   </HelmetProvider>
-
-
 );
 
 // If you want to start measuring performance in your app, pass a function
