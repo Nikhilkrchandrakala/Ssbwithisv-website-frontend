@@ -1,4 +1,8 @@
 import React from 'react';
+// Force HTTPS redirect
+if (window.location.protocol === 'http:' && !window.location.hostname.includes('localhost')) {
+    window.location.replace(`https://${window.location.hostname}${window.location.pathname}${window.location.search}`);
+}
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
