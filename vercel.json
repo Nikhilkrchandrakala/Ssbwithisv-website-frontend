@@ -5,7 +5,7 @@
       "destination": "https://ssbwithisv-website-backend.vercel.app/api/$1"
     },
     {
-      "source": "/admin",
+      "source": "/admin(/?)",
       "destination": "https://ssbwithisv-website-backend.vercel.app/admin-login"
     },
     {
