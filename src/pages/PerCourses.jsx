@@ -612,7 +612,7 @@ function BatchPage() {
                                     </div>
 
                                     <p className={`${styles.batchTitle} ${batchClass}`}>
-                                        {batchIcon} {batch.title}
+                                        {batchIcon} {batch.title} {batch.batchNo ? `(#${batch.batchNo})` : ''}
                                     </p>
                                 </div>
 
@@ -704,6 +704,12 @@ function BatchPage() {
                                         <FaCalendarAlt />
                                         <span>Start: {formatDateTime(selectedBatch.startTime)}</span>
                                     </div>
+                                    {selectedBatch.batchNo && (
+                                        <div className={styles.metaItem}>
+                                            <FaBookOpen />
+                                            <span>Batch No: #{selectedBatch.batchNo}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

@@ -656,7 +656,7 @@ const ProfileDashboard = () => {
                                                                     <h3>
                                                                         Start: {formatDate(order?.slotId?.startTime)}
                                                                     </h3>
-                                                                    <h3>{order.slotId?.title || 'Batch Session'}</h3>
+                                                                    <h3>{order.slotId?.title || 'Batch Session'} {order.slotId?.batchNo ? `(#${order.slotId.batchNo})` : ''}</h3>
                                                                 </div>
                                                                 <div className={styles.courseMeta}>
                                                                     <div className={styles.coursePrice}>
