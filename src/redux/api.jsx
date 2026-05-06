@@ -9,9 +9,7 @@ export const api = createApi({
     ],
 
     baseQuery: fetchBaseQuery({
-        // baseUrl: "http://localhost:5001/api/",
-        baseUrl: "https://ssbwithisv-website-backend.vercel.app/api/",
-        // baseUrl: "https://learning-admin-panel-backend.onrender.com/api/v1/",
+        baseUrl: "https://api.ssbwithisv.in/api/",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("authToken");
             if (token) {
