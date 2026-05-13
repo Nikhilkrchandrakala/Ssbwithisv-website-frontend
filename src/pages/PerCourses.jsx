@@ -13,7 +13,6 @@ import {
     FaPercent,
     FaCalendarAlt,
     FaRupeeSign,
-    FaUserGraduate,
     FaSun,
     FaMoon,
     FaFilter,
@@ -41,6 +40,35 @@ function BatchPage() {
     const [selectedBatchType, setSelectedBatchType] = useState("all");
     const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+    // Effect to handle pending bookings after login
+    useEffect(() => {
+        const pendingBatchData = localStorage.getItem('pendingBatch');
+        if (pendingBatchData && user) {
+            try {
+                const batch = JSON.parse(pendingBatchData);
+                const pendingCoupon = localStorage.getItem('pendingCoupon');
+                
+                // Clear pending data
+                localStorage.removeItem('pendingBatch');
+                localStorage.removeItem('pendingCoupon');
+                
+                // Set state to open modal
+                setSelectedBatch(batch);
+                if (pendingCoupon) {
+                    setCouponCode(pendingCoupon);
+                    // We'll need to trigger the coupon application or just set the code
+                    // Since handleApplyCoupon is async and depends on selectedBatch,
+                    // it might be better to let the user click apply or call it here
+                }
+                setIsModalOpen(true);
+                document.body.style.overflow = "hidden";
+            } catch (e) {
+                console.error("Error parsing pending batch", e);
+                localStorage.removeItem('pendingBatch');
+            }
+        }
+    }, [user]); // Re-run when user data is loaded
 
     // Coupon states
     const [couponCode, setCouponCode] = useState("");
@@ -146,7 +174,7 @@ function BatchPage() {
     };
 
     const formatDateTime = (isoString) => {
-        console.log(isoString)
+
         if (!isoString) return 'N/A';
         const date = new Date(isoString);
         return date.toLocaleString('en-IN', {
@@ -335,7 +363,12 @@ function BatchPage() {
 
         try {
             if (!user) {
-                navigate('/SignIn');
+                // Store selected batch to resume after signup
+                localStorage.setItem('pendingBatch', JSON.stringify(selectedBatch));
+                if (appliedCoupon) {
+                    localStorage.setItem('pendingCoupon', appliedCoupon.code);
+                }
+                navigate('/SignUp');
                 return;
             }
 
@@ -357,9 +390,13 @@ function BatchPage() {
                 return;
             }
 
+            const referralCode = localStorage.getItem("referralCode");
+
             const order = await createOrder({
                 amount: selectedBatch.price,
                 slotId: selectedBatch._id,
+                referralCode: referralCode || null,
+                couponCode: appliedCoupon ? appliedCoupon.code : null,
             }).unwrap();
 
             const options = {
@@ -453,7 +490,7 @@ function BatchPage() {
             return;
         }
 
-        const originalAmount = getBatchTotalWithGST(selectedBatch);
+        const originalAmount = selectedBatch.price; // Use principal amount for discount calculation
 
         if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
             setCouponError("This coupon is already applied");
@@ -640,18 +677,8 @@ function BatchPage() {
                                 <div className={styles.batchStats}>
                                     <div className={styles.stat}>
                                         <FaUsers />
-                                        <span>Capacity: {batch.maxStudents || '∞'}</span>
+                                        <span>Limited Seats Available</span>
                                     </div>
-                                    <div className={styles.stat}>
-                                        <FaUserGraduate />
-                                        <span>Booked: {bookedCount}</span>
-                                    </div>
-                                    {!isFull && batch.maxStudents && (
-                                        <div className={`${styles.stat} ${styles.available}`}>
-                                            <FaCheckCircle />
-                                            <span>Available: {availableSpots}</span>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div className={styles.batchPrice}>
@@ -716,17 +743,9 @@ function BatchPage() {
                             <div className={styles.modalAvailability}>
                                 <h4><FaUsers /> Seat Availability</h4>
                                 <div className={styles.availabilityStats}>
-                                    <div className={styles.statRow}>
-                                        <span>Maximum Capacity:</span>
-                                        <strong>{selectedBatch.maxStudents || 'Unlimited'}</strong>
-                                    </div>
-                                    <div className={styles.statRow}>
-                                        <span>Already Booked:</span>
-                                        <strong>{selectedBatch.bookedStudents?.length || 0}</strong>
-                                    </div>
                                     <div className={`${styles.statRow} ${styles.highlight}`}>
-                                        <span>Seats Available:</span>
-                                        <strong className={styles.availableCount}>{getAvailableSpots(selectedBatch)}</strong>
+                                        <span>Status:</span>
+                                        <strong className={styles.availableCount}>Limited Seats Available</strong>
                                     </div>
                                 </div>
                             </div>
@@ -786,33 +805,26 @@ function BatchPage() {
 
                             <div className={styles.modalFooter}>
                                 <div className={styles.priceSummary}>
-                                    {appliedCoupon ? (
                                         <>
                                             <div className={styles.priceRow}>
-                                                <span>Original Price:</span>
-                                                <span className={styles.strikethrough}>₹{getOriginalPrice().toFixed(2)}</span>
+                                                <span>Base Price:</span>
+                                                <span>₹{selectedBatch.price.toFixed(2)}</span>
                                             </div>
-                                            <div className={`${styles.priceRow} ${styles.discount}`}>
-                                                <span>Discount:</span>
-                                                <span className={styles.discountAmount}>- ₹{couponDiscount.toFixed(2)}</span>
+                                            {appliedCoupon && (
+                                                <div className={`${styles.priceRow} ${styles.discount}`}>
+                                                    <span>Discount:</span>
+                                                    <span className={styles.discountAmount}>- ₹{couponDiscount.toFixed(2)}</span>
+                                                </div>
+                                            )}
+                                            <div className={styles.priceRow}>
+                                                <span>GST (18%):</span>
+                                                <span>₹{((selectedBatch.price - (appliedCoupon ? couponDiscount : 0)) * 0.18).toFixed(2)}</span>
                                             </div>
                                             <div className={`${styles.priceRow} ${styles.total}`}>
                                                 <span>Total Amount</span>
-                                                <strong>₹{finalAmount.toFixed(2)}</strong>
+                                                <strong>₹{(appliedCoupon ? finalAmount : getBatchTotalWithGST(selectedBatch)).toFixed(2)}</strong>
                                             </div>
                                         </>
-                                    ) : (
-                                        <>
-                                            <div className={`${styles.priceRow} ${styles.total}`}>
-                                                <span>Total Amount</span>
-                                                <strong>₹{getOriginalPrice().toFixed(2)}</strong>
-                                            </div>
-                                            <div className={styles.priceBreakdown}>
-                                                <span>Batch Fee: ₹{selectedBatch.price}</span>
-                                                <span>GST (18%): ₹{(selectedBatch.price * 0.18).toFixed(2)}</span>
-                                            </div>
-                                        </>
-                                    )}
                                 </div>
 
                                 <button
@@ -824,12 +836,12 @@ function BatchPage() {
                                         ? 'Batch Full'
                                         : isBookingClosed(selectedBatch.startTime)
                                             ? 'Booking Closed'
-                                            : 'Confirm Booking'} <FaArrowRight />
+                                            : 'Proceed to Checkout'} <FaArrowRight />
                                 </button>
 
                                 <div className={styles.modalNote}>
                                     {/* <FaInfinity /> */}
-                                    <span><FaStar /> Booking Confirmation will prompt you to create an account. Account creation is mandatory to see your course progress, access Psych Test and VTXTM.</span>
+                                    <span><FaStar /> Proceeding to checkout will prompt you to create an account. Account creation is mandatory to see your course progress, access Psych Test and VTXTM.</span>
                                 </div>
                             </div>
                         </div>

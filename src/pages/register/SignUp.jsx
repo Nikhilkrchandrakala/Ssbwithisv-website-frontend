@@ -157,7 +157,7 @@ function SignUp() {
     let widgetId = "346a776c5749333834363239"
 
     const handleSendOtp = async () => {
-        console.log("SEND OTP clicked");
+
 
         // Validate required fields before sending OTP
         const isNameValid = validateField("name", name);
@@ -260,16 +260,7 @@ function SignUp() {
                 password
             }
             const registerResponse = await register(body).unwrap();
-
-            // axios.post("https://api.ssbwithisv.in/api/register", {
-            //     name,
-            //     email,
-            //     phone: phone,
-            //     password,
-            // });
-
             if (registerResponse) {
-                console.log("User registered successfully:", registerResponse);
                 await addLead();
             } else {
                 setErrorMsg(registerResponse.message || "Registration failed. Please try again.");
@@ -300,15 +291,8 @@ function SignUp() {
                 phoneNumber: phone,
             }).unwrap();
 
-            // axios.post("https://api.ssbwithisv.in/api/addLead", {
-            //     name,
-            //     email,
-            //     phoneNumber: phone,
-            // });
-
             if (response) {
                 navigate('/SignIn');
-                console.log("Lead added successfully:", response);
                 return response;
             } else {
                 throw new Error("Failed to add lead");

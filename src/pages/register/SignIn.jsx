@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import '../../style/custom-theme.css'
 import { useNavigate } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
-import axios from 'axios'
+
 import toast from 'react-hot-toast'
 import { BiArrowBack } from 'react-icons/bi'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
@@ -19,7 +19,7 @@ function SignIn() {
     })
 
     // State to manage loading and error states
-    const [isLoading, setIsLoading] = useState(false)
+
     const [error, setError] = useState('')
     const [showPassword, setShowPassword] = useState(false);
 
@@ -120,7 +120,6 @@ function SignIn() {
             return
         }
 
-        setIsLoading(true)
         setError('')
 
         try {
@@ -141,12 +140,7 @@ function SignIn() {
 
             // Call the login API
             const response = await login(requestData).unwrap()
-            // axios.post('https://api.ssbwithisv.in/api/login', requestData, {
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         // Add any other required headers
-            //     }
-            // })
+
 
             // Handle successful login
             console.log('Login successful:', response)
@@ -174,23 +168,24 @@ function SignIn() {
             // Store login type for future reference if needed
             localStorage.setItem('lastLoginType', loginType)
 
-            // Redirect based on user role or default dashboard
+            // Redirect based on user role or pending actions
             if (response) {
-                navigate('/')
+                const pendingBatch = localStorage.getItem('pendingBatch');
+                if (pendingBatch) {
+                    navigate('/batches'); // Go back to batches to complete payment
+                } else {
+                    navigate('/');
+                }
                 toast.success('Logged in successfully!')
             }
 
         } catch (err) {
             // Handle errors
-            console.error('Login error:', err?.data.error)
+            console.error('Login error:', err?.data?.error)
 
             // Set appropriate error message
-            if (err.data) {
-                // Server responded with error status
-                const errorData = err.response
-                setError(err?.data?.error)
-
-
+            if (err?.data?.error) {
+                setError(err.data.error)
             } else if (err.request) {
                 // Request was made but no response
                 setError('Network error. Please check your internet connection')
@@ -198,25 +193,11 @@ function SignIn() {
                 // Other errors
                 setError('An error occurred. Please try again')
             }
-        } finally {
-            setIsLoading(false)
         }
     }
 
-    // Function to handle Enter key press
-    const handleKeyPress = (e) => {
-        if (e.key === 'Enter' && !isLoading) {
-            handleSubmit(e)
-        }
-    }
 
-    // Function to handle Google sign in (placeholder)
-    const handleGoogleSignIn = () => {
-        // Implement Google OAuth logic here
-        console.log('Google sign in clicked')
-        // You might want to redirect to Google OAuth endpoint
-        // or use Firebase/Google Auth SDK
-    }
+
 
     return (
         <div className="thm-content-layer">
@@ -246,7 +227,7 @@ function SignIn() {
                                 placeholder="Enter Your Email or Phone Number"
                                 value={formData.loginId}
                                 onChange={handleInputChange}
-                                disabled={isLoading}
+                                disabled={isLoginLoading}
                                 autoComplete="username"
                                 maxLength={30} // Set a reasonable max length for email
                             />
@@ -263,7 +244,7 @@ function SignIn() {
                             placeholder="Password"
                             value={formData.password}
                             onChange={handleInputChange}
-                            disabled={isLoading}
+                            disabled={isLoginLoading}
                             autoComplete="current-password"
                         />
                     </div> */}
@@ -279,11 +260,11 @@ function SignIn() {
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleInputChange}
-                                disabled={isLoading}
+                                disabled={isLoginLoading}
                                 autoComplete="current-password"
                             />
 
-                            {console.log(showPassword)}
+
 
                             <span
                                 className="password-toggle"
@@ -301,7 +282,7 @@ function SignIn() {
                                     name="rememberMe"
                                     checked={formData.rememberMe}
                                     onChange={handleInputChange}
-                                    disabled={isLoading}
+                                    disabled={isLoginLoading}
                                 />
                                 <span className="thm-checkmark"></span>
                                 Remember me
@@ -310,14 +291,14 @@ function SignIn() {
 
                         <div
                             style={{ zIndex: '999999' }}
-                            onClick={() => !isLoading && navigate('/AccountRecovery')}
+                            onClick={() => !isLoginLoading && navigate('/AccountRecovery')}
                             className="col-6 mt-4 text-end"
                         >
                             <div
                                 className="thm-account-link"
                                 style={{
-                                    cursor: isLoading ? 'not-allowed' : 'pointer',
-                                    opacity: isLoading ? 0.6 : 1
+                                    cursor: isLoginLoading ? 'not-allowed' : 'pointer',
+                                    opacity: isLoginLoading ? 0.6 : 1
                                 }}
                             >
                                 Forgot Password?
@@ -333,21 +314,21 @@ function SignIn() {
 
                         <div className="col-12 d-flex justify-content-center mt-5">
                             <CustomButton
-                                text={isLoading ? "SIGNING IN..." : "SIGN IN"}
+                                text={isLoginLoading ? "SIGNING IN..." : "SIGN IN"}
                                 onClick={handleSubmit}
                                 // type="submit"
-                                disabled={isLoading}
-                                loading={isLoading}
+                                disabled={isLoginLoading}
+                                loading={isLoginLoading}
                             />
                         </div>
 
                         <div className="col-12 text-center mt-5">
                             <div
-                                onClick={() => !isLoading && navigate('/SignUp')}
+                                onClick={() => !isLoginLoading && navigate('/SignUp')}
                                 className="thm-account-link"
                                 style={{
-                                    cursor: isLoading ? 'not-allowed' : 'pointer',
-                                    opacity: isLoading ? 0.6 : 1
+                                    cursor: isLoginLoading ? 'not-allowed' : 'pointer',
+                                    opacity: isLoginLoading ? 0.6 : 1
                                 }}
                             >
                                 Create a new account.

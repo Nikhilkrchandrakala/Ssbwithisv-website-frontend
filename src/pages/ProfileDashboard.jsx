@@ -15,7 +15,8 @@ import {
     BiRupee,
     BiCalendar,
     BiTime,
-    BiDollar
+    BiDollar,
+    BiDownload
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -24,7 +25,12 @@ import {
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
 import NavStyles from "../style/Navbar.module.css";
-import { useUpdateUserProfileMutation, useUserProfileQuery, useUserCoursesQuery } from "../redux/api";
+import { 
+    useUpdateUserProfileMutation, 
+    useUserProfileQuery, 
+    useUserCoursesQuery,
+    useGetAllMagazineQuery
+} from "../redux/api";
 import toast from "react-hot-toast";
 import ImageUploadPopup from "../components/ImageUploadPopup";
 import axios from "axios";
@@ -62,7 +68,8 @@ const ProfileDashboard = () => {
     const [otpError, setOtpError] = useState('');
 
     const { data: profileData } = useUserProfileQuery();
-    const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery(); // API now returns batch orders
+    const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
+    const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
     const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
@@ -249,7 +256,7 @@ const ProfileDashboard = () => {
                 }
             }
         } catch (error) {
-            console.error("OTP ERROR:", error);
+
             setOtpError("Failed to send OTP. Please try again.");
         } finally {
             setIsVerifying(false);
@@ -314,7 +321,7 @@ const ProfileDashboard = () => {
             setOtp('');
             setReqId('');
         } catch (error) {
-            console.error("Verification ERROR:", error);
+
             setOtpError("OTP verification failed. Please try again.");
         } finally {
             setIsVerifying(false);
@@ -474,6 +481,17 @@ const ProfileDashboard = () => {
                                     >
                                         <BiBook />
                                         <span>My Batches</span>
+                                        <BiChevronRight className={styles.chevron} />
+                                    </button>
+                                    <button
+                                        className={`${styles.navTab} ${activeTab === 'downloads' ? styles.active : ''}`}
+                                        onClick={() => {
+                                            setActiveTab('downloads');
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        <BiDownload />
+                                        <span>My Downloads</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
                                 </nav>
@@ -724,6 +742,58 @@ const ProfileDashboard = () => {
                                                 </div>
                                             )}
                                         </div>
+                                    </div>
+                                )}
+
+                                {/* Downloads Tab */}
+                                {activeTab === 'downloads' && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.tabHeader}>
+                                            <h2>
+                                                <BiDownload className={styles.tabIcon} />
+                                                My Downloads
+                                            </h2>
+                                        </div>
+
+                                        {isMagazinesLoading ? (
+                                            <div className={styles.loadingState}>
+                                                <div className="spinner-border text-warning" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        ) : magazines && magazines.length > 0 ? (
+                                            <div className={styles.downloadsGrid}>
+                                                {magazines.map((mag) => (
+                                                    <div key={mag._id} className={styles.downloadCard}>
+                                                        <div className={styles.magImage}>
+                                                            <img 
+                                                                src={`https://api.ssbwithisv.in/${mag.magazineFrontImage}`} 
+                                                                alt={mag.pdfTitle} 
+                                                                onError={(e) => e.target.src = 'https://via.placeholder.com/150x200?text=No+Image'}
+                                                            />
+                                                        </div>
+                                                        <div className={styles.magInfo}>
+                                                            <h4>{mag.pdfTitle}</h4>
+                                                            <p className={styles.magTags}>{mag.tags}</p>
+                                                            <a 
+                                                                href={`https://api.ssbwithisv.in/${mag.pdfFilePath}`} 
+                                                                target="_blank" 
+                                                                rel="noopener noreferrer"
+                                                                className={styles.downloadLink}
+                                                                download
+                                                            >
+                                                                <BiDownload /> Download PDF
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className={styles.emptyState}>
+                                                <BiDownload className={styles.emptyIcon} />
+                                                <p>No downloads available at the moment.</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
