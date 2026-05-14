@@ -2268,15 +2268,20 @@
 }
 
 .magImage {
-    height: 350px;
+    aspect-ratio: 1 / 1.414; /* Standard A4 portrait ratio */
+    height: auto;
     overflow: hidden;
     position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .magImage img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Shows entire cover */
     transition: transform 0.5s ease;
 }
 
