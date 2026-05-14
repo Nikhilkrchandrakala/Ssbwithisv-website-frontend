@@ -841,7 +841,7 @@ function BatchPage() {
 
                                 <div className={styles.modalNote}>
                                     {/* <FaInfinity /> */}
-                                    <span><FaStar /> Proceeding to checkout will prompt you to create an account. Account creation is mandatory to see your course progress, access Psych Test and VTX<sup>TM</sup>.</span>
+                                    <span><FaStar /> Proceeding to checkout will prompt you to create an account. Account creation is mandatory to see your course progress, access Psych Test and VTX<sup>TM</sup></span>
                                 </div>
                             </div>
                         </div>
