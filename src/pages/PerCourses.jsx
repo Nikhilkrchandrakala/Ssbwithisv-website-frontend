@@ -480,6 +480,14 @@ function BatchPage() {
     };
 
     const handleApplyCoupon = async () => {
+        if (!user) {
+            // Store selected batch to resume after signup
+            localStorage.setItem('pendingBatch', JSON.stringify(selectedBatch));
+            localStorage.setItem('pendingCoupon', couponCode.toUpperCase());
+            navigate('/SignUp');
+            return;
+        }
+
         if (!couponCode.trim()) {
             setCouponError("Please enter a coupon code");
             return;
