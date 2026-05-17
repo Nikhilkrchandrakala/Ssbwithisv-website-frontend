@@ -197,128 +197,49 @@ function BatchPage() {
         return available > 0 ? available : 0;
     };
 
-    // Check if batch start date is today
-    const isStartDateToday = (startTime) => {
-        if (!startTime) return false;
-        const startDate = new Date(startTime);
-        const today = new Date();
-
-        return startDate.getDate() === today.getDate() &&
-            startDate.getMonth() === today.getMonth() &&
-            startDate.getFullYear() === today.getFullYear();
-    };
-
-    // NEW FUNCTION: Check if booking message should be shown (1 day before or on the day)
-    const shouldShowBookingMessage = (startTime) => {
-        if (!startTime) return false;
-
-        const startDate = new Date(startTime);
-        const today = new Date();
-
-        // Reset time to midnight for accurate date comparison
-        const startDateMidnight = new Date(startDate);
-        startDateMidnight.setHours(0, 0, 0, 0);
-
-        const todayMidnight = new Date(today);
-        todayMidnight.setHours(0, 0, 0, 0);
-
-        // Calculate difference in days
-        const diffTime = startDateMidnight - todayMidnight;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        // Show message only if:
-        // 1. It's today (diffDays === 0) OR
-        // 2. It's exactly 1 day before (diffDays === 1)
-        // 3. And booking is not closed yet
-        return diffDays === 0 || diffDays === 1;
-    };
-
-    // Get cutoff time for same-day batches
-    const getSameDayCutoffMessage = (startTime) => {
-        if (!startTime) return "";
-
-        const cutoffTime = new Date(startTime);
-        cutoffTime.setHours(10, 0, 0, 0); // 10:00 AM cutoff
-
-        const now = new Date();
-
-        if (now > cutoffTime) {
-            return "Booking closed for today's batch";
-        }
-
-        const hoursLeft = Math.ceil((cutoffTime - now) / (1000 * 60 * 60));
-        const minutesLeft = Math.ceil((cutoffTime - now) / (1000 * 60));
-
-        if (hoursLeft < 1) {
-            return `Last chance! Only ${minutesLeft} minutes left to book`;
-        }
-
-        return `Book before ${cutoffTime.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} today`;
-    };
-
-    // Check if booking is still available for same-day batch
-    const isSameDayBookingOpen = (startTime) => {
-        if (!isStartDateToday(startTime)) return true;
-
-        const cutoffTime = new Date(startTime);
-        cutoffTime.setHours(10, 0, 0, 0); // 10:00 AM cutoff
-        const now = new Date();
-
-        return now <= cutoffTime;
-    };
-
-    // Check if booking is closed (includes same-day cutoff)
+    // Check if booking is closed (cutoff is 11:59:59 PM the day before)
     const isBookingClosed = (startTime) => {
         if (!startTime) return true;
 
         const startDate = new Date(startTime);
-        const now = new Date();
-
-        // Last booking date = same day (aaj)
-        const lastBookingDate = new Date(startDate);
-        lastBookingDate.setHours(23, 59, 59, 999);
-
-        const isToday =
-            startDate.getDate() === now.getDate() &&
-            startDate.getMonth() === now.getMonth() &&
-            startDate.getFullYear() === now.getFullYear();
-
-        if (isToday) {
-            return now > lastBookingDate;
-        }
-
-        // Future batch → ek din pehle midnight tak
         const cutoffDate = new Date(startDate);
         cutoffDate.setDate(cutoffDate.getDate() - 1);
         cutoffDate.setHours(23, 59, 59, 999);
 
+        const now = new Date();
         return now > cutoffDate;
     };
 
-    // UPDATED: Get booking message based on date type (only shows 1 day before or on the day)
+    // Get booking message based on date type (only shows 1 day before)
     const getBookingMessage = (startTime) => {
-        if (!shouldShowBookingMessage(startTime)) return null;
+        if (!startTime) return null;
 
         const startDate = new Date(startTime);
+        const cutoffDate = new Date(startDate);
+        cutoffDate.setDate(cutoffDate.getDate() - 1);
+        cutoffDate.setHours(23, 59, 59, 999);
+
         const now = new Date();
+        
+        // If it's already closed, no message
+        if (now > cutoffDate) return null;
 
-        const isToday =
-            startDate.getDate() === now.getDate() &&
-            startDate.getMonth() === now.getMonth() &&
-            startDate.getFullYear() === now.getFullYear();
+        // Reset time to midnight for accurate date comparison
+        const cutoffMidnight = new Date(cutoffDate);
+        cutoffMidnight.setHours(0, 0, 0, 0);
 
-        if (isToday) {
-            return "⏰ Booking is open until midnight today";
+        const todayMidnight = new Date(now);
+        todayMidnight.setHours(0, 0, 0, 0);
+
+        // Calculate difference in days
+        const diffDays = Math.ceil((cutoffMidnight - todayMidnight) / (1000 * 60 * 60 * 24));
+
+        // If it is exactly 1 day before the batch (i.e. today is the cutoff day)
+        if (diffDays === 0) {
+            return "⏰ Booking closes tonight at 11:59 PM";
         }
-
-        // It's exactly 1 day before
-        const tomorrowDate = new Date(startDate);
-        const formattedDate = tomorrowDate.toLocaleDateString('en-IN', {
-            day: '2-digit',
-            month: 'short'
-        });
-
-        return `⏰ Booking is open until midnight on ${formattedDate}`;
+        
+        return null;
     };
 
     const getLastBookingDate = (startTime) => {
@@ -498,6 +419,11 @@ function BatchPage() {
             return;
         }
 
+        if (!selectedBatch.isFullCourse) {
+            setCouponError("Coupons are only valid for the Full Course");
+            return;
+        }
+
         const originalAmount = selectedBatch.price; // Use principal amount for discount calculation
 
         if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
@@ -512,7 +438,8 @@ function BatchPage() {
         try {
             const response = await applyCoupon({
                 code: couponCode,
-                amount: originalAmount
+                amount: originalAmount,
+                slotId: selectedBatch._id
             }).unwrap();
 
             setAppliedCoupon({
@@ -566,7 +493,7 @@ function BatchPage() {
                     <FaArrowLeft />
                 </button>
                 <h1 className={styles.title}>
-                    10 days online SSB Hackathon Courses
+                    SSB Online Courses
                 </h1>
             </div>
 
@@ -638,7 +565,6 @@ function BatchPage() {
                         const batchClass = isMorning ? styles.morningBatch : styles.eveningBatch;
 
                         const isClosed = isBookingClosed(batch.startTime);
-                        const isToday = isStartDateToday(batch.startTime);
                         const disableBooking = isFull || isClosed;
 
                         // Get booking message (only shows 1 day before or on the day)
@@ -647,7 +573,7 @@ function BatchPage() {
                         return (
                             <div
                                 key={batch._id}
-                                className={`${styles.batchCard} ${isFull ? styles.batchFull : ''} ${isToday && !isClosed ? styles.todayBatch : ''}`}
+                                className={`${styles.batchCard} ${isFull ? styles.batchFull : ''}`}
                                 onClick={() => !isFull && !isClosed && openModal(batch)}
                             >
                                 <div className={styles.batchHeader}>
@@ -661,15 +587,8 @@ function BatchPage() {
                                     </p>
                                 </div>
 
-                                {/* Show cutoff message for today's batch (always shows for today) */}
-                                {isToday && !isClosed && (
-                                    <div className={styles.cutoffMessageUrgent}>
-                                        {getSameDayCutoffMessage(batch.startTime)}
-                                    </div>
-                                )}
-
                                 {/* Show regular message only for 1 day before or on the day */}
-                                {!isToday && !isClosed && bookingMessage && (
+                                {!isClosed && bookingMessage && (
                                     <div className={styles.cutoffMessageUrgent}>
                                         {bookingMessage}
                                     </div>
@@ -707,9 +626,7 @@ function BatchPage() {
                                         ? 'Batch Full'
                                         : isClosed
                                             ? 'Booking Closed'
-                                            : isToday
-                                                ? 'Book Now (Today\'s Batch)'
-                                                : 'Book Now'} <FaArrowRight />
+                                            : 'Book Now'} <FaArrowRight />
                                 </button>
                             </div>
                         );
@@ -758,58 +675,79 @@ function BatchPage() {
                                 </div>
                             </div>
 
-                            <div className={styles.modalCoupon}>
-                                <h4><FaTicketAlt /> Apply Coupon</h4>
-                                <div className={styles.couponInputGroup}>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter coupon code"
-                                        value={couponCode}
-                                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-                                        disabled={!!appliedCoupon}
-                                        className={styles.couponInput}
-                                    />
-                                    {!appliedCoupon ? (
-                                        <button
-                                            onClick={handleApplyCoupon}
-                                            disabled={isApplyingCoupon || !couponCode.trim()}
-                                            className={styles.applyCouponBtn}
-                                        >
-                                            {isApplyingCoupon ? "Applying..." : "Apply"}
-                                        </button>
-                                    ) : (
-                                        <button onClick={handleRemoveCoupon} className={styles.removeCouponBtn}>
-                                            <FaTrash /> Remove
-                                        </button>
+                            {selectedBatch.isFullCourse && (
+                                <div className={styles.modalModules}>
+                                    <h4><FaBookOpen /> Included Modules</h4>
+                                    <ul className={styles.moduleList}>
+                                        <li>Introduction to SSB & PPDT</li>
+                                        <li>Psych Theory Course</li>
+                                        <li>Interview Theory Course</li>
+                                        <li>Group Testing Course</li>
+                                    </ul>
+                                </div>
+                            )}
+
+                            {selectedBatch.isFullCourse ? (
+                                <div className={styles.modalCoupon}>
+                                    <h4><FaTicketAlt /> Apply Coupon</h4>
+                                    <div className={styles.couponInputGroup}>
+                                        <input
+                                            type="text"
+                                            placeholder="Enter coupon code"
+                                            value={couponCode}
+                                            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                            disabled={!!appliedCoupon}
+                                            className={styles.couponInput}
+                                        />
+                                        {!appliedCoupon ? (
+                                            <button
+                                                onClick={handleApplyCoupon}
+                                                disabled={isApplyingCoupon || !couponCode.trim()}
+                                                className={styles.applyCouponBtn}
+                                            >
+                                                {isApplyingCoupon ? "Applying..." : "Apply"}
+                                            </button>
+                                        ) : (
+                                            <button onClick={handleRemoveCoupon} className={styles.removeCouponBtn}>
+                                                <FaTrash /> Remove
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {couponError && (
+                                        <div className={styles.couponError}>
+                                            <FaTimes />
+                                            <span>{couponError}</span>
+                                        </div>
+                                    )}
+
+                                    {couponSuccess && (
+                                        <div className={styles.couponSuccess}>
+                                            <FaCheckCircle />
+                                            <span>{couponSuccess}</span>
+                                        </div>
+                                    )}
+
+                                    {appliedCoupon && (
+                                        <div className={styles.appliedCoupon}>
+                                            <div className={styles.couponBadge}>
+                                                <FaPercent />
+                                                <span>Coupon <strong>{appliedCoupon.code}</strong> applied</span>
+                                            </div>
+                                            <div className={styles.savedAmount}>
+                                                You saved <strong>₹{appliedCoupon.discount.toFixed(2)}</strong>!
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
-
-                                {couponError && (
-                                    <div className={styles.couponError}>
-                                        <FaTimes />
-                                        <span>{couponError}</span>
-                                    </div>
-                                )}
-
-                                {couponSuccess && (
-                                    <div className={styles.couponSuccess}>
-                                        <FaCheckCircle />
-                                        <span>{couponSuccess}</span>
-                                    </div>
-                                )}
-
-                                {appliedCoupon && (
-                                    <div className={styles.appliedCoupon}>
-                                        <div className={styles.couponBadge}>
-                                            <FaPercent />
-                                            <span>Coupon <strong>{appliedCoupon.code}</strong> applied</span>
-                                        </div>
-                                        <div className={styles.savedAmount}>
-                                            You saved <strong>₹{appliedCoupon.discount.toFixed(2)}</strong>!
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            ) : (
+                                <div className={styles.modalCouponDisabled}>
+                                    <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", margin: 0 }}>
+                                        <FaTicketAlt style={{ marginRight: "8px" }} />
+                                        Coupons are only valid for the Full Course.
+                                    </p>
+                                </div>
+                            )}
 
                             <div className={styles.modalFooter}>
                                 <div className={styles.priceSummary}>

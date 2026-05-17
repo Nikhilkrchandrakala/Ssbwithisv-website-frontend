@@ -399,7 +399,7 @@
 }
 
 .modalContent {
-    padding: 30px;
+    padding: 40px;
 }
 
 .modalTitle {
@@ -432,12 +432,33 @@
 
 .modalAvailability {
     margin-bottom: 25px;
-    padding: 15px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
 }
 
+.modalModules {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border-left: 3px solid var(--secondary-color, #d2a100);
+}
+
+.moduleList {
+    margin: 10px 0 0 20px;
+    padding: 0;
+    list-style-type: disc;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.moduleList li {
+    margin-bottom: 5px;
+}
+
 .modalAvailability h4,
+.modalModules h4,
 .modalCoupon h4 {
     font-size: 18px;
     color: var(--theme-white, #c6c5af);
@@ -448,6 +469,7 @@
 }
 
 .modalAvailability h4 svg,
+.modalModules h4 svg,
 .modalCoupon h4 svg {
     color: var(--secondary-color, #d2a100);
 }
@@ -478,9 +500,17 @@
 
 .modalCoupon {
     margin: 20px 0;
-    padding: 15px;
+    padding: 20px;
     background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
+}
+
+.modalCouponDisabled {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
 .couponInputGroup {
@@ -572,15 +602,15 @@
 }
 
 .modalFooter {
-    padding-top: 20px;
+    padding-top: 25px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .priceSummary {
     background: rgba(210, 161, 0, 0.1);
-    padding: 15px;
+    padding: 24px;
     border-radius: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .priceRow {
@@ -622,7 +652,7 @@
 
 .confirmBookBtn {
     width: 100%;
-    padding: 14px;
+    padding: 16px;
     background: var(--secondary-color, #d2a100);
     border: none;
     border-radius: 12px;
