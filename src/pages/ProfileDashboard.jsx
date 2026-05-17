@@ -70,6 +70,15 @@ const ProfileDashboard = () => {
     const { data: profileData } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
     const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
+    const [selectedTag, setSelectedTag] = useState("all");
+
+    const filteredMagazines = isMagazinesLoading === false && magazines
+        ? [...(selectedTag === "all"
+            ? magazines
+            : magazines.filter(item => item?.tags === selectedTag)
+        )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
+        : [];
+        
     const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
@@ -748,11 +757,24 @@ const ProfileDashboard = () => {
                                 {/* Downloads Tab */}
                                 {activeTab === 'downloads' && (
                                     <div className={styles.tabContent}>
-                                        <div className={styles.tabHeader}>
+                                        <div className={styles.tabHeader} style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <h2>
                                                 <BiDownload className={styles.tabIcon} />
                                                 My Downloads
                                             </h2>
+                                            <div className="form-group" style={{ margin: 0, minWidth: '200px' }}>
+                                                <select
+                                                    className="form-select w-100"
+                                                    value={selectedTag}
+                                                    onChange={(e) => setSelectedTag(e.target.value)}
+                                                    style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(210, 161, 0, 0.3)', borderRadius: '8px', padding: '10px' }}
+                                                >
+                                                    <option value="all" style={{ color: '#000' }}>All Resources</option>
+                                                    <option value="Magazine" style={{ color: '#000' }}>Current Affairs Magazine</option>
+                                                    <option value="Books" style={{ color: '#000' }}>Books</option>
+                                                    <option value="SSBPrep" style={{ color: '#000' }}>SSB Prep Material</option>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         {isMagazinesLoading ? (
@@ -761,9 +783,9 @@ const ProfileDashboard = () => {
                                                     <span className="visually-hidden">Loading...</span>
                                                 </div>
                                             </div>
-                                        ) : magazines && magazines.length > 0 ? (
+                                        ) : filteredMagazines && filteredMagazines.length > 0 ? (
                                             <div className={styles.downloadsGrid}>
-                                                {magazines.map((mag) => (
+                                                {filteredMagazines.map((mag) => (
                                                     <div key={mag._id} className={styles.downloadCard}>
                                                         <div className={styles.magImage}>
                                                             <img 

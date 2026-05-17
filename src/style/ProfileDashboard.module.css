@@ -2246,7 +2246,7 @@
 /* Downloads Styles */
 .downloadsGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     margin-top: 20px;
 }
@@ -2334,12 +2334,30 @@
     box-shadow: 0 5px 15px rgba(210, 161, 0, 0.3);
 }
 
+@media (max-width: 1200px) {
+    .downloadsGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .downloadsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .downloadsGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .magImage {
         height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .downloadsGrid {
+        grid-template-columns: 1fr;
     }
 }
