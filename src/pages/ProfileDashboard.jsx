@@ -25,9 +25,9 @@ import {
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
 import NavStyles from "../style/Navbar.module.css";
-import { 
-    useUpdateUserProfileMutation, 
-    useUserProfileQuery, 
+import {
+    useUpdateUserProfileMutation,
+    useUserProfileQuery,
     useUserCoursesQuery,
     useGetAllMagazineQuery
 } from "../redux/api";
@@ -78,7 +78,7 @@ const ProfileDashboard = () => {
             : magazines.filter(item => item?.tags === selectedTag)
         )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
         : [];
-        
+
     const [updateProfile] = useUpdateUserProfileMutation();
 
     // User data
@@ -719,20 +719,45 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                 )}
 
-                                                                {/* <div className={styles.courseActions}>
+                                                                <div style={{ marginTop: '18px' }}>
                                                                     <button
-                                                                        className={styles.watchNowBtn}
-                                                                        onClick={() => navigate(`/batch/${order.slotId?._id}`)}
+                                                                        style={{
+                                                                            width: '100%',
+                                                                            padding: '12px 20px',
+                                                                            background: '#d2a100',
+                                                                            border: 'none',
+                                                                            borderRadius: '8px',
+                                                                            color: '#000',
+                                                                            fontWeight: '600',
+                                                                            fontSize: '0.95rem',
+                                                                            cursor: 'pointer',
+                                                                            display: 'flex',
+                                                                            alignItems: 'center',
+                                                                            justifyContent: 'center',
+                                                                            gap: '8px',
+                                                                            boxShadow: '0 4px 15px rgba(210, 161, 0, 0.2)',
+                                                                            transition: 'all 0.3s ease'
+                                                                        }}
+                                                                        onClick={() => {
+                                                                            const token = localStorage.getItem("authToken");
+                                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                            const baseUrl = isLocal
+                                                                                ? "http://localhost:3000"
+                                                                                : (import.meta.env.VITE_PSYCH_PORTAL_URL || "https://ssb-psych-battery.vercel.app");
+                                                                            window.open(`${baseUrl}?token=${token}`, "_blank");
+                                                                        }}
+                                                                        onMouseOver={(e) => {
+                                                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                                                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(210, 161, 0, 0.4)';
+                                                                        }}
+                                                                        onMouseOut={(e) => {
+                                                                            e.currentTarget.style.transform = 'none';
+                                                                            e.currentTarget.style.boxShadow = '0 4px 15px rgba(210, 161, 0, 0.2)';
+                                                                        }}
                                                                     >
-                                                                        View Batch Details
+                                                                        Go to Psyche Test
                                                                     </button>
-                                                                    <button
-                                                                        className={styles.viewInvoiceBtn}
-                                                                        onClick={() => navigate(`/invoice/${order.orderId}`)}
-                                                                    >
-                                                                        View Invoice
-                                                                    </button>
-                                                                </div> */}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     ))}
@@ -788,18 +813,18 @@ const ProfileDashboard = () => {
                                                 {filteredMagazines.map((mag) => (
                                                     <div key={mag._id} className={styles.downloadCard}>
                                                         <div className={styles.magImage}>
-                                                            <img 
-                                                                src={`https://api.ssbwithisv.in/${mag.magazineFrontImage}`} 
-                                                                alt={mag.pdfTitle} 
+                                                            <img
+                                                                src={`https://api.ssbwithisv.in/${mag.magazineFrontImage}`}
+                                                                alt={mag.pdfTitle}
                                                                 onError={(e) => e.target.src = 'https://via.placeholder.com/150x200?text=No+Image'}
                                                             />
                                                         </div>
                                                         <div className={styles.magInfo}>
                                                             <h4>{mag.pdfTitle}</h4>
                                                             <p className={styles.magTags}>{mag.tags}</p>
-                                                            <a 
-                                                                href={`https://api.ssbwithisv.in/${mag.pdfFilePath}`} 
-                                                                target="_blank" 
+                                                            <a
+                                                                href={`https://api.ssbwithisv.in/${mag.pdfFilePath}`}
+                                                                target="_blank"
                                                                 rel="noopener noreferrer"
                                                                 className={styles.downloadLink}
                                                                 download

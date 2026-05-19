@@ -3,7 +3,7 @@ import '../../style/custom-theme.css'
 import CustomButton from '../../components/CustomButton'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { BiArrowBack } from 'react-icons/bi'
+import { BiArrowBack, BiEye, BiEyeOff } from 'react-icons/bi'
 import { useVerifyOtpMutation } from '../../redux/api'
 
 function AccountRecovery() {
@@ -26,6 +26,8 @@ function AccountRecovery() {
     const [otpSent, setOtpSent] = useState(false)
     const [reqID, setReqID] = useState('')
     const [inputType, setInputType] = useState('text') // For dynamic input type
+    const [showNewPassword, setShowNewPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     // Refs
     const timerRef = useRef(null)
@@ -654,9 +656,9 @@ function AccountRecovery() {
                             className="row col-xl-7 g-4 g-md-2 mt-5 pt-5 col-lg-9 mx-auto justify-content-center"
                             onKeyPress={(e) => handleKeyPress(e, 'resetPassword')}
                         >
-                            <div className="col-lg-12">
+                            <div className="col-lg-12 position-relative">
                                 <input
-                                    type="password"
+                                    type={showNewPassword ? "text" : "password"}
                                     name="newPassword"
                                     className="form-control thm-input"
                                     placeholder="Enter New Password"
@@ -664,12 +666,34 @@ function AccountRecovery() {
                                     onChange={handleInputChange}
                                     disabled={isLoading}
                                     autoComplete="new-password"
+                                    style={{ paddingRight: '45px' }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNewPassword(!showNewPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '25px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        color: 'rgba(255, 255, 255, 0.4)',
+                                        cursor: 'pointer',
+                                        zIndex: 10,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: 0
+                                    }}
+                                >
+                                    {showNewPassword ? <BiEye size={20} /> : <BiEyeOff size={20} />}
+                                </button>
                             </div>
 
-                            <div className="col-lg-12 mt-3">
+                            <div className="col-lg-12 mt-3 position-relative">
                                 <input
-                                    type="password"
+                                    type={showConfirmPassword ? "text" : "password"}
                                     name="confirmPassword"
                                     className="form-control thm-input"
                                     placeholder="Confirm New Password"
@@ -677,7 +701,29 @@ function AccountRecovery() {
                                     onChange={handleInputChange}
                                     disabled={isLoading}
                                     autoComplete="new-password"
+                                    style={{ paddingRight: '45px' }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    style={{
+                                        position: 'absolute',
+                                        right: '25px',
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        background: 'none',
+                                        border: 'none',
+                                        color: 'rgba(255, 255, 255, 0.4)',
+                                        cursor: 'pointer',
+                                        zIndex: 10,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        padding: 0
+                                    }}
+                                >
+                                    {showConfirmPassword ? <BiEye size={20} /> : <BiEyeOff size={20} />}
+                                </button>
                             </div>
 
                             <div className="col-lg-12 mt-2">
