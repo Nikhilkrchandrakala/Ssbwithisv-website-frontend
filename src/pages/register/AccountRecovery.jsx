@@ -3,7 +3,8 @@ import '../../style/custom-theme.css'
 import CustomButton from '../../components/CustomButton'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { BiArrowBack, BiEye, BiEyeOff } from 'react-icons/bi'
+import { BiArrowBack } from 'react-icons/bi'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useVerifyOtpMutation } from '../../redux/api'
 
 function AccountRecovery() {
@@ -687,7 +688,7 @@ function AccountRecovery() {
                                         padding: 0
                                     }}
                                 >
-                                    {showNewPassword ? <BiEye size={20} /> : <BiEyeOff size={20} />}
+                                    {showNewPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                                 </button>
                             </div>
 
@@ -722,7 +723,7 @@ function AccountRecovery() {
                                         padding: 0
                                     }}
                                 >
-                                    {showConfirmPassword ? <BiEye size={20} /> : <BiEyeOff size={20} />}
+                                    {showConfirmPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                                 </button>
                             </div>
 
