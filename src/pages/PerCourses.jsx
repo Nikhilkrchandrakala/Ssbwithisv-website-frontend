@@ -70,6 +70,45 @@ function BatchPage() {
         }
     }, [user]); // Re-run when user data is loaded
 
+    // Course modules pricing matrix
+    const COURSE_MODULES = [
+        { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT', price: 3500 },
+        { id: 'psych', name: 'Psych Theory Course', price: 4500 },
+        { id: 'interview', name: 'Interview Theory Course', price: 5000 },
+        { id: 'group_testing', name: 'Group Testing Course', price: 5000 }
+    ];
+
+    const [selectedModules, setSelectedModules] = useState(['ssb_ppdt', 'psych', 'interview', 'group_testing']);
+
+    const getCalculatedPrice = () => {
+        if (!selectedBatch) return 0;
+        if (selectedModules.length === 4) {
+            return selectedBatch.price; // ₹12,499 bundle override
+        }
+        let sum = 0;
+        COURSE_MODULES.forEach(mod => {
+            if (selectedModules.includes(mod.id)) {
+                sum += mod.price;
+            }
+        });
+        return sum;
+    };
+
+    const handleModuleToggle = (moduleId) => {
+        let updated;
+        if (selectedModules.includes(moduleId)) {
+            updated = selectedModules.filter(id => id !== moduleId);
+        } else {
+            updated = [...selectedModules, moduleId];
+        }
+        setSelectedModules(updated);
+        
+        // Auto-remove coupon if not all modules are selected
+        if (updated.length < 4) {
+            resetCouponStateOnly();
+        }
+    };
+
     // Coupon states
     const [couponCode, setCouponCode] = useState("");
     const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -311,13 +350,20 @@ function BatchPage() {
                 return;
             }
 
+            if (selectedModules.length === 0) {
+                alert("Please select at least one module to proceed.");
+                setIsPaying(false);
+                return;
+            }
+
             const referralCode = localStorage.getItem("referralCode");
 
             const order = await createOrder({
-                amount: selectedBatch.price,
+                amount: getCalculatedPrice(),
                 slotId: selectedBatch._id,
                 referralCode: referralCode || null,
                 couponCode: appliedCoupon ? appliedCoupon.code : null,
+                selectedModules: selectedModules,
             }).unwrap();
 
             const options = {
@@ -362,12 +408,14 @@ function BatchPage() {
 
     const getOriginalPrice = () => {
         if (!selectedBatch) return 0;
-        return getBatchTotalWithGST(selectedBatch);
+        const price = getCalculatedPrice();
+        const gst = price * 0.18;
+        return price + gst;
     };
 
     const getBatchTotalWithGST = (batch) => {
         if (!batch) return 0;
-        const price = batch.price || 0;
+        const price = getCalculatedPrice();
         const gst = price * 0.18;
         return price + gst;
     };
@@ -390,7 +438,7 @@ function BatchPage() {
         document.body.style.overflow = "auto";
     };
 
-    const resetCouponState = () => {
+    const resetCouponStateOnly = () => {
         setCouponCode("");
         setAppliedCoupon(null);
         setCouponDiscount(0);
@@ -398,6 +446,11 @@ function BatchPage() {
         setCouponError("");
         setCouponSuccess("");
         setIsApplyingCoupon(false);
+    };
+
+    const resetCouponState = () => {
+        resetCouponStateOnly();
+        setSelectedModules(['ssb_ppdt', 'psych', 'interview', 'group_testing']);
     };
 
     const handleApplyCoupon = async () => {
@@ -678,16 +731,33 @@ function BatchPage() {
                             {selectedBatch.isFullCourse && (
                                 <div className={styles.modalModules}>
                                     <h4><FaBookOpen /> Included Modules</h4>
-                                    <ul className={styles.moduleList}>
-                                        <li>Introduction to SSB & PPDT</li>
-                                        <li>Psych Theory Course</li>
-                                        <li>Interview Theory Course</li>
-                                        <li>Group Testing Course</li>
+                                    <ul className={styles.moduleList} style={{ listStyle: 'none', padding: 0 }}>
+                                        {COURSE_MODULES.map((mod) => (
+                                            <li key={mod.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', background: 'rgba(255,255,255,0.03)', padding: '10px 15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', margin: 0, color: '#fff', fontSize: '14px', width: '100%' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedModules.includes(mod.id)}
+                                                        onChange={() => handleModuleToggle(mod.id)}
+                                                        style={{ marginRight: '12px', width: '18px', height: '18px', accentColor: '#C5A028', cursor: 'pointer' }}
+                                                    />
+                                                    {mod.name}
+                                                </label>
+                                                <span style={{ color: '#C5A028', fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap', marginLeft: '10px' }}>
+                                                    ₹{mod.price.toLocaleString('en-IN')}
+                                                </span>
+                                            </li>
+                                        ))}
                                     </ul>
+                                    {selectedModules.length === 4 && (
+                                        <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', background: 'rgba(197, 160, 40, 0.1)', border: '1px solid rgba(197, 160, 40, 0.2)', padding: '8px 12px', borderRadius: '6px', marginTop: '10px' }}>
+                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹18,000 to ₹12,499.
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
-                            {selectedBatch.isFullCourse ? (
+                            {selectedBatch.isFullCourse && selectedModules.length === 4 ? (
                                 <div className={styles.modalCoupon}>
                                     <h4><FaTicketAlt /> Apply Coupon</h4>
                                     <div className={styles.couponInputGroup}>
@@ -744,7 +814,7 @@ function BatchPage() {
                                 <div className={styles.modalCouponDisabled}>
                                     <p style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "14px", margin: 0 }}>
                                         <FaTicketAlt style={{ marginRight: "8px" }} />
-                                        Coupons are only valid for the Full Course.
+                                        Coupons are only valid for the Full Course bundle.
                                     </p>
                                 </div>
                             )}
@@ -754,7 +824,7 @@ function BatchPage() {
                                         <>
                                             <div className={styles.priceRow}>
                                                 <span>Base Price:</span>
-                                                <span>₹{selectedBatch.price.toFixed(2)}</span>
+                                                <span>₹{getCalculatedPrice().toFixed(2)}</span>
                                             </div>
                                             {appliedCoupon && (
                                                 <div className={`${styles.priceRow} ${styles.discount}`}>
@@ -764,7 +834,7 @@ function BatchPage() {
                                             )}
                                             <div className={styles.priceRow}>
                                                 <span>GST (18%):</span>
-                                                <span>₹{((selectedBatch.price - (appliedCoupon ? couponDiscount : 0)) * 0.18).toFixed(2)}</span>
+                                                <span>₹{((getCalculatedPrice() - (appliedCoupon ? couponDiscount : 0)) * 0.18).toFixed(2)}</span>
                                             </div>
                                             <div className={`${styles.priceRow} ${styles.total}`}>
                                                 <span>Total Amount</span>
