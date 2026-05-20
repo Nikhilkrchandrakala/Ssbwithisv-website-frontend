@@ -2361,3 +2361,194 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   PSYCHE TEST TAB STYLES
+   ======================================== */
+
+.psycheTestPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.psycheHero {
+    text-align: center;
+    padding: 40px 30px;
+    background: linear-gradient(135deg, rgba(210, 161, 0, 0.08) 0%, rgba(210, 161, 0, 0.02) 100%);
+    border: 1px solid rgba(210, 161, 0, 0.2);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.psycheHero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(210, 161, 0, 0.05) 0%, transparent 60%);
+    animation: psycheGlow 6s ease-in-out infinite;
+}
+
+@keyframes psycheGlow {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+.psycheHeroIcon {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 20px rgba(210, 161, 0, 0.3));
+}
+
+.psycheHero h3 {
+    color: #fff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+.psycheHero p {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.psycheFeatures {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.psycheFeature {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(210, 161, 0, 0.15);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.psycheFeature:hover {
+    background: rgba(210, 161, 0, 0.06);
+    border-color: rgba(210, 161, 0, 0.35);
+    transform: translateY(-2px);
+}
+
+.psycheFeatureIcon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.psycheFeature strong {
+    display: block;
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.psycheFeature p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.psycheCta {
+    text-align: center;
+    padding: 30px;
+    background: rgba(210, 161, 0, 0.05);
+    border: 1px solid rgba(210, 161, 0, 0.25);
+    border-radius: 20px;
+}
+
+.psycheCtaLabel {
+    color: rgba(210, 161, 0, 0.85);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.psycheTestBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 40px;
+    background: linear-gradient(135deg, #d2a100 0%, #8c6a0f 100%);
+    border: none;
+    border-radius: 14px;
+    color: #000;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(210, 161, 0, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.psycheTestBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(210, 161, 0, 0.5);
+}
+
+.psycheTestBtn:active {
+    transform: translateY(-1px);
+}
+
+.psycheLocked {
+    text-align: center;
+    padding: 40px 30px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(210, 161, 0, 0.2);
+    border-radius: 20px;
+}
+
+.psycheLockedIcon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    opacity: 0.6;
+}
+
+.psycheLocked h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.psycheLocked p {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .psycheFeatures {
+        grid-template-columns: 1fr;
+    }
+
+    .psycheHero {
+        padding: 30px 20px;
+    }
+
+    .psycheTestBtn {
+        width: 100%;
+        padding: 14px 30px;
+    }
+}

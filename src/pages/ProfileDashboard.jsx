@@ -16,7 +16,8 @@ import {
     BiCalendar,
     BiTime,
     BiDollar,
-    BiDownload
+    BiDownload,
+    BiBrain
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -67,6 +68,12 @@ const ProfileDashboard = () => {
     const [reqId, setReqId] = useState('');
     const [otpError, setOtpError] = useState('');
 
+    // Psyche Test states
+    const [psychSubmissions, setPsychSubmissions] = useState([]);
+    const [loadingPsych, setLoadingPsych] = useState(false);
+    const [psychUploadFiles, setPsychUploadFiles] = useState([]);
+    const [isPsychUploading, setIsPsychUploading] = useState(false);
+
     const { data: profileData } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
     const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
@@ -113,6 +120,72 @@ const ProfileDashboard = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    // Fetch Psych Submissions
+    useEffect(() => {
+        if (activeTab === 'psycheTest') {
+            fetchPsychSubmissions();
+        }
+    }, [activeTab]);
+
+    const fetchPsychSubmissions = async () => {
+        setLoadingPsych(true);
+        try {
+            const token = localStorage.getItem("authToken");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? "http://localhost:3000" 
+                : "https://psych.ssbwithisv.in";
+            const res = await axios.get(`${baseUrl}/api/submissions`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setPsychSubmissions(res.data);
+        } catch (e) {
+            console.error("Failed to fetch psych submissions", e);
+        } finally {
+            setLoadingPsych(false);
+        }
+    };
+
+    const handlePsychFileChange = (e) => {
+        if (e.target.files) {
+            setPsychUploadFiles(Array.from(e.target.files));
+        }
+    };
+
+    const handlePsychFileUpload = async (submissionId) => {
+        if (psychUploadFiles.length === 0) {
+            toast.error("Please select files to upload");
+            return;
+        }
+        setIsPsychUploading(true);
+        try {
+            const formData = new FormData();
+            psychUploadFiles.forEach(file => {
+                formData.append('files', file);
+            });
+            
+            const token = localStorage.getItem("authToken");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? "http://localhost:3000" 
+                : "https://psych.ssbwithisv.in";
+                
+            await axios.post(`${baseUrl}/api/submissions/${submissionId}/upload`, formData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            toast.success("Answers uploaded successfully! Processing with OCR...");
+            setPsychUploadFiles([]);
+            fetchPsychSubmissions();
+        } catch (e) {
+            console.error("Upload failed", e);
+            toast.error("Failed to upload answers.");
+        } finally {
+            setIsPsychUploading(false);
+        }
+    };
 
     // Update preview data when profile data changes
     useEffect(() => {
@@ -503,6 +576,17 @@ const ProfileDashboard = () => {
                                         <span>My Downloads</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
+                                    <button
+                                        className={`${styles.navTab} ${activeTab === 'psycheTest' ? styles.active : ''}`}
+                                        onClick={() => {
+                                            setActiveTab('psycheTest');
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        <BiBrain />
+                                        <span>Psyche Test</span>
+                                        <BiChevronRight className={styles.chevron} />
+                                    </button>
                                 </nav>
 
                                 <button className={styles.logoutBtn} onClick={handleLogout}>
@@ -743,7 +827,7 @@ const ProfileDashboard = () => {
                                                                             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
                                                                             const baseUrl = isLocal
                                                                                 ? "http://localhost:3000"
-                                                                                : (import.meta.env.VITE_PSYCH_PORTAL_URL || "https://ssb-psych-battery.vercel.app");
+                                                                                : "https://psych.ssbwithisv.in";
                                                                             window.open(`${baseUrl}?token=${token}`, "_blank");
                                                                         }}
                                                                         onMouseOver={(e) => {
@@ -841,6 +925,179 @@ const ProfileDashboard = () => {
                                                 <p>No downloads available at the moment.</p>
                                             </div>
                                         )}
+                                    </div>
+                                )}
+
+                                {/* Psyche Test Tab */}
+                                {activeTab === 'psycheTest' && (
+                                    <div className={styles.tabContent}>
+                                        <div className={styles.tabHeader}>
+                                            <h2>
+                                                <BiBrain className={styles.tabIcon} />
+                                                Psyche Test Battery
+                                            </h2>
+                                        </div>
+
+                                        <div className={styles.psycheTestPanel}>
+                                            <div className={styles.psycheHero}>
+                                                <div className={styles.psycheHeroIcon}>🧠</div>
+                                                <h3>SSB Psychological Test Battery</h3>
+                                                <p>Comprehensive timed evaluation simulating real SSB conditions — including TAT, WAT, SRT and SDT modules.</p>
+                                            </div>
+
+                                            <div className={styles.psycheFeatures}>
+                                                <div className={styles.psycheFeature}>
+                                                    <span className={styles.psycheFeatureIcon}>⏱️</span>
+                                                    <div>
+                                                        <strong>Timed Automatic Slides</strong>
+                                                        <p>Simulates real SSB test conditions with precise timing</p>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.psycheFeature}>
+                                                    <span className={styles.psycheFeatureIcon}>✍️</span>
+                                                    <div>
+                                                        <strong>Handwritten Answer Upload</strong>
+                                                        <p>Write your answers on paper and upload scanned copies</p>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.psycheFeature}>
+                                                    <span className={styles.psycheFeatureIcon}>👨‍⚖️</span>
+                                                    <div>
+                                                        <strong>Expert Assessor Review</strong>
+                                                        <p>Personalized feedback from qualified psychologists</p>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.psycheFeature}>
+                                                    <span className={styles.psycheFeatureIcon}>📊</span>
+                                                    <div>
+                                                        <strong>Detailed Evaluation Report</strong>
+                                                        <p>Comprehensive psychological profile & improvement areas</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {loadingPsych ? (
+                                                <div className={styles.loadingState}>
+                                                    <div className="spinner-border text-warning" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            ) : psychSubmissions && psychSubmissions.length > 0 ? (
+                                                <div className={styles.psychSubmissionsList}>
+                                                    <h4 style={{ color: '#fff', marginBottom: '15px' }}>Your Psych Tests</h4>
+                                                    {psychSubmissions.map(sub => (
+                                                        <div key={sub._id} style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid rgba(210, 161, 0, 0.2)' }}>
+                                                            <h5 style={{ color: '#d2a100' }}>{sub.assessmentId?.title || 'Psychological Test Battery'}</h5>
+                                                            <p style={{ color: '#ccc', fontSize: '0.9rem', marginBottom: '10px' }}>
+                                                                Started: {sub.startedAt ? formatDate(sub.startedAt) + ' ' + formatTime(sub.startedAt) : 'N/A'}
+                                                            </p>
+                                                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px' }}>
+                                                                <span style={{ 
+                                                                    padding: '4px 10px', 
+                                                                    borderRadius: '20px', 
+                                                                    fontSize: '0.8rem',
+                                                                    background: sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? 'rgba(40, 167, 69, 0.2)' : 'rgba(255, 193, 7, 0.2)',
+                                                                    color: sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? '#28a745' : '#ffc107',
+                                                                    border: `1px solid ${sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? '#28a745' : '#ffc107'}`
+                                                                }}>
+                                                                    Status: {sub.status}
+                                                                </span>
+                                                            </div>
+                                                            
+                                                            {(!sub.uploadedFiles || sub.uploadedFiles.length === 0) && (
+                                                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)' }}>
+                                                                    <p style={{ color: '#fff', marginBottom: '10px', fontSize: '0.95rem' }}>
+                                                                        <BiBook style={{ marginRight: '5px' }} />
+                                                                        Upload Handwritten Answers (Max 20 images)
+                                                                    </p>
+                                                                    <input 
+                                                                        type="file" 
+                                                                        multiple 
+                                                                        accept="image/*" 
+                                                                        onChange={handlePsychFileChange}
+                                                                        style={{ color: '#fff', marginBottom: '15px', width: '100%' }}
+                                                                    />
+                                                                    <button 
+                                                                        onClick={() => handlePsychFileUpload(sub._id)}
+                                                                        disabled={isPsychUploading || psychUploadFiles.length === 0}
+                                                                        style={{
+                                                                            background: '#d2a100', color: '#000', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold',
+                                                                            opacity: (isPsychUploading || psychUploadFiles.length === 0) ? 0.6 : 1,
+                                                                            cursor: (isPsychUploading || psychUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
+                                                                        }}
+                                                                    >
+                                                                        {isPsychUploading ? 'Uploading...' : 'Upload Answers & Generate Transcript'}
+                                                                    </button>
+                                                                </div>
+                                                            )}
+
+                                                            {sub.uploadedFiles && sub.uploadedFiles.length > 0 && (
+                                                                <div style={{ marginTop: '10px' }}>
+                                                                    <p style={{ color: '#28a745', fontSize: '0.9rem' }}><FaCheckCircle /> Answers uploaded successfully.</p>
+                                                                    {sub.assessorRemarks && (
+                                                                        <div style={{ marginTop: '15px', background: 'rgba(210, 161, 0, 0.1)', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #d2a100' }}>
+                                                                            <h6 style={{ color: '#d2a100', marginBottom: '5px' }}>Assessor Feedback:</h6>
+                                                                            <p style={{ color: '#eee', margin: 0, fontSize: '0.9rem' }}>{sub.assessorRemarks}</p>
+                                                                        </div>
+                                                                    )}
+                                                                    {sub.meetingLink && (
+                                                                        <div style={{ marginTop: '15px' }}>
+                                                                            <a href={sub.meetingLink} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#25D366', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
+                                                                                Join Feedback Meeting
+                                                                            </a>
+                                                                            {sub.meetingDate && <span style={{ color: '#aaa', marginLeft: '10px', fontSize: '0.9rem' }}>Scheduled: {formatDate(sub.meetingDate)}</span>}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                                        <button
+                                                            className={styles.psycheTestBtn}
+                                                            onClick={() => {
+                                                                const token = localStorage.getItem("authToken");
+                                                                const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                                                                    ? "http://localhost:3000" 
+                                                                    : "https://psych.ssbwithisv.in";
+                                                                window.open(`${baseUrl}?token=${token}`, "_blank");
+                                                            }}
+                                                        >
+                                                            🧠 Take Another Test
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ) : batchesData?.orders?.length > 0 ? (
+                                                <div className={styles.psycheCta}>
+                                                    <p className={styles.psycheCtaLabel}>You have access to the Psyche Test Battery</p>
+                                                    <button
+                                                        className={styles.psycheTestBtn}
+                                                        onClick={() => {
+                                                            const token = localStorage.getItem("authToken");
+                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                            const baseUrl = isLocal
+                                                                ? "http://localhost:3000"
+                                                                : "https://psych.ssbwithisv.in";
+                                                            window.open(`${baseUrl}?token=${token}`, "_blank");
+                                                        }}
+                                                    >
+                                                        🧠 Take Psyche Test
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className={styles.psycheLocked}>
+                                                    <div className={styles.psycheLockedIcon}>🔒</div>
+                                                    <h4>Access Locked</h4>
+                                                    <p>Purchase any SSB batch to unlock the Psyche Test Battery</p>
+                                                    <button
+                                                        className={styles.browseCoursesBtn}
+                                                        onClick={() => navigate('/batches')}
+                                                    >
+                                                        Browse Batches
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </div>
