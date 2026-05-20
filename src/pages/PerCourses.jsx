@@ -72,22 +72,30 @@ function BatchPage() {
 
     // Course modules pricing matrix
     const COURSE_MODULES = [
-        { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT', price: 3500 },
-        { id: 'psych', name: 'Psych Theory Course', price: 4500 },
-        { id: 'interview', name: 'Interview Theory Course', price: 5000 },
-        { id: 'group_testing', name: 'Group Testing Course', price: 5000 }
+        { id: 'full_course', name: '10 days Services Selection Board Hackathon (Full Course)', price: 12499 },
+        { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT', price: 1999 },
+        { id: 'psych', name: 'Psych Theory Course', price: 3499 },
+        { id: 'interview', name: 'Interview Theory Course', price: 2499 },
+        { id: 'group_testing', name: 'Group Testing Course', price: 7999 }
     ];
 
     const [selectedModules, setSelectedModules] = useState([]);
 
     const getCalculatedPrice = () => {
         if (!selectedBatch) return 0;
-        if (selectedModules.length === 4) {
-            return selectedBatch.price; // ₹12,499 bundle override
+        if (selectedModules.includes('full_course')) {
+            return selectedBatch.price || 12499;
         }
+        
+        // If all 4 individual modules are selected, apply full course price
+        const individualSelectedCount = selectedModules.filter(id => id !== 'full_course').length;
+        if (individualSelectedCount === 4) {
+            return selectedBatch.price || 12499;
+        }
+        
         let sum = 0;
         COURSE_MODULES.forEach(mod => {
-            if (selectedModules.includes(mod.id)) {
+            if (mod.id !== 'full_course' && selectedModules.includes(mod.id)) {
                 sum += mod.price;
             }
         });
@@ -96,15 +104,26 @@ function BatchPage() {
 
     const handleModuleToggle = (moduleId) => {
         let updated;
-        if (selectedModules.includes(moduleId)) {
-            updated = selectedModules.filter(id => id !== moduleId);
+        if (moduleId === 'full_course') {
+            if (selectedModules.includes('full_course')) {
+                updated = [];
+            } else {
+                updated = ['full_course'];
+            }
         } else {
-            updated = [...selectedModules, moduleId];
+            if (selectedModules.includes('full_course')) return; // Safeguard if others are disabled
+            
+            if (selectedModules.includes(moduleId)) {
+                updated = selectedModules.filter(id => id !== moduleId);
+            } else {
+                updated = [...selectedModules, moduleId];
+            }
         }
         setSelectedModules(updated);
-
-        // Auto-remove coupon if not all modules are selected
-        if (updated.length < 4) {
+        
+        // Auto-remove coupon if not all modules are selected (not representing the Full Course)
+        const isFullCourseSelected = updated.includes('full_course') || updated.filter(id => id !== 'full_course').length === 4;
+        if (!isFullCourseSelected) {
             resetCouponStateOnly();
         }
     };
@@ -735,32 +754,61 @@ function BatchPage() {
                                         Selecting all Modules will unlock the 10 DAY HACKATHON (Full Course) at the special price of Rs 12499
                                     </p>
                                     <ul className={styles.moduleList} style={{ listStyle: 'none', padding: 0 }}>
-                                        {COURSE_MODULES.map((mod) => (
-                                            <li key={mod.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', background: 'rgba(255,255,255,0.03)', padding: '10px 15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', margin: 0, color: '#fff', fontSize: '14px', width: '100%' }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedModules.includes(mod.id)}
-                                                        onChange={() => handleModuleToggle(mod.id)}
-                                                        style={{ marginRight: '12px', width: '18px', height: '18px', accentColor: '#C5A028', cursor: 'pointer' }}
-                                                    />
-                                                    {mod.name}
-                                                </label>
-                                                <span style={{ color: '#C5A028', fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap', marginLeft: '10px' }}>
-                                                    ₹{mod.price.toLocaleString('en-IN')}
-                                                </span>
-                                            </li>
-                                        ))}
+                                        {COURSE_MODULES.map((mod) => {
+                                            const isGreyedOut = mod.id !== 'full_course' && selectedModules.includes('full_course');
+                                            return (
+                                                <li key={mod.id} style={{ 
+                                                    display: 'flex', 
+                                                    alignItems: 'center', 
+                                                    justifyContent: 'space-between', 
+                                                    marginBottom: '10px', 
+                                                    background: 'rgba(255,255,255,0.03)', 
+                                                    padding: '10px 15px', 
+                                                    borderRadius: '8px', 
+                                                    border: '1px solid rgba(255,255,255,0.05)',
+                                                    opacity: isGreyedOut ? 0.4 : 1,
+                                                    transition: 'opacity 0.2s ease-in-out'
+                                                }}>
+                                                    <label style={{ 
+                                                        display: 'flex', 
+                                                        alignItems: 'center', 
+                                                        cursor: isGreyedOut ? 'not-allowed' : 'pointer', 
+                                                        margin: 0, 
+                                                        color: '#fff', 
+                                                        fontSize: '14px', 
+                                                        width: '100%' 
+                                                    }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedModules.includes(mod.id)}
+                                                            onChange={() => handleModuleToggle(mod.id)}
+                                                            disabled={isGreyedOut}
+                                                            style={{ 
+                                                                marginRight: '12px', 
+                                                                width: '18px', 
+                                                                height: '18px', 
+                                                                accentColor: '#C5A028', 
+                                                                cursor: isGreyedOut ? 'not-allowed' : 'pointer' 
+                                                            }}
+                                                        />
+                                                        {mod.name}
+                                                    </label>
+                                                    <span style={{ color: '#C5A028', fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap', marginLeft: '10px' }}>
+                                                        ₹{(mod.id === 'full_course' ? (selectedBatch.price || mod.price) : mod.price).toLocaleString('en-IN')}
+                                                    </span>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
-                                    {selectedModules.length === 4 && (
+                                    {selectedModules.filter(id => id !== 'full_course').length === 4 && (
                                         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', background: 'rgba(197, 160, 40, 0.1)', border: '1px solid rgba(197, 160, 40, 0.2)', padding: '8px 12px', borderRadius: '6px', marginTop: '10px' }}>
-                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹18,000 to ₹12,499.
+                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹15,996 to ₹{(selectedBatch.price || 12499).toLocaleString('en-IN')}.
                                         </div>
                                     )}
                                 </div>
                             )}
 
-                            {selectedBatch.isFullCourse && selectedModules.length === 4 ? (
+                            {selectedBatch.isFullCourse && (selectedModules.includes('full_course') || selectedModules.filter(id => id !== 'full_course').length === 4) ? (
                                 <div className={styles.modalCoupon}>
                                     <h4><FaTicketAlt /> Apply Coupon</h4>
                                     <div className={styles.couponInputGroup}>
