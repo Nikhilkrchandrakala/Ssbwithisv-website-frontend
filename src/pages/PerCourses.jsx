@@ -73,9 +73,9 @@ function BatchPage() {
     // Course modules pricing matrix
     const COURSE_MODULES = [
         { id: 'full_course', name: '10 days Services Selection Board Hackathon (Full Course)', price: 12499 },
-        { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT', price: 1999 },
-        { id: 'psych', name: 'Psych Theory Course', price: 3499 },
-        { id: 'interview', name: 'Interview Theory Course', price: 2499 },
+        { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT, Stage 1 Process', price: 1999 },
+        { id: 'psych', name: 'Psychology Test Preparation Program', price: 3499 },
+        { id: 'interview', name: 'Interview Theory Course and Mock Interview', price: 2499 },
         { id: 'group_testing', name: 'Group Testing Course', price: 7999 }
     ];
 
