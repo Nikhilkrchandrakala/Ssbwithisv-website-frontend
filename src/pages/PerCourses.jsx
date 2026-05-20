@@ -749,10 +749,7 @@ function BatchPage() {
 
                             {selectedBatch.isFullCourse && (
                                 <div className={styles.modalModules}>
-                                    <h4 style={{ marginBottom: '4px' }}><FaBookOpen /> Choose your Course</h4>
-                                    <p style={{ fontSize: '12px', color: '#C5A028', margin: '0 0 15px 0', fontWeight: '500' }}>
-                                        Selecting all Modules will unlock the 10 DAY HACKATHON (Full Course) at the special price of Rs 12499
-                                    </p>
+                                    <h4 style={{ marginBottom: '15px' }}><FaBookOpen /> Choose your Course</h4>
                                     <ul className={styles.moduleList} style={{ listStyle: 'none', padding: 0 }}>
                                         {COURSE_MODULES.map((mod) => {
                                             const isGreyedOut = mod.id !== 'full_course' && selectedModules.includes('full_course');
