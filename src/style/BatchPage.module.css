@@ -107,6 +107,41 @@
 .filterRight {
     display: flex;
     align-items: center;
+    gap: 15px;
+}
+
+.monthNavButtons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.iconNavBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--secondary-color, #d2a100);
+    border-radius: 50%;
+    color: var(--secondary-color, #d2a100);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.iconNavBtn:hover:not(:disabled) {
+    background: var(--secondary-color, #d2a100);
+    color: #000;
+    box-shadow: 0 0 10px rgba(210, 161, 0, 0.3);
+}
+
+.iconNavBtn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.25);
 }
 
 .batchTypeFilter {

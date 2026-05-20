@@ -565,18 +565,12 @@ function BatchPage() {
                     <FaArrowLeft />
                 </button>
                 <h1 className={styles.title}>
-                    SSB Online Courses
+                    Ongoing Online SSB Batches
                 </h1>
             </div>
 
             {/* Ongoing Online SSB Batches Info Section */}
             <div className={styles.introContainer}>
-                <h2 className={styles.introTitle}>
-                    <FaBookOpen style={{ color: '#C5A028' }} /> Ongoing Online SSB Batches
-                </h2>
-                <p className={styles.introDescription}>
-                    Our flagship SSB preparation program is a <span className={styles.introHighlight}>10-day online SSB Hackathon</span> (Intro to SSB & Stage 1+ Psych Test Prep + Mock Psych Test & feedback + Interview Prep + Mock Interview & feedback + GTO Course on VTX<sup>TM</sup> & feedback). You can sign up for the full 10-day online SSB Hackathon batch or individual modules in a particular batch.
-                </p>
                 <div className={styles.modulesGrid}>
                     <div className={styles.moduleCard}>
                         <div className={styles.moduleNumber}>1</div>
@@ -621,23 +615,11 @@ function BatchPage() {
                 </div>
             </div>
 
-            {/* Filter Bar */}
+            {/* Filter & Month Navigation Bar */}
             <div className={styles.filterBar}>
-                <div className={styles.searchWrapper}>
-                    <FaSearch className={styles.searchIcon} />
-                    <input
-                        type="text"
-                        placeholder="Search batches..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={styles.searchInput}
-                    />
-                    {searchTerm && (
-                        <button onClick={() => setSearchTerm("")} className={styles.clearSearch}>
-                            <FaTimes />
-                        </button>
-                    )}
-                </div>
+                <h2 className={styles.currentMonth}>
+                    {new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long' })} {selectedYear}
+                </h2>
 
                 <div className={styles.filterRight}>
                     <div className={styles.batchTypeFilter}>
@@ -652,28 +634,26 @@ function BatchPage() {
                             <option value="Evening Batch">Evening Batch</option>
                         </select>
                     </div>
-                </div>
-            </div>
 
-            {/* Month Navigation */}
-            <div className={styles.monthNavigation}>
-                <button
-                    onClick={goToPrevMonth}
-                    disabled={!canGoPrev}
-                    className={styles.navBtn}
-                >
-                    <FaChevronLeft /> Previous
-                </button>
-                <h2 className={styles.currentMonth}>
-                    {new Date(selectedYear, selectedMonth).toLocaleString('default', { month: 'long' })} {selectedYear}
-                </h2>
-                <button
-                    onClick={goToNextMonth}
-                    disabled={!canGoNext}
-                    className={styles.navBtn}
-                >
-                    Next <FaChevronRight />
-                </button>
+                    <div className={styles.monthNavButtons}>
+                        <button
+                            onClick={goToPrevMonth}
+                            disabled={!canGoPrev}
+                            className={styles.iconNavBtn}
+                            title="Previous Month"
+                        >
+                            <FaChevronLeft />
+                        </button>
+                        <button
+                            onClick={goToNextMonth}
+                            disabled={!canGoNext}
+                            className={styles.iconNavBtn}
+                            title="Next Month"
+                        >
+                            <FaChevronRight />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Batches Grid */}
