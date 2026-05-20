@@ -571,6 +571,11 @@ function BatchPage() {
 
             {/* Ongoing Online SSB Batches Info Section */}
             <div className={styles.introContainer}>
+                <p className={styles.introDescription}>
+                    Our flagship SSB preparation program is a <span className={styles.introHighlight}>10-day online SSB Hackathon</span> (Intro to SSB & Stage 1+ Psych Test Prep + Mock Psych Test & feedback + Interview Prep + Mock Interview & feedback + GTO Course on VTX<sup>TM</sup> & feedback).
+                    <br />
+                    You can sign up for the full 10-day online SSB Hackathon batch or individual modules in a particular batch.
+                </p>
                 <div className={styles.modulesGrid}>
                     <div className={styles.moduleCard}>
                         <div className={styles.moduleNumber}>1</div>
