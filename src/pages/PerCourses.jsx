@@ -48,11 +48,11 @@ function BatchPage() {
             try {
                 const batch = JSON.parse(pendingBatchData);
                 const pendingCoupon = localStorage.getItem('pendingCoupon');
-                
+
                 // Clear pending data
                 localStorage.removeItem('pendingBatch');
                 localStorage.removeItem('pendingCoupon');
-                
+
                 // Set state to open modal
                 setSelectedBatch(batch);
                 if (pendingCoupon) {
@@ -78,7 +78,7 @@ function BatchPage() {
         { id: 'group_testing', name: 'Group Testing Course', price: 5000 }
     ];
 
-    const [selectedModules, setSelectedModules] = useState(['ssb_ppdt', 'psych', 'interview', 'group_testing']);
+    const [selectedModules, setSelectedModules] = useState([]);
 
     const getCalculatedPrice = () => {
         if (!selectedBatch) return 0;
@@ -102,7 +102,7 @@ function BatchPage() {
             updated = [...selectedModules, moduleId];
         }
         setSelectedModules(updated);
-        
+
         // Auto-remove coupon if not all modules are selected
         if (updated.length < 4) {
             resetCouponStateOnly();
@@ -259,7 +259,7 @@ function BatchPage() {
         cutoffDate.setHours(23, 59, 59, 999);
 
         const now = new Date();
-        
+
         // If it's already closed, no message
         if (now > cutoffDate) return null;
 
@@ -277,7 +277,7 @@ function BatchPage() {
         if (diffDays === 0) {
             return "⏰ Booking closes tonight at 11:59 PM";
         }
-        
+
         return null;
     };
 
@@ -450,7 +450,7 @@ function BatchPage() {
 
     const resetCouponState = () => {
         resetCouponStateOnly();
-        setSelectedModules(['ssb_ppdt', 'psych', 'interview', 'group_testing']);
+        setSelectedModules([]);
     };
 
     const handleApplyCoupon = async () => {
@@ -612,7 +612,7 @@ function BatchPage() {
                         const isFull = isSlotFull(batch);
                         const availableSpots = getAvailableSpots(batch);
                         const bookedCount = batch.bookedStudents?.length || 0;
-                        
+
                         const isMorning = batch.title?.toLowerCase().includes("morning");
                         const batchIcon = isMorning ? <FaSun /> : <FaMoon />;
                         const batchClass = isMorning ? styles.morningBatch : styles.eveningBatch;
@@ -661,11 +661,11 @@ function BatchPage() {
                                     </div>
                                 </div>
 
-                                <div className={styles.batchPrice}>
-                                    <FaRupeeSign />
-                                    <span>{batch.price || 0}</span>
-                                    <small>+ GST</small>
-                                </div>
+                                 {/* <div className={styles.batchPrice}>
+                                     <FaRupeeSign />
+                                     <span>{batch.price || 0}</span>
+                                     <small>+ GST</small>
+                                 </div> */}
 
                                 <button
                                     className={`${styles.bookBtn} ${disableBooking ? styles.disabled : ''}`}
@@ -730,7 +730,10 @@ function BatchPage() {
 
                             {selectedBatch.isFullCourse && (
                                 <div className={styles.modalModules}>
-                                    <h4><FaBookOpen /> Included Modules</h4>
+                                    <h4 style={{ marginBottom: '4px' }}><FaBookOpen /> Choose your Course</h4>
+                                    <p style={{ fontSize: '12px', color: '#C5A028', margin: '0 0 15px 0', fontWeight: '500' }}>
+                                        Selecting all Modules will unlock the 10 DAY HACKATHON (Full Course) at the special price of Rs 12499
+                                    </p>
                                     <ul className={styles.moduleList} style={{ listStyle: 'none', padding: 0 }}>
                                         {COURSE_MODULES.map((mod) => (
                                             <li key={mod.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px', background: 'rgba(255,255,255,0.03)', padding: '10px 15px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -821,26 +824,26 @@ function BatchPage() {
 
                             <div className={styles.modalFooter}>
                                 <div className={styles.priceSummary}>
-                                        <>
-                                            <div className={styles.priceRow}>
-                                                <span>Base Price:</span>
-                                                <span>₹{getCalculatedPrice().toFixed(2)}</span>
+                                    <>
+                                        <div className={styles.priceRow}>
+                                            <span>Base Price:</span>
+                                            <span>₹{getCalculatedPrice().toFixed(2)}</span>
+                                        </div>
+                                        {appliedCoupon && (
+                                            <div className={`${styles.priceRow} ${styles.discount}`}>
+                                                <span>Discount:</span>
+                                                <span className={styles.discountAmount}>- ₹{couponDiscount.toFixed(2)}</span>
                                             </div>
-                                            {appliedCoupon && (
-                                                <div className={`${styles.priceRow} ${styles.discount}`}>
-                                                    <span>Discount:</span>
-                                                    <span className={styles.discountAmount}>- ₹{couponDiscount.toFixed(2)}</span>
-                                                </div>
-                                            )}
-                                            <div className={styles.priceRow}>
-                                                <span>GST (18%):</span>
-                                                <span>₹{((getCalculatedPrice() - (appliedCoupon ? couponDiscount : 0)) * 0.18).toFixed(2)}</span>
-                                            </div>
-                                            <div className={`${styles.priceRow} ${styles.total}`}>
-                                                <span>Total Amount</span>
-                                                <strong>₹{(appliedCoupon ? finalAmount : getBatchTotalWithGST(selectedBatch)).toFixed(2)}</strong>
-                                            </div>
-                                        </>
+                                        )}
+                                        <div className={styles.priceRow}>
+                                            <span>GST (18%):</span>
+                                            <span>₹{((getCalculatedPrice() - (appliedCoupon ? couponDiscount : 0)) * 0.18).toFixed(2)}</span>
+                                        </div>
+                                        <div className={`${styles.priceRow} ${styles.total}`}>
+                                            <span>Total Amount</span>
+                                            <strong>₹{(appliedCoupon ? finalAmount : getBatchTotalWithGST(selectedBatch)).toFixed(2)}</strong>
+                                        </div>
+                                    </>
                                 </div>
 
                                 <button
