@@ -75,7 +75,7 @@ function BatchPage() {
         { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT, Stage 1 Process', price: 1999 },
         { id: 'psych', name: 'Psychology Test Preparation Program', price: 3499 },
         { id: 'interview', name: 'Interview Theory Course and Mock Interview', price: 2499 },
-        { id: 'group_testing', name: 'Group Testing Course', price: 7999 },
+        { id: 'group_testing', name: 'Group Testing Course on VTX', price: 7999 },
         { id: 'full_course', name: '10 days Services Selection Board Hackathon (Full Course)', price: 12499 }
     ];
 
@@ -788,7 +788,9 @@ function BatchPage() {
                                                                 cursor: isGreyedOut ? 'not-allowed' : 'pointer' 
                                                             }}
                                                         />
-                                                        {mod.name}
+                                                        {mod.id === 'group_testing' ? (
+                                                            <span>Group Testing Course on VTX<sup>TM</sup></span>
+                                                        ) : mod.name}
                                                     </label>
                                                     <span style={{ color: '#C5A028', fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap', marginLeft: '10px' }}>
                                                         ₹{(mod.id === 'full_course' ? (selectedBatch.price || mod.price) : mod.price).toLocaleString('en-IN')}
