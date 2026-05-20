@@ -569,6 +569,58 @@ function BatchPage() {
                 </h1>
             </div>
 
+            {/* Ongoing Online SSB Batches Info Section */}
+            <div className={styles.introContainer}>
+                <h2 className={styles.introTitle}>
+                    <FaBookOpen style={{ color: '#C5A028' }} /> Ongoing Online SSB Batches
+                </h2>
+                <p className={styles.introDescription}>
+                    Our flagship SSB preparation program is a <span className={styles.introHighlight}>10-day online SSB Hackathon</span> (Intro to SSB & Stage 1+ Psych Test Prep + Mock Psych Test & feedback + Interview Prep + Mock Interview & feedback + GTO Course on VTX<sup>TM</sup> & feedback). You can sign up for the full 10-day online SSB Hackathon batch or individual modules in a particular batch.
+                </p>
+                <div className={styles.modulesGrid}>
+                    <div className={styles.moduleCard}>
+                        <div className={styles.moduleNumber}>1</div>
+                        <div className={styles.moduleName}>Full 10-day SSB Hackathon</div>
+                        <div className={styles.modulePrice}>
+                            <span>₹12,499</span>
+                            <span className={styles.gstText}>+ 18% GST</span>
+                        </div>
+                    </div>
+                    <div className={styles.moduleCard}>
+                        <div className={styles.moduleNumber}>2</div>
+                        <div className={styles.moduleName}>Intro to SSB, PPDT & Stage 1 Process</div>
+                        <div className={styles.modulePrice}>
+                            <span>₹1,999</span>
+                            <span className={styles.gstText}>+ 18% GST</span>
+                        </div>
+                    </div>
+                    <div className={styles.moduleCard}>
+                        <div className={styles.moduleNumber}>3</div>
+                        <div className={styles.moduleName}>Psych Test Prep Program</div>
+                        <div className={styles.modulePrice}>
+                            <span>₹3,499</span>
+                            <span className={styles.gstText}>+ 18% GST</span>
+                        </div>
+                    </div>
+                    <div className={styles.moduleCard}>
+                        <div className={styles.moduleNumber}>4</div>
+                        <div className={styles.moduleName}>Interview theory course and Mock Interview</div>
+                        <div className={styles.modulePrice}>
+                            <span>₹2,499</span>
+                            <span className={styles.gstText}>+ 18% GST</span>
+                        </div>
+                    </div>
+                    <div className={styles.moduleCard}>
+                        <div className={styles.moduleNumber}>5</div>
+                        <div className={styles.moduleName}>GTO course on VTX<sup>TM</sup></div>
+                        <div className={styles.modulePrice}>
+                            <span>₹7,999</span>
+                            <span className={styles.gstText}>+ 18% GST</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Filter Bar */}
             <div className={styles.filterBar}>
                 <div className={styles.searchWrapper}>
