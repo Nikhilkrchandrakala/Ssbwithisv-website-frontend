@@ -5,8 +5,18 @@ import Footer from "./Footer";
 import { Helmet } from "react-helmet-async";
 import { CoursesfaqData, scheduleData, CoursesModuleOne, tabs } from "../util/data";
 import Faq from "../components/Faq";
+import { useGetAllCoursesQuery } from "../redux/api";
 
 function Courses() {
+    const { data: dbCourses } = useGetAllCoursesQuery(undefined, { refetchOnMountOrArgChange: true });
+
+    const getPrice = (courseId, fallback) => {
+        if (dbCourses && Array.isArray(dbCourses)) {
+            const match = dbCourses.find(c => c.courseId === courseId);
+            if (match) return match.price;
+        }
+        return fallback;
+    };
 
     const [activeTab, setActiveTab] = useState("c1");
     const [scheduleTab, setScheduleTab] = useState("morning");
@@ -244,7 +254,7 @@ function Courses() {
                                         10 days Services Selection Board Hackathon
                                     </h2>
 
-                                    <p className="title-gtx shimmerText_sec  course-tab-card-title" >Price -  12499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec  course-tab-card-title" >Price -  ₹{getPrice("full_course", 12499).toLocaleString('en-IN')} + 18% GST</p>
 
                                 </div>
 
@@ -307,7 +317,7 @@ function Courses() {
                                         Introduction to SSB & PPDT
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  1999 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  ₹{getPrice("ssb_ppdt", 1999).toLocaleString('en-IN')} + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -343,7 +353,7 @@ function Courses() {
 
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  3499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  ₹{getPrice("psych", 3499).toLocaleString('en-IN')} + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -380,7 +390,7 @@ function Courses() {
                                         Interview Theory Course
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  2499 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  ₹{getPrice("interview", 2499).toLocaleString('en-IN')} + 18% GST</p>
 
                                 </div>
                                 <ul>
@@ -407,7 +417,7 @@ function Courses() {
                                         Group Testing Course
                                     </h3>
 
-                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  7999 + 18% GST</p>
+                                    <p className="title-gtx shimmerText_sec course-tab-card-title" >Price -  ₹{getPrice("group_testing", 7999).toLocaleString('en-IN')} + 18% GST</p>
 
                                 </div>
                                 <ul>

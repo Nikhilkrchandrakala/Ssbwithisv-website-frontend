@@ -22,11 +22,12 @@ import {
     FaStar
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { useCreateOrderMutation, useGetAllSlotesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation } from "../redux/api";
+import { useCreateOrderMutation, useGetAllSlotesQuery, useUserProfileQuery, useVerifyPaymentMutation, useApplyCouponMutation, useGetAllCoursesQuery } from "../redux/api";
 import styles from "../style/BatchPage.module.css";
 
 function BatchPage() {
     const { data: slotsData, isLoading, isError } = useGetAllSlotesQuery();
+    const { data: dbCourses } = useGetAllCoursesQuery(undefined, { refetchOnMountOrArgChange: true });
     const [createOrder] = useCreateOrderMutation();
     const [verifyPayment] = useVerifyPaymentMutation();
     const [applyCoupon] = useApplyCouponMutation();
@@ -70,31 +71,48 @@ function BatchPage() {
         }
     }, [user]); // Re-run when user data is loaded
 
-    // Course modules pricing matrix
-    const COURSE_MODULES = [
+    // Course modules pricing matrix state with baseline defaults
+    const [courseModules, setCourseModules] = useState([
         { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT, Stage 1 Process', price: 1999 },
         { id: 'psych', name: 'Psychology Test Preparation Program', price: 3499 },
         { id: 'interview', name: 'Interview Theory Course and Mock Interview', price: 2499 },
         { id: 'group_testing', name: 'Group Testing Course on VTX', price: 7999 },
         { id: 'full_course', name: '10 days Services Selection Board Hackathon (Full Course)', price: 12499 }
-    ];
+    ]);
+
+    useEffect(() => {
+        if (dbCourses && Array.isArray(dbCourses)) {
+            setCourseModules(prev => prev.map(mod => {
+                const match = dbCourses.find(c => c.courseId === mod.id);
+                return match ? { ...mod, price: match.price, name: match.title || mod.name } : mod;
+            }));
+        }
+    }, [dbCourses]);
+
+    const fullCoursePrice = courseModules.find(m => m.id === 'full_course')?.price || 12499;
+    const ssbPpdtPrice = courseModules.find(m => m.id === 'ssb_ppdt')?.price || 1999;
+    const psychPrice = courseModules.find(m => m.id === 'psych')?.price || 3499;
+    const interviewPrice = courseModules.find(m => m.id === 'interview')?.price || 2499;
+    const groupTestingPrice = courseModules.find(m => m.id === 'group_testing')?.price || 7999;
+    const individualSum = courseModules.filter(m => m.id !== 'full_course').reduce((sum, m) => sum + m.price, 0);
 
     const [selectedModules, setSelectedModules] = useState([]);
 
     const getCalculatedPrice = () => {
         if (!selectedBatch) return 0;
+        const fullCoursePrice = courseModules.find(m => m.id === 'full_course')?.price || 12499;
         if (selectedModules.includes('full_course')) {
-            return selectedBatch.price || 12499;
+            return selectedBatch.price || fullCoursePrice;
         }
         
         // If all 4 individual modules are selected, apply full course price
         const individualSelectedCount = selectedModules.filter(id => id !== 'full_course').length;
         if (individualSelectedCount === 4) {
-            return selectedBatch.price || 12499;
+            return selectedBatch.price || fullCoursePrice;
         }
         
         let sum = 0;
-        COURSE_MODULES.forEach(mod => {
+        courseModules.forEach(mod => {
             if (mod.id !== 'full_course' && selectedModules.includes(mod.id)) {
                 sum += mod.price;
             }
@@ -581,7 +599,7 @@ function BatchPage() {
                         <div className={styles.moduleNumber}>1</div>
                         <div className={styles.moduleName}>Full 10-day SSB Hackathon</div>
                         <div className={styles.modulePrice}>
-                            <span>₹12,499</span>
+                            <span>₹{fullCoursePrice.toLocaleString('en-IN')}</span>
                             <span className={styles.gstText}>+ 18% GST</span>
                         </div>
                     </div>
@@ -589,7 +607,7 @@ function BatchPage() {
                         <div className={styles.moduleNumber}>2</div>
                         <div className={styles.moduleName}>Intro to SSB, PPDT & Stage 1 Process</div>
                         <div className={styles.modulePrice}>
-                            <span>₹1,999</span>
+                            <span>₹{ssbPpdtPrice.toLocaleString('en-IN')}</span>
                             <span className={styles.gstText}>+ 18% GST</span>
                         </div>
                     </div>
@@ -597,7 +615,7 @@ function BatchPage() {
                         <div className={styles.moduleNumber}>3</div>
                         <div className={styles.moduleName}>Psych Test Prep Program</div>
                         <div className={styles.modulePrice}>
-                            <span>₹3,499</span>
+                            <span>₹{psychPrice.toLocaleString('en-IN')}</span>
                             <span className={styles.gstText}>+ 18% GST</span>
                         </div>
                     </div>
@@ -605,7 +623,7 @@ function BatchPage() {
                         <div className={styles.moduleNumber}>4</div>
                         <div className={styles.moduleName}>Interview theory course and Mock Interview</div>
                         <div className={styles.modulePrice}>
-                            <span>₹2,499</span>
+                            <span>₹{interviewPrice.toLocaleString('en-IN')}</span>
                             <span className={styles.gstText}>+ 18% GST</span>
                         </div>
                     </div>
@@ -613,7 +631,7 @@ function BatchPage() {
                         <div className={styles.moduleNumber}>5</div>
                         <div className={styles.moduleName}>GTO course on VTX<sup>TM</sup></div>
                         <div className={styles.modulePrice}>
-                            <span>₹7,999</span>
+                            <span>₹{groupTestingPrice.toLocaleString('en-IN')}</span>
                             <span className={styles.gstText}>+ 18% GST</span>
                         </div>
                     </div>
@@ -788,7 +806,7 @@ function BatchPage() {
                                 <div className={styles.modalModules}>
                                     <h4 style={{ marginBottom: '15px' }}><FaBookOpen /> Choose your Course</h4>
                                     <ul className={styles.moduleList} style={{ listStyle: 'none', padding: 0 }}>
-                                        {COURSE_MODULES.map((mod) => {
+                                        {courseModules.map((mod) => {
                                             const isGreyedOut = mod.id !== 'full_course' && selectedModules.includes('full_course');
                                             return (
                                                 <li key={mod.id} style={{ 
@@ -838,7 +856,7 @@ function BatchPage() {
                                     </ul>
                                     {selectedModules.filter(id => id !== 'full_course').length === 4 && (
                                         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', background: 'rgba(197, 160, 40, 0.1)', border: '1px solid rgba(197, 160, 40, 0.2)', padding: '8px 12px', borderRadius: '6px', marginTop: '10px' }}>
-                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹15,996 to ₹{(selectedBatch.price || 12499).toLocaleString('en-IN')}.
+                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹{individualSum.toLocaleString('en-IN')} to ₹{(selectedBatch.price || fullCoursePrice).toLocaleString('en-IN')}.
                                         </div>
                                     )}
                                 </div>

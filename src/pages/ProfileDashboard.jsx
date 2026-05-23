@@ -73,6 +73,8 @@ const ProfileDashboard = () => {
     const [loadingPsych, setLoadingPsych] = useState(false);
     const [psychUploadFiles, setPsychUploadFiles] = useState([]);
     const [isPsychUploading, setIsPsychUploading] = useState(false);
+    const [piqUploadFiles, setPiqUploadFiles] = useState([]);
+    const [isPiqUploading, setIsPiqUploading] = useState(false);
 
     const { data: profileData } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
@@ -133,7 +135,7 @@ const ProfileDashboard = () => {
         try {
             const token = localStorage.getItem("authToken");
             const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                ? "http://localhost:3000" 
+                ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
             const res = await axios.get(`${baseUrl}/api/submissions`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -166,7 +168,7 @@ const ProfileDashboard = () => {
             
             const token = localStorage.getItem("authToken");
             const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                ? "http://localhost:3000" 
+                ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
                 
             await axios.post(`${baseUrl}/api/submissions/${submissionId}/upload`, formData, {
@@ -184,6 +186,47 @@ const ProfileDashboard = () => {
             toast.error("Failed to upload answers.");
         } finally {
             setIsPsychUploading(false);
+        }
+    };
+
+    const handlePiqFileChange = (e) => {
+        if (e.target.files) {
+            setPiqUploadFiles(Array.from(e.target.files));
+        }
+    };
+
+    const handlePiqFileUpload = async (submissionId) => {
+        if (piqUploadFiles.length === 0) {
+            toast.error("Please select PIQ files to upload");
+            return;
+        }
+        setIsPiqUploading(true);
+        try {
+            const formData = new FormData();
+            piqUploadFiles.forEach(file => {
+                formData.append('files', file);
+            });
+            
+            const token = localStorage.getItem("authToken");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? "http://localhost:5173" 
+                : "https://psych.ssbwithisv.in";
+                
+            await axios.post(`${baseUrl}/api/submissions/${submissionId}/piq`, formData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            toast.success("PIQ Form uploaded successfully! Processing with Gemini OCR...");
+            setPiqUploadFiles([]);
+            fetchPsychSubmissions();
+        } catch (e) {
+            console.error("PIQ Upload failed", e);
+            toast.error("Failed to upload PIQ Form.");
+        } finally {
+            setIsPiqUploading(false);
         }
     };
 
@@ -826,7 +869,7 @@ const ProfileDashboard = () => {
                                                                             const token = localStorage.getItem("authToken");
                                                                             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
                                                                             const baseUrl = isLocal
-                                                                                ? "http://localhost:3000"
+                                                                                ? "http://localhost:5173"
                                                                                 : "https://psych.ssbwithisv.in";
                                                                             window.open(`${baseUrl}?token=${token}`, "_blank");
                                                                         }}
@@ -1004,38 +1047,118 @@ const ProfileDashboard = () => {
                                                                 </span>
                                                             </div>
                                                             
-                                                            {(!sub.uploadedFiles || sub.uploadedFiles.length === 0) && (
-                                                                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '15px', borderRadius: '8px', border: '1px dashed rgba(255,255,255,0.2)' }}>
-                                                                    <p style={{ color: '#fff', marginBottom: '10px', fontSize: '0.95rem' }}>
-                                                                        <BiBook style={{ marginRight: '5px' }} />
-                                                                        Upload Handwritten Answers (Max 20 images)
+                                                            {/* Gold Border Warning Banner if files are incomplete */}
+                                                            {((!sub.uploadedFiles || sub.uploadedFiles.length === 0) || (!sub.piqFiles || sub.piqFiles.length === 0)) && (
+                                                                <div style={{
+                                                                    background: 'rgba(210, 161, 0, 0.05)',
+                                                                    border: '1px solid #d2a100',
+                                                                    borderRadius: '8px',
+                                                                    padding: '15px',
+                                                                    marginBottom: '20px',
+                                                                    color: '#fff',
+                                                                    fontSize: '0.95rem'
+                                                                }}>
+                                                                    <h6 style={{ color: '#d2a100', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 8px 0' }}>
+                                                                        ⚠️ ACTION REQUIRED: Upload Scanned Answers and PIQ Form
+                                                                    </h6>
+                                                                    <p style={{ margin: 0, fontSize: '0.88rem', opacity: 0.9 }}>
+                                                                        To begin the assessor review, please upload both your handwritten test answers and your completed PIQ Form.
                                                                     </p>
-                                                                    <input 
-                                                                        type="file" 
-                                                                        multiple 
-                                                                        accept="image/*" 
-                                                                        onChange={handlePsychFileChange}
-                                                                        style={{ color: '#fff', marginBottom: '15px', width: '100%' }}
-                                                                    />
-                                                                    <button 
-                                                                        onClick={() => handlePsychFileUpload(sub._id)}
-                                                                        disabled={isPsychUploading || psychUploadFiles.length === 0}
-                                                                        style={{
-                                                                            background: '#d2a100', color: '#000', border: 'none', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold',
-                                                                            opacity: (isPsychUploading || psychUploadFiles.length === 0) ? 0.6 : 1,
-                                                                            cursor: (isPsychUploading || psychUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
-                                                                        }}
-                                                                    >
-                                                                        {isPsychUploading ? 'Uploading...' : 'Upload Answers & Generate Transcript'}
-                                                                    </button>
                                                                 </div>
                                                             )}
 
-                                                            {sub.uploadedFiles && sub.uploadedFiles.length > 0 && (
-                                                                <div style={{ marginTop: '10px' }}>
-                                                                    <p style={{ color: '#28a745', fontSize: '0.9rem' }}><FaCheckCircle /> Answers uploaded successfully.</p>
+                                                            {/* Upload Grid */}
+                                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginTop: '15px', marginBottom: '15px' }}>
+                                                                {/* Panel 1: Handwritten Test Answer Sheets */}
+                                                                <div style={{ 
+                                                                    background: 'rgba(0,0,0,0.2)', 
+                                                                    padding: '20px', 
+                                                                    borderRadius: '8px', 
+                                                                    border: sub.uploadedFiles && sub.uploadedFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
+                                                                }}>
+                                                                    <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                                        ✍️ 1. Handwritten Test Answers
+                                                                    </h6>
+                                                                    <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
+                                                                        Upload scanned answers of your TAT/WAT/SRT sheets (accepts images or PDF).
+                                                                    </p>
+                                                                    {sub.uploadedFiles && sub.uploadedFiles.length > 0 ? (
+                                                                        <div style={{ color: '#28a745', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                                            <FaCheckCircle /> {sub.uploadedFiles.length} pages uploaded successfully.
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div>
+                                                                            <input 
+                                                                                type="file" 
+                                                                                multiple 
+                                                                                accept="image/*,application/pdf" 
+                                                                                onChange={handlePsychFileChange}
+                                                                                style={{ color: '#fff', marginBottom: '12px', fontSize: '0.8rem', width: '100%' }}
+                                                                            />
+                                                                            <button 
+                                                                                onClick={() => handlePsychFileUpload(sub._id)}
+                                                                                disabled={isPsychUploading || psychUploadFiles.length === 0}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    background: '#d2a100', color: '#000', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem',
+                                                                                    opacity: (isPsychUploading || psychUploadFiles.length === 0) ? 0.6 : 1,
+                                                                                    cursor: (isPsychUploading || psychUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                {isPsychUploading ? 'Uploading...' : 'Upload Answers & Transcribe'}
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                {/* Panel 2: Personal Information Questionnaire (PIQ) */}
+                                                                <div style={{ 
+                                                                    background: 'rgba(0,0,0,0.2)', 
+                                                                    padding: '20px', 
+                                                                    borderRadius: '8px', 
+                                                                    border: sub.piqFiles && sub.piqFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
+                                                                }}>
+                                                                    <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                                        📄 2. PIQ (Personal Information Questionnaire) Form
+                                                                    </h6>
+                                                                    <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
+                                                                        Upload your scanned PIQ Form (accepts images or PDF).
+                                                                    </p>
+                                                                    {sub.piqFiles && sub.piqFiles.length > 0 ? (
+                                                                        <div style={{ color: '#28a745', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                                            <FaCheckCircle /> PIQ Form uploaded ({sub.piqStatus}).
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div>
+                                                                            <input 
+                                                                                type="file" 
+                                                                                multiple 
+                                                                                accept="image/*,application/pdf" 
+                                                                                onChange={handlePiqFileChange}
+                                                                                style={{ color: '#fff', marginBottom: '12px', fontSize: '0.8rem', width: '100%' }}
+                                                                            />
+                                                                            <button 
+                                                                                onClick={() => handlePiqFileUpload(sub._id)}
+                                                                                disabled={isPiqUploading || piqUploadFiles.length === 0}
+                                                                                style={{
+                                                                                    width: '100%',
+                                                                                    background: '#d2a100', color: '#000', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem',
+                                                                                    opacity: (isPiqUploading || piqUploadFiles.length === 0) ? 0.6 : 1,
+                                                                                    cursor: (isPiqUploading || piqUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                {isPiqUploading ? 'Uploading...' : 'Upload & Parse PIQ'}
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                            {/* Feedback and Assessor details */}
+                                                            {(sub.uploadedFiles?.length > 0 || sub.piqFiles?.length > 0) && (
+                                                                <div style={{ marginTop: '15px' }}>
                                                                     {sub.assessorRemarks && (
-                                                                        <div style={{ marginTop: '15px', background: 'rgba(210, 161, 0, 0.1)', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #d2a100' }}>
+                                                                        <div style={{ background: 'rgba(210, 161, 0, 0.1)', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #d2a100', marginBottom: '10px' }}>
                                                                             <h6 style={{ color: '#d2a100', marginBottom: '5px' }}>Assessor Feedback:</h6>
                                                                             <p style={{ color: '#eee', margin: 0, fontSize: '0.9rem' }}>{sub.assessorRemarks}</p>
                                                                         </div>
@@ -1058,7 +1181,7 @@ const ProfileDashboard = () => {
                                                             onClick={() => {
                                                                 const token = localStorage.getItem("authToken");
                                                                 const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                                                                    ? "http://localhost:3000" 
+                                                                    ? "http://localhost:5173" 
                                                                     : "https://psych.ssbwithisv.in";
                                                                 window.open(`${baseUrl}?token=${token}`, "_blank");
                                                             }}
@@ -1076,7 +1199,7 @@ const ProfileDashboard = () => {
                                                             const token = localStorage.getItem("authToken");
                                                             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
                                                             const baseUrl = isLocal
-                                                                ? "http://localhost:3000"
+                                                                ? "http://localhost:5173"
                                                                 : "https://psych.ssbwithisv.in";
                                                             window.open(`${baseUrl}?token=${token}`, "_blank");
                                                         }}

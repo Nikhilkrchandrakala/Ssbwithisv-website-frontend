@@ -9,8 +9,9 @@ export const api = createApi({
     ],
 
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://api.ssbwithisv.in/api/",
-        // baseUrl: "http://localhost:5001/api/",
+        baseUrl: window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5001/api/"
+            : "https://api.ssbwithisv.in/api/",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("authToken");
             if (token) {
