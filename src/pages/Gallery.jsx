@@ -78,7 +78,7 @@ function Gallery() {
 
 
                             </div>
-                                <p style={{ textAlign: "center", marginTop: "10px" }}>{images[currentImageIndex]?.imageText || "Image description not available."}</p>
+                                <p style={{ textAlign: "center", marginTop: "10px" }}>{image.imageText || "Image description not available."}</p>
                         </div>
                     ))}
                 </div>

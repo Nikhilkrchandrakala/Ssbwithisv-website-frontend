@@ -101,23 +101,28 @@ function BatchPage() {
     const getCalculatedPrice = () => {
         if (!selectedBatch) return 0;
         const fullCoursePrice = courseModules.find(m => m.id === 'full_course')?.price || 12499;
-        if (selectedModules.includes('full_course')) {
-            return selectedBatch.price || fullCoursePrice;
-        }
         
-        // If all 4 individual modules are selected, apply full course price
-        const individualSelectedCount = selectedModules.filter(id => id !== 'full_course').length;
-        if (individualSelectedCount === 4) {
-            return selectedBatch.price || fullCoursePrice;
-        }
-        
-        let sum = 0;
-        courseModules.forEach(mod => {
-            if (mod.id !== 'full_course' && selectedModules.includes(mod.id)) {
-                sum += mod.price;
+        if (selectedBatch.isFullCourse) {
+            if (selectedModules.includes('full_course')) {
+                return fullCoursePrice;
             }
-        });
-        return sum;
+            
+            // If all 4 individual modules are selected, apply full course price
+            const individualSelectedCount = selectedModules.filter(id => id !== 'full_course').length;
+            if (individualSelectedCount === 4) {
+                return fullCoursePrice;
+            }
+            
+            let sum = 0;
+            courseModules.forEach(mod => {
+                if (mod.id !== 'full_course' && selectedModules.includes(mod.id)) {
+                    sum += mod.price;
+                }
+            });
+            return sum;
+        } else {
+            return selectedBatch.price || 0;
+        }
     };
 
     const handleModuleToggle = (moduleId) => {
@@ -514,7 +519,7 @@ function BatchPage() {
             return;
         }
 
-        const originalAmount = selectedBatch.price; // Use principal amount for discount calculation
+        const originalAmount = selectedBatch.isFullCourse ? fullCoursePrice : selectedBatch.price; // Use principal amount for discount calculation
 
         if (appliedCoupon && appliedCoupon.code === couponCode.toUpperCase()) {
             setCouponError("This coupon is already applied");
@@ -848,7 +853,7 @@ function BatchPage() {
                                                         ) : mod.name}
                                                     </label>
                                                     <span style={{ color: '#C5A028', fontWeight: 'bold', fontSize: '14px', whiteSpace: 'nowrap', marginLeft: '10px' }}>
-                                                        ₹{(mod.id === 'full_course' ? (selectedBatch.price || mod.price) : mod.price).toLocaleString('en-IN')}
+                                                        ₹{mod.price.toLocaleString('en-IN')}
                                                     </span>
                                                 </li>
                                             );
@@ -856,7 +861,7 @@ function BatchPage() {
                                     </ul>
                                     {selectedModules.filter(id => id !== 'full_course').length === 4 && (
                                         <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', background: 'rgba(197, 160, 40, 0.1)', border: '1px solid rgba(197, 160, 40, 0.2)', padding: '8px 12px', borderRadius: '6px', marginTop: '10px' }}>
-                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹{individualSum.toLocaleString('en-IN')} to ₹{(selectedBatch.price || fullCoursePrice).toLocaleString('en-IN')}.
+                                            🎉 <strong>Full Bundle Discount Applied!</strong> Price reduced from ₹{individualSum.toLocaleString('en-IN')} to ₹{fullCoursePrice.toLocaleString('en-IN')}.
                                         </div>
                                     )}
                                 </div>
