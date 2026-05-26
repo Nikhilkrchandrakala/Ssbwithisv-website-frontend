@@ -5,9 +5,25 @@ import styles from "../style/Footer.module.css";
 import VisitorCounter from "../components/VisitorCounter";
 import PerCourses from "../pages/PerCourses";
 import CustomButton from "../components/CustomButton";
+import { useGetContactSettingsQuery } from "../redux/api";
 
 function Footer() {
     const navigate = useNavigate();
+
+    const { data: contactSettings } = useGetContactSettingsQuery();
+
+    const whatsappNumRaw = contactSettings?.whatsappNumber || "8420422821";
+    const callNumRaw = contactSettings?.callNumber || "7483617249";
+
+    const formatPhoneNumber = (num) => {
+        if (num && num.length === 10) {
+            return `${num.substring(0, 5)} ${num.substring(5)}`;
+        }
+        return num;
+    };
+
+    const whatsappNumFormatted = formatPhoneNumber(whatsappNumRaw);
+    const callNumFormatted = formatPhoneNumber(callNumRaw);
 
     const date = new Date();
     const year = date.getFullYear();
@@ -33,7 +49,7 @@ function Footer() {
 
 
                     <a
-                        href="https://wa.me/918420422821"
+                        href={`https://wa.me/91${whatsappNumRaw}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className='bottom-contact-box'
@@ -43,7 +59,7 @@ function Footer() {
 
                     {/* Phone Call */}
                     <a
-                        href="tel:+917004615277"
+                        href={`tel:+91${callNumRaw}`}
                         className='bottom-contact-box'
                     >
                         <i className="fa fa-phone"></i>
@@ -123,22 +139,22 @@ function Footer() {
 
                         <div className={styles.contactRow}>
                             <a
-                                href="https://wa.me/918420422821"
+                                href={`https://wa.me/91${whatsappNumRaw}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.contactItem}
                             >
                                 <p>
-                                    <i className="fa fa-whatsapp"></i> +91 84204 22821
+                                    <i className="fa fa-whatsapp"></i> +91 {whatsappNumFormatted}
                                 </p>
                             </a>
 
                             <a
-                                href="tel:+917004615277"
+                                href={`tel:+91${callNumRaw}`}
                                 className={styles.contactItem}
                             >
                                 <p>
-                                    <i className="fa fa-phone"></i> +91 70046 15277
+                                    <i className="fa fa-phone"></i> +91 {callNumFormatted}
                                 </p>
                             </a>
 

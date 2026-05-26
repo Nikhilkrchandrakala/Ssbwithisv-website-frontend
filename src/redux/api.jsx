@@ -118,6 +118,11 @@ export const api = createApi({
             providesTags: ["Profile"],
         }),
 
+        getContactSettings: builder.query({
+            query: () => "contactSettings",
+            providesTags: ["Profile"],
+        }),
+
 
         checkPurchase: builder.query({
             query: (id) => `checkPurchase/:${id}`,
@@ -201,6 +206,7 @@ export const {
     useGetAllSlotesQuery,
     useVerifyPaymentMutation,
     useGetAllNumberMonitorsQuery,
+    useGetContactSettingsQuery,
 
     useApplyCouponMutation,
     useCheckPurchaseQuery

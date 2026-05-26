@@ -3,7 +3,7 @@ import styles from "../style/Sidebar.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CustomButton from "./CustomButton";
-import { useUserProfileQuery } from "../redux/api";
+import { useUserProfileQuery, useGetContactSettingsQuery } from "../redux/api";
 import ContactUs from "./ContactUs";
 
 const Sidebar = ({ open, onClose }) => {
@@ -15,6 +15,20 @@ const Sidebar = ({ open, onClose }) => {
 
 
     const { data: blogs } = useUserProfileQuery()
+    const { data: contactSettings } = useGetContactSettingsQuery();
+
+    const whatsappNumRaw = contactSettings?.whatsappNumber || "8420422821";
+    const callNumRaw = contactSettings?.callNumber || "7483617249";
+
+    const formatPhoneNumber = (num) => {
+        if (num && num.length === 10) {
+            return `${num.substring(0, 5)} ${num.substring(5)}`;
+        }
+        return num;
+    };
+
+    const whatsappNumFormatted = formatPhoneNumber(whatsappNumRaw);
+    const callNumFormatted = formatPhoneNumber(callNumRaw);
 
 
 
@@ -71,9 +85,28 @@ const Sidebar = ({ open, onClose }) => {
 
 
 
-                    {blogs?.user?.name ? (<div className="mb-4">
-                        Welcome Back {blogs?.user?.name}!
-                    </div>) :
+                    {blogs?.user?.name ? (
+                        <div className="mb-4 d-flex justify-content-between align-items-center" style={{ color: "#c6c5af", fontSize: "16px", fontWeight: "bold", width: "100%", paddingRight: "30px" }}>
+                            <span>{blogs?.user?.name}</span>
+                            <button
+                                onClick={handleLogout}
+                                style={{
+                                    background: "none",
+                                    border: "none",
+                                    color: "#c6c5af",
+                                    cursor: "pointer",
+                                    fontSize: "21px",
+                                    padding: "0 5px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                                title="Log Out"
+                            >
+                                <i className="fa fa-sign-out"></i>
+                            </button>
+                        </div>
+                    ) :
 
                         (<div className="mb-4 d-flex justify-content-between">
                             {/* <button style={{ color: 'var( --white)' }} onClick={() => navigate('/SignUp')} >Sign Up</button> */}
@@ -220,8 +253,7 @@ const Sidebar = ({ open, onClose }) => {
 
 
 
-                        {blogs?.user?.name &&
-                            <CustomButton text={'Log Out'} onClick={handleLogout} />}
+
 
 
 
@@ -238,20 +270,20 @@ const Sidebar = ({ open, onClose }) => {
                     <div className={styles.contact}>
                         {/* WhatsApp */}
                         <a
-                            href="https://wa.me/918420422821"
+                            href={`https://wa.me/91${whatsappNumRaw}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.contactItem}
                         >
-                            <i className="fa fa-whatsapp"></i> +91 84204 22821
+                            <i className="fa fa-whatsapp"></i> +91 {whatsappNumFormatted}
                         </a>
 
                         {/* Phone Call */}
                         <a
-                            href="tel:+917004615277"
+                            href={`tel:+91${callNumRaw}`}
                             className={styles.contactItem}
                         >
-                            <i className="fa fa-phone"></i> +91 70046 15277
+                            <i className="fa fa-phone"></i> +91 {callNumFormatted}
                         </a>
                     </div>
 
