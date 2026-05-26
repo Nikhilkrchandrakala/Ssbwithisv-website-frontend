@@ -2,15 +2,15 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://ssbwithisv-website-backend.vercel.app/api/$1"
+      "destination": "https://api.ssbwithisv.in/api/$1"
     },
     {
       "source": "/admin(/?)",
-      "destination": "https://ssbwithisv-website-backend.vercel.app/admin-login"
+      "destination": "https://api.ssbwithisv.in/admin-login"
     },
     {
       "source": "/admin/(.*)",
-      "destination": "https://ssbwithisv-website-backend.vercel.app/admin/$1"
+      "destination": "https://api.ssbwithisv.in/admin/$1"
     },
     {
       "source": "/(.*)",
