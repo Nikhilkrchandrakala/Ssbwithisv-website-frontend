@@ -55,6 +55,8 @@ const ProfileDashboard = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [showImagePopup, setShowImagePopup] = useState(false);
     const fileInputRef = useRef(null);
+    const timelinePiqInputRef = useRef(null);
+    const timelineDossierInputRef = useRef(null);
     const popupRef = useRef(null);
 
     // OTP Verification states
@@ -75,6 +77,7 @@ const ProfileDashboard = () => {
     const [isPsychUploading, setIsPsychUploading] = useState(false);
     const [piqUploadFiles, setPiqUploadFiles] = useState([]);
     const [isPiqUploading, setIsPiqUploading] = useState(false);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
     const { data: profileData } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
@@ -227,6 +230,100 @@ const ProfileDashboard = () => {
             toast.error("Failed to upload PIQ Form.");
         } finally {
             setIsPiqUploading(false);
+        }
+    };
+
+    const handleTimelinePiqUpload = async (files) => {
+        setIsPiqUploading(true);
+        try {
+            const token = localStorage.getItem("authToken");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? "http://localhost:5173" 
+                : "https://psych.ssbwithisv.in";
+                
+            const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
+            let submissionId = activeSub?.id || activeSub?._id;
+            
+            // 1. If no active submission, create a new one first
+            if (!submissionId) {
+                // Fetch active assessments to get the first one
+                const assessmentsRes = await axios.get(`${baseUrl}/api/assessments`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const assessments = assessmentsRes.data;
+                const assessmentId = assessments && assessments.length > 0 ? (assessments[0].id || assessments[0]._id) : null;
+                
+                if (!assessmentId) {
+                    toast.error("No active psychological assessments found.");
+                    setIsPiqUploading(false);
+                    return;
+                }
+                
+                const subRes = await axios.post(`${baseUrl}/api/submissions`, { 
+                    assessmentId,
+                    status: 'IN_PROGRESS',
+                    startedAt: new Date().toISOString()
+                }, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                submissionId = subRes.data.id || subRes.data._id;
+            }
+            
+            // 2. Upload the PIQ files
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append('files', file);
+            });
+            
+            await axios.post(`${baseUrl}/api/submissions/${submissionId}/piq`, formData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            toast.success("PIQ Form uploaded successfully! Processing with Gemini OCR...");
+            fetchPsychSubmissions();
+        } catch (e) {
+            console.error("PIQ Upload failed", e);
+            toast.error("Failed to upload PIQ Form.");
+        } finally {
+            setIsPiqUploading(false);
+        }
+    };
+
+    const handleTimelineDossierUpload = async (files) => {
+        const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
+        if (!activeSub?.id && !activeSub?._id) {
+            toast.error("No active session found to upload dossier.");
+            return;
+        }
+        setIsPsychUploading(true);
+        try {
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append('files', file);
+            });
+            
+            const token = localStorage.getItem("authToken");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
+                ? "http://localhost:5173" 
+                : "https://psych.ssbwithisv.in";
+                
+            await axios.post(`${baseUrl}/api/submissions/${activeSub.id || activeSub._id}/upload`, formData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
+            toast.success("Dossier uploaded successfully! Processing with OCR...");
+            fetchPsychSubmissions();
+        } catch (e) {
+            console.error("Dossier upload failed", e);
+            toast.error("Failed to upload Dossier.");
+        } finally {
+            setIsPsychUploading(false);
         }
     };
 
@@ -627,7 +724,7 @@ const ProfileDashboard = () => {
                                         }}
                                     >
                                         <BiBrain />
-                                        <span>Psyche Test</span>
+                                        <span>Candidate Evaluation</span>
                                         <BiChevronRight className={styles.chevron} />
                                     </button>
                                 </nav>
@@ -846,47 +943,8 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                 )}
 
-                                                                <div style={{ marginTop: '18px' }}>
-                                                                    <button
-                                                                        style={{
-                                                                            width: '100%',
-                                                                            padding: '12px 20px',
-                                                                            background: '#d2a100',
-                                                                            border: 'none',
-                                                                            borderRadius: '8px',
-                                                                            color: '#000',
-                                                                            fontWeight: '600',
-                                                                            fontSize: '0.95rem',
-                                                                            cursor: 'pointer',
-                                                                            display: 'flex',
-                                                                            alignItems: 'center',
-                                                                            justifyContent: 'center',
-                                                                            gap: '8px',
-                                                                            boxShadow: '0 4px 15px rgba(210, 161, 0, 0.2)',
-                                                                            transition: 'all 0.3s ease'
-                                                                        }}
-                                                                        onClick={() => {
-                                                                            const token = localStorage.getItem("authToken");
-                                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                            const baseUrl = isLocal
-                                                                                ? "http://localhost:5173"
-                                                                                : "https://psych.ssbwithisv.in";
-                                                                            window.open(`${baseUrl}?token=${token}`, "_blank");
-                                                                        }}
-                                                                        onMouseOver={(e) => {
-                                                                            e.currentTarget.style.transform = 'translateY(-2px)';
-                                                                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(210, 161, 0, 0.4)';
-                                                                        }}
-                                                                        onMouseOut={(e) => {
-                                                                            e.currentTarget.style.transform = 'none';
-                                                                            e.currentTarget.style.boxShadow = '0 4px 15px rgba(210, 161, 0, 0.2)';
-                                                                        }}
-                                                                    >
-                                                                        Go to Psyche Test
-                                                                    </button>
                                                                 </div>
                                                             </div>
-                                                        </div>
                                                     ))}
                                                 </div>
                                             ) : (
@@ -977,47 +1035,225 @@ const ProfileDashboard = () => {
                                         <div className={styles.tabHeader}>
                                             <h2>
                                                 <BiBrain className={styles.tabIcon} />
-                                                Psyche Test Battery
+                                                Candidate Evaluation
                                             </h2>
                                         </div>
 
                                         <div className={styles.psycheTestPanel}>
-                                            <div className={styles.psycheHero}>
-                                                <div className={styles.psycheHeroIcon}>🧠</div>
-                                                <h3>SSB Psychological Test Battery</h3>
-                                                <p>Comprehensive timed evaluation simulating real SSB conditions — including TAT, WAT, SRT and SDT modules.</p>
-                                            </div>
+                                            <div className={styles.psycheCombinedCard}>
+                                                <div className={styles.psycheMainInfo}>
+                                                    <h3>SSB Candidate Evaluation</h3>
+                                                    <p>Comprehensive timed evaluation simulating real SSB conditions — including TAT, WAT, SRT and SDT modules.</p>
+                                                </div>
 
-                                            <div className={styles.psycheFeatures}>
-                                                <div className={styles.psycheFeature}>
-                                                    <span className={styles.psycheFeatureIcon}>⏱️</span>
-                                                    <div>
+                                                <div className={styles.psycheFeatureGrid}>
+                                                    <div className={styles.psycheFeatureItem}>
                                                         <strong>Timed Automatic Slides</strong>
                                                         <p>Simulates real SSB test conditions with precise timing</p>
                                                     </div>
-                                                </div>
-                                                <div className={styles.psycheFeature}>
-                                                    <span className={styles.psycheFeatureIcon}>✍️</span>
-                                                    <div>
+                                                    <div className={styles.psycheFeatureItem}>
                                                         <strong>Handwritten Answer Upload</strong>
                                                         <p>Write your answers on paper and upload scanned copies</p>
                                                     </div>
-                                                </div>
-                                                <div className={styles.psycheFeature}>
-                                                    <span className={styles.psycheFeatureIcon}>👨‍⚖️</span>
-                                                    <div>
+                                                    <div className={styles.psycheFeatureItem}>
                                                         <strong>Expert Assessor Review</strong>
                                                         <p>Personalized feedback from qualified psychologists</p>
                                                     </div>
-                                                </div>
-                                                <div className={styles.psycheFeature}>
-                                                    <span className={styles.psycheFeatureIcon}>📊</span>
-                                                    <div>
+                                                    <div className={styles.psycheFeatureItem}>
                                                         <strong>Detailed Evaluation Report</strong>
                                                         <p>Comprehensive psychological profile & improvement areas</p>
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Process Flow Stepper */}
+                                            <div className={styles.psycheTimelineContainer}>
+                                                <h4 className={styles.timelineHeader}>Your Candidate Evaluation Journey</h4>
+                                                <div className={styles.psycheTimeline}>
+                                                     {[
+                                                        {
+                                                            title: "Download PIQ Form",
+                                                            desc: "Download and print your empty Personal Information Questionnaire.",
+                                                            action: (() => {
+                                                                const piqDoc = magazines?.find(m => 
+                                                                    m?.pdfTitle?.toLowerCase().includes("personal information questionnaire") ||
+                                                                    m?.pdfTitle?.toLowerCase().includes("piq")
+                                                                );
+                                                                const downloadUrl = piqDoc 
+                                                                    ? `https://api.ssbwithisv.in/${piqDoc.pdfFilePath}`
+                                                                    : "/assets/Blank_PIQ_Form.pdf";
+                                                                return (
+                                                                    <a 
+                                                                        href={downloadUrl} 
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className={styles.stepDownloadLink}
+                                                                        download="Blank_PIQ_Form.pdf"
+                                                                    >
+                                                                        <BiDownload /> Download PIQ Form
+                                                                    </a>
+                                                                );
+                                                            })()
+                                                        },
+                                                        {
+                                                            title: "Upload Filled PIQ",
+                                                            desc: "Scan and upload your completed PIQ Form to your portal below.",
+                                                            action: (
+                                                                <div>
+                                                                    <input 
+                                                                        type="file" 
+                                                                        ref={timelinePiqInputRef}
+                                                                        style={{ display: 'none' }} 
+                                                                        accept="image/*,application/pdf"
+                                                                        multiple
+                                                                        onChange={async (e) => {
+                                                                            if (e.target.files && e.target.files.length > 0) {
+                                                                                const files = Array.from(e.target.files);
+                                                                                await handleTimelinePiqUpload(files);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    <button 
+                                                                        className={styles.stepActionButton}
+                                                                        onClick={() => timelinePiqInputRef.current?.click()}
+                                                                        disabled={isPiqUploading}
+                                                                    >
+                                                                        {isPiqUploading ? "Uploading..." : "Upload PIQ Form"}
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        },
+                                                        {
+                                                            title: "Candidate Evaluation",
+                                                            desc: "Start and complete your timed online psychological test.",
+                                                            action: (
+                                                                <button 
+                                                                    className={styles.stepActionButton}
+                                                                    onClick={() => {
+                                                                        const token = localStorage.getItem("authToken");
+                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                        const baseUrl = isLocal
+                                                                            ? "http://localhost:5173"
+                                                                            : "https://psych.ssbwithisv.in";
+                                                                        window.location.href = `${baseUrl}?token=${token}`;
+                                                                    }}
+                                                                >
+                                                                    Start Candidate Evaluation
+                                                                </button>
+                                                            )
+                                                        },
+                                                        {
+                                                            title: "Upload Dossier",
+                                                            desc: "Scan and upload your handwritten TAT, WAT, SRT answer sheets below.",
+                                                            action: (
+                                                                <div>
+                                                                    <input 
+                                                                        type="file" 
+                                                                        ref={timelineDossierInputRef}
+                                                                        style={{ display: 'none' }} 
+                                                                        accept="image/*,application/pdf"
+                                                                        multiple
+                                                                        onChange={async (e) => {
+                                                                            if (e.target.files && e.target.files.length > 0) {
+                                                                                const files = Array.from(e.target.files);
+                                                                                await handleTimelineDossierUpload(files);
+                                                                            }
+                                                                        }}
+                                                                    />
+                                                                    <button 
+                                                                        className={styles.stepActionButton}
+                                                                        onClick={() => timelineDossierInputRef.current?.click()}
+                                                                        disabled={isPsychUploading}
+                                                                    >
+                                                                        {isPsychUploading ? "Uploading..." : "Upload Dossier"}
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        },
+                                                        {
+                                                            title: "Assessor Review Queue",
+                                                            desc: "Your answers are transcribed via OCR and queued for assessor evaluation."
+                                                        }
+                                                     ].map((step, idx) => {
+                                                         const stepNum = idx + 1;
+                                                         const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
+                                                         
+                                                         const getFlowStep = () => {
+                                                             if (!activeSub) return 2;
+                                                             const hasPiq = activeSub.piqFiles && activeSub.piqFiles.length > 0;
+                                                             const isTestCompleted = activeSub.status === 'COMPLETED' || activeSub.status === 'REVIEW_PENDING' || activeSub.status === 'TEST_COMPLETED';
+                                                             const hasDossier = activeSub.uploadedFiles && activeSub.uploadedFiles.length > 0;
+                                                             
+                                                             if (!hasPiq) return 2;
+                                                             if (!isTestCompleted) return 3;
+                                                             if (!hasDossier) return 4;
+                                                             return 5;
+                                                         };
+ 
+                                                         const currentStep = getFlowStep();
+                                                         const isCompleted = stepNum < currentStep;
+                                                         const isActive = stepNum === currentStep;
+ 
+                                                         return (
+                                                             <div key={stepNum} className={`${styles.timelineStep} ${isCompleted ? styles.completed : ''} ${isActive ? styles.active : ''}`}>
+                                                                 <div className={styles.stepIndicator}>
+                                                                     {isCompleted ? <FaCheckCircle /> : stepNum}
+                                                                 </div>
+                                                                 <div className={styles.stepText}>
+                                                                     <strong>{step.title}</strong>
+                                                                     <p>{step.desc}</p>
+                                                                 </div>
+                                                                 {step.action && (
+                                                                     (stepNum === 1) ||
+                                                                     (stepNum === 2 && currentStep === 2) ||
+                                                                     (stepNum === 3 && currentStep === 3) ||
+                                                                     (stepNum === 4 && currentStep === 4)
+                                                                 ) && (
+                                                                     <div className={styles.stepActionWrapper}>
+                                                                         {step.action}
+                                                                     </div>
+                                                                 )}
+                                                             </div>
+                                                         );
+                                                     })}
+                                                 </div>
+
+                                                 {/* Dynamic Broadcast Feedback Release Button */}
+                                                 {(() => {
+                                                     const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
+                                                     if (activeSub && activeSub.status === 'REPORT_RELEASED') {
+                                                         return (
+                                                             <div style={{ marginTop: '35px', textAlign: 'center' }}>
+                                                                 <button
+                                                                     onClick={() => setShowFeedbackModal(true)}
+                                                                     style={{
+                                                                         background: 'linear-gradient(135deg, #d2a100 0%, #8c6a0f 100%)',
+                                                                         color: '#000',
+                                                                         border: 'none',
+                                                                         padding: '16px 40px',
+                                                                         borderRadius: '14px',
+                                                                         fontWeight: '900',
+                                                                         fontSize: '0.9rem',
+                                                                         textTransform: 'uppercase',
+                                                                         letterSpacing: '0.2em',
+                                                                         boxShadow: '0 8px 24px rgba(210, 161, 0, 0.25)',
+                                                                         cursor: 'pointer',
+                                                                         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                                                         display: 'inline-flex',
+                                                                         alignItems: 'center',
+                                                                         gap: '12px'
+                                                                     }}
+                                                                     className="hover-glow-effect"
+                                                                 >
+                                                                     <BiBrain style={{ fontSize: '1.2rem' }} /> Final Assessment Remarks
+                                                                 </button>
+                                                             </div>
+                                                         );
+                                                     }
+                                                     return null;
+                                                 })()}
+                                             </div>
+
 
                                             {loadingPsych ? (
                                                 <div className={styles.loadingState}>
@@ -1047,7 +1283,6 @@ const ProfileDashboard = () => {
                                                                 </span>
                                                             </div>
                                                             
-                                                            {/* Gold Border Warning Banner if files are incomplete */}
                                                             {((!sub.uploadedFiles || sub.uploadedFiles.length === 0) || (!sub.piqFiles || sub.piqFiles.length === 0)) && (
                                                                 <div style={{
                                                                     background: 'rgba(210, 161, 0, 0.05)',
@@ -1059,7 +1294,7 @@ const ProfileDashboard = () => {
                                                                     fontSize: '0.95rem'
                                                                 }}>
                                                                     <h6 style={{ color: '#d2a100', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 8px 0' }}>
-                                                                        ⚠️ ACTION REQUIRED: Upload Scanned Answers and PIQ Form
+                                                                        ACTION REQUIRED: Upload Scanned Answers and PIQ Form
                                                                     </h6>
                                                                     <p style={{ margin: 0, fontSize: '0.88rem', opacity: 0.9 }}>
                                                                         To begin the assessor review, please upload both your handwritten test answers and your completed PIQ Form.
@@ -1067,9 +1302,7 @@ const ProfileDashboard = () => {
                                                                 </div>
                                                             )}
 
-                                                            {/* Upload Grid */}
                                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginTop: '15px', marginBottom: '15px' }}>
-                                                                {/* Panel 1: Handwritten Test Answer Sheets */}
                                                                 <div style={{ 
                                                                     background: 'rgba(0,0,0,0.2)', 
                                                                     padding: '20px', 
@@ -1077,7 +1310,7 @@ const ProfileDashboard = () => {
                                                                     border: sub.uploadedFiles && sub.uploadedFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
                                                                 }}>
                                                                     <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                        ✍️ 1. Handwritten Test Answers
+                                                                        1. Handwritten Test Answers
                                                                     </h6>
                                                                     <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
                                                                         Upload scanned answers of your TAT/WAT/SRT sheets (accepts images or PDF).
@@ -1111,7 +1344,6 @@ const ProfileDashboard = () => {
                                                                     )}
                                                                 </div>
 
-                                                                {/* Panel 2: Personal Information Questionnaire (PIQ) */}
                                                                 <div style={{ 
                                                                     background: 'rgba(0,0,0,0.2)', 
                                                                     padding: '20px', 
@@ -1119,7 +1351,7 @@ const ProfileDashboard = () => {
                                                                     border: sub.piqFiles && sub.piqFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
                                                                 }}>
                                                                     <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                        📄 2. PIQ (Personal Information Questionnaire) Form
+                                                                        2. PIQ (Personal Information Questionnaire) Form
                                                                     </h6>
                                                                     <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
                                                                         Upload your scanned PIQ Form (accepts images or PDF).
@@ -1154,7 +1386,6 @@ const ProfileDashboard = () => {
                                                                 </div>
                                                             </div>
 
-                                                            {/* Feedback and Assessor details */}
                                                             {(sub.uploadedFiles?.length > 0 || sub.piqFiles?.length > 0) && (
                                                                 <div style={{ marginTop: '15px' }}>
                                                                     {sub.assessorRemarks && (
@@ -1175,43 +1406,13 @@ const ProfileDashboard = () => {
                                                             )}
                                                         </div>
                                                     ))}
-                                                    <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                                                        <button
-                                                            className={styles.psycheTestBtn}
-                                                            onClick={() => {
-                                                                const token = localStorage.getItem("authToken");
-                                                                const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                                                                    ? "http://localhost:5173" 
-                                                                    : "https://psych.ssbwithisv.in";
-                                                                window.open(`${baseUrl}?token=${token}`, "_blank");
-                                                            }}
-                                                        >
-                                                            🧠 Take Another Test
-                                                        </button>
-                                                    </div>
                                                 </div>
                                             ) : batchesData?.orders?.length > 0 ? (
-                                                <div className={styles.psycheCta}>
-                                                    <p className={styles.psycheCtaLabel}>You have access to the Psyche Test Battery</p>
-                                                    <button
-                                                        className={styles.psycheTestBtn}
-                                                        onClick={() => {
-                                                            const token = localStorage.getItem("authToken");
-                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                            const baseUrl = isLocal
-                                                                ? "http://localhost:5173"
-                                                                : "https://psych.ssbwithisv.in";
-                                                            window.open(`${baseUrl}?token=${token}`, "_blank");
-                                                        }}
-                                                    >
-                                                        🧠 Take Psyche Test
-                                                    </button>
-                                                </div>
+                                                null
                                             ) : (
                                                 <div className={styles.psycheLocked}>
-                                                    <div className={styles.psycheLockedIcon}>🔒</div>
                                                     <h4>Access Locked</h4>
-                                                    <p>Purchase any SSB batch to unlock the Psyche Test Battery</p>
+                                                    <p>Purchase any SSB batch to unlock the Candidate Evaluation</p>
                                                     <button
                                                         className={styles.browseCoursesBtn}
                                                         onClick={() => navigate('/batches')}
@@ -1225,6 +1426,205 @@ const ProfileDashboard = () => {
                                 )}
                             </div>
                         </div>
+
+                        {/* Immersive Qualitative Assessor Feedback Modal */}
+                        {showFeedbackModal && (() => {
+                            const sub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
+                            const psychRemarks = sub?.psychRemarks || sub?.assessorRemarks || '';
+                            const gtoRemarks = sub?.gtoRemarks || '';
+                            const ioRemarks = sub?.ioRemarks || '';
+                            const toRemarks = sub?.toRemarks || '';
+
+                            const hasPsych = profileData?.user?.assignedPsych && psychRemarks;
+                            const hasGto = profileData?.user?.assignedGTO && gtoRemarks;
+                            const hasIo = profileData?.user?.assignedIO && ioRemarks;
+                            const hasTo = profileData?.user?.assignedTO && toRemarks;
+
+                            return (
+                                <div style={{
+                                    position: 'fixed',
+                                    inset: 0,
+                                    background: 'rgba(0, 0, 0, 0.85)',
+                                    backdropFilter: 'blur(15px)',
+                                    zIndex: 99999,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    padding: '20px',
+                                    animation: 'fadeIn 0.3s ease'
+                                }}>
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, #16181b 0%, #0d0f11 100%)',
+                                        border: '1px solid rgba(210, 161, 0, 0.25)',
+                                        borderRadius: '30px',
+                                        maxWidth: '850px',
+                                        width: '100%',
+                                        maxHeight: '85vh',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        overflow: 'hidden',
+                                        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 35px rgba(210, 161, 0, 0.1)',
+                                        animation: 'slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+                                    }}>
+                                        {/* Modal Header */}
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            padding: '25px 35px'
+                                        }}>
+                                            <div>
+                                                <h2 style={{ color: '#fff', fontSize: '1.8rem', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+                                                    Final Assessor Feedback
+                                                </h2>
+                                                <span style={{ color: '#d2a100', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block', marginTop: '4px' }}>
+                                                    SSB Evaluation Portfolio
+                                                </span>
+                                            </div>
+                                            <button
+                                                onClick={() => setShowFeedbackModal(false)}
+                                                style={{
+                                                    background: 'rgba(255, 255, 255, 0.05)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                    borderRadius: '12px',
+                                                    color: '#aaa',
+                                                    width: '40px',
+                                                    height: '40px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                                onMouseOver={(e) => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'; }}
+                                                onMouseOut={(e) => { e.currentTarget.style.color = '#aaa'; e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'; }}
+                                            >
+                                                <BiX style={{ fontSize: '1.5rem' }} />
+                                            </button>
+                                        </div>
+
+                                        {/* Modal Body */}
+                                        <div style={{
+                                            padding: '35px',
+                                            overflowY: 'auto',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '24px'
+                                        }}>
+                                            {/* Security Disclaimer Banner */}
+                                            <div style={{
+                                                background: 'rgba(210, 161, 0, 0.05)',
+                                                border: '1px solid rgba(210, 161, 0, 0.15)',
+                                                borderRadius: '16px',
+                                                padding: '15px 20px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '12px'
+                                            }}>
+                                                <BiBrain style={{ color: '#d2a100', fontSize: '1.4rem', shrink: 0 }} />
+                                                <p style={{ color: '#ccc', fontSize: '0.78rem', margin: 0, fontStyle: 'italic', lineHeight: '1.4' }}>
+                                                    Security mandate: Only qualitative written observations and revision guidelines are released. Numerical marks, score sheets, and trait sliders are kept strictly confidential.
+                                                </p>
+                                            </div>
+
+                                            {/* Remarks stack */}
+                                            {hasPsych && (
+                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                    <h4 style={{ color: '#d2a100', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                        1. Psychologist Observations & Timeline Analysis
+                                                    </h4>
+                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                        "{psychRemarks}"
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {hasGto && (
+                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                    <h4 style={{ color: '#3b82f6', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                        2. GTO Group Dynamic & Outdoor Observations
+                                                    </h4>
+                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                        "{gtoRemarks}"
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {hasIo && (
+                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                    <h4 style={{ color: '#f59e0b', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                        3. Personal Interview (IO) Observations
+                                                    </h4>
+                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                        "{ioRemarks}"
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {hasTo && (
+                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                    <h4 style={{ color: '#10b981', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                        4. Technical Officer Observations
+                                                    </h4>
+                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                        "{toRemarks}"
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {!hasPsych && !hasGto && !hasIo && !hasTo && (
+                                                <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.5 }}>
+                                                    <p style={{ color: '#ccc', fontStyle: 'italic', fontSize: '0.95rem' }}>No qualitative assessment comments have been released yet.</p>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Modal Footer */}
+                                        {sub?.meetingLink && (
+                                            <div style={{
+                                                background: 'rgba(0, 0, 0, 0.25)',
+                                                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                                padding: '25px 35px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                gap: '15px',
+                                                flexWrap: 'wrap'
+                                            }}>
+                                                <div style={{ textAlign: 'left' }}>
+                                                    <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Scheduled feedback slot:</span>
+                                                    <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
+                                                        {sub.meetingDate ? formatDate(sub.meetingDate) + ' at ' + formatTime(sub.meetingDate) : 'Time Pending'}
+                                                    </p>
+                                                </div>
+                                                <a
+                                                    href={sub.meetingLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        background: '#25D366',
+                                                        color: '#fff',
+                                                        textDecoration: 'none',
+                                                        padding: '12px 28px',
+                                                        borderRadius: '12px',
+                                                        fontSize: '0.85rem',
+                                                        fontWeight: 'bold',
+                                                        textTransform: 'uppercase',
+                                                        letterSpacing: '0.1em',
+                                                        boxShadow: '0 6px 15px rgba(37, 211, 102, 0.2)',
+                                                        transition: 'all 0.2s ease',
+                                                        display: 'inline-block'
+                                                    }}
+                                                >
+                                                    Join Meet Session
+                                                </a>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* Image Upload Popup */}
                         {showImagePopup && (
