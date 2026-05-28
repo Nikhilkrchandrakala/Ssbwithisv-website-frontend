@@ -245,8 +245,8 @@ function SignIn() {
                             <h5 style={{ color: "#DAA520", fontWeight: "600", fontSize: "1.1rem", margin: "0 0 6px 0", fontFamily: "'Outfit', sans-serif" }}>
                                 Security Upgrade & Confidentiality Notice
                             </h5>
-                            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "0.88rem", lineHeight: "1.45", margin: "0", fontFamily: "'Inter', sans-serif" }}>
-                                We have successfully upgraded our database security and isolation protocols to guarantee the absolute highest level of candidate confidentiality. As part of this transition, some users may need to reset their credentials. If you are unable to sign in, please click <strong>Forgot Password</strong> below to instantly reset and secure your account.
+                            <p style={{ color: "rgba(255, 255, 255, 0.9)", fontSize: "0.88rem", lineHeight: "1.5", margin: "0", fontFamily: "'Inter', sans-serif" }}>
+                                We are pleased to announce that we have successfully revamped our security protocols as we continuously strive towards the highest level of confidentiality and data integrity for all our candidates. As a positive and necessary step in this upgrade, users will need to reset their passwords. If you are unable to log in, please click <strong>Forgot Password</strong> below to instantly reset your password and secure your account.
                             </p>
                         </div>
                     </div>
