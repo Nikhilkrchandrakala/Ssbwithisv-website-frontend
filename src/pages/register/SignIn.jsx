@@ -210,6 +210,48 @@ function SignIn() {
             <div className="container position-relative">
                 <h1 className="thm-big-title">Sign In</h1>
 
+                {/* 🛡️ Premium Security & Confidentiality Banner */}
+                <div 
+                    className="mx-auto col-xl-7 col-lg-9 mb-4 p-4 position-relative"
+                    style={{
+                        background: "rgba(218, 165, 32, 0.05)",
+                        border: "1px solid rgba(218, 165, 32, 0.2)",
+                        borderRadius: "12px",
+                        backdropFilter: "blur(10px)",
+                        boxShadow: "0 8px 32px 0 rgba(0, 0, 0, 0.3)",
+                        transition: "all 0.3s ease",
+                        zIndex: "55556",
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.border = "1px solid rgba(218, 165, 32, 0.4)";
+                        e.currentTarget.style.background = "rgba(218, 165, 32, 0.08)";
+                        e.currentTarget.style.transform = "translateY(-2px)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.border = "1px solid rgba(218, 165, 32, 0.2)";
+                        e.currentTarget.style.background = "rgba(218, 165, 32, 0.05)";
+                        e.currentTarget.style.transform = "translateY(0)";
+                    }}
+                >
+                    <div className="d-flex align-items-center gap-3">
+                        <div style={{ flexShrink: 0 }}>
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DAA520" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M12 8v4"/>
+                                <path d="M12 16h.01"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h5 style={{ color: "#DAA520", fontWeight: "600", fontSize: "1.1rem", margin: "0 0 6px 0", fontFamily: "'Outfit', sans-serif" }}>
+                                Security Upgrade & Confidentiality Notice
+                            </h5>
+                            <p style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "0.88rem", lineHeight: "1.45", margin: "0", fontFamily: "'Inter', sans-serif" }}>
+                                We have successfully upgraded our database security and isolation protocols to guarantee the absolute highest level of candidate confidentiality. As part of this transition, some users may need to reset their credentials. If you are unable to sign in, please click <strong>Forgot Password</strong> below to instantly reset and secure your account.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Display error message */}
                 <div className="position-relative" style={{ zIndex: '55555' }}>
 
