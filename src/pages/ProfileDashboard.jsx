@@ -1452,127 +1452,25 @@ const ProfileDashboard = () => {
                                                                 </span>
                                                             </div>
                                                             
-                                                            {((!sub.uploadedFiles || sub.uploadedFiles.length === 0) || (!sub.piqFiles || sub.piqFiles.length === 0)) && (
-                                                                <div style={{
-                                                                    background: 'rgba(210, 161, 0, 0.05)',
-                                                                    border: '1px solid #d2a100',
-                                                                    borderRadius: '8px',
-                                                                    padding: '15px',
-                                                                    marginBottom: '20px',
-                                                                    color: '#fff',
-                                                                    fontSize: '0.95rem'
-                                                                }}>
-                                                                    <h6 style={{ color: '#d2a100', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 8px 0' }}>
-                                                                        ACTION REQUIRED: Upload Scanned Answers and PIQ Form
-                                                                    </h6>
-                                                                    <p style={{ margin: 0, fontSize: '0.88rem', opacity: 0.9 }}>
-                                                                        To begin the assessor review, please upload both your handwritten test answers and your completed PIQ Form.
-                                                                    </p>
-                                                                </div>
-                                                            )}
+                                                            <div style={{ marginTop: '15px' }}>
+                                                                {/* Render specialized meeting links */}
+                                                                {(() => {
+                                                                    const meetings = [];
+                                                                    if (sub.psychMeetingLink && sub.psychMeetingDate) meetings.push({ role: 'Psychologist', date: sub.psychMeetingDate, link: sub.psychMeetingLink });
+                                                                    if (sub.ioMeetingLink && sub.ioMeetingDate) meetings.push({ role: 'Interviewing Officer', date: sub.ioMeetingDate, link: sub.ioMeetingLink });
+                                                                    if (sub.toMeetingLink && sub.toMeetingDate) meetings.push({ role: 'Technical Officer', date: sub.toMeetingDate, link: sub.toMeetingLink });
+                                                                    if (meetings.length === 0 && sub.meetingLink && sub.meetingDate) meetings.push({ role: 'Assessor', date: sub.meetingDate, link: sub.meetingLink });
 
-                                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '20px', marginTop: '15px', marginBottom: '15px' }}>
-                                                                <div style={{ 
-                                                                    background: 'rgba(0,0,0,0.2)', 
-                                                                    padding: '20px', 
-                                                                    borderRadius: '8px', 
-                                                                    border: sub.uploadedFiles && sub.uploadedFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
-                                                                }}>
-                                                                    <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                        1. Handwritten Test Answers
-                                                                    </h6>
-                                                                    <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
-                                                                        Upload scanned answers of your TAT/WAT/SRT sheets (accepts images or PDF).
-                                                                    </p>
-                                                                    {sub.uploadedFiles && sub.uploadedFiles.length > 0 ? (
-                                                                        <div style={{ color: '#28a745', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                            <FaCheckCircle /> {sub.uploadedFiles.length} pages uploaded successfully.
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div>
-                                                                            <input 
-                                                                                type="file" 
-                                                                                multiple 
-                                                                                accept="image/*,application/pdf" 
-                                                                                onChange={handlePsychFileChange}
-                                                                                style={{ color: '#fff', marginBottom: '12px', fontSize: '0.8rem', width: '100%' }}
-                                                                            />
-                                                                            <button 
-                                                                                onClick={() => handlePsychFileUpload(sub._id)}
-                                                                                disabled={isPsychUploading || psychUploadFiles.length === 0}
-                                                                                style={{
-                                                                                    width: '100%',
-                                                                                    background: '#d2a100', color: '#000', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem',
-                                                                                    opacity: (isPsychUploading || psychUploadFiles.length === 0) ? 0.6 : 1,
-                                                                                    cursor: (isPsychUploading || psychUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
-                                                                                }}
-                                                                            >
-                                                                                {isPsychUploading ? 'Uploading...' : 'Upload Answers & Transcribe'}
-                                                                            </button>
-                                                                        </div>
-                                                                    )}
+                                                                        return meetings.map((m, idx) => (
+                                                                            <div key={idx} style={{ marginTop: '15px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                                                                <a href={m.link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#15803D', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
+                                                                                    Join {m.role} Meeting
+                                                                                </a>
+                                                                                {m.date && <span style={{ color: '#aaa', fontSize: '0.9rem' }}>Scheduled: {formatDate(m.date)}</span>}
+                                                                            </div>
+                                                                        ));
+                                                                    })()}
                                                                 </div>
-
-                                                                <div style={{ 
-                                                                    background: 'rgba(0,0,0,0.2)', 
-                                                                    padding: '20px', 
-                                                                    borderRadius: '8px', 
-                                                                    border: sub.piqFiles && sub.piqFiles.length > 0 ? '1px solid rgba(40, 167, 69, 0.3)' : '1px dashed rgba(255,255,255,0.2)',
-                                                                }}>
-                                                                    <h6 style={{ color: '#fff', marginBottom: '8px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                        2. PIQ (Personal Information Questionnaire) Form
-                                                                    </h6>
-                                                                    <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '12px' }}>
-                                                                        Upload your scanned PIQ Form (accepts images or PDF).
-                                                                    </p>
-                                                                    {sub.piqFiles && sub.piqFiles.length > 0 ? (
-                                                                        <div style={{ color: '#28a745', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                                            <FaCheckCircle /> PIQ Form uploaded ({sub.piqStatus}).
-                                                                        </div>
-                                                                    ) : (
-                                                                        <div>
-                                                                            <input 
-                                                                                type="file" 
-                                                                                multiple 
-                                                                                accept="image/*,application/pdf" 
-                                                                                onChange={handlePiqFileChange}
-                                                                                style={{ color: '#fff', marginBottom: '12px', fontSize: '0.8rem', width: '100%' }}
-                                                                            />
-                                                                            <button 
-                                                                                onClick={() => handlePiqFileUpload(sub._id)}
-                                                                                disabled={isPiqUploading || piqUploadFiles.length === 0}
-                                                                                style={{
-                                                                                    width: '100%',
-                                                                                    background: '#d2a100', color: '#000', border: 'none', padding: '8px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '0.85rem',
-                                                                                    opacity: (isPiqUploading || piqUploadFiles.length === 0) ? 0.6 : 1,
-                                                                                    cursor: (isPiqUploading || piqUploadFiles.length === 0) ? 'not-allowed' : 'pointer'
-                                                                                }}
-                                                                            >
-                                                                                {isPiqUploading ? 'Uploading...' : 'Upload & Parse PIQ'}
-                                                                            </button>
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-
-                                                            {(sub.uploadedFiles?.length > 0 || sub.piqFiles?.length > 0) && (
-                                                                <div style={{ marginTop: '15px' }}>
-                                                                    {sub.assessorRemarks && (
-                                                                        <div style={{ background: 'rgba(210, 161, 0, 0.1)', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #d2a100', marginBottom: '10px' }}>
-                                                                            <h6 style={{ color: '#d2a100', marginBottom: '5px' }}>Assessor Feedback:</h6>
-                                                                            <p style={{ color: '#eee', margin: 0, fontSize: '0.9rem' }}>{sub.assessorRemarks}</p>
-                                                                        </div>
-                                                                    )}
-                                                                    {sub.meetingLink && (
-                                                                        <div style={{ marginTop: '15px' }}>
-                                                                            <a href={sub.meetingLink} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#25D366', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
-                                                                                Join Feedback Meeting
-                                                                            </a>
-                                                                            {sub.meetingDate && <span style={{ color: '#aaa', marginLeft: '10px', fontSize: '0.9rem' }}>Scheduled: {formatDate(sub.meetingDate)}</span>}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     ))}
                                                 </div>
