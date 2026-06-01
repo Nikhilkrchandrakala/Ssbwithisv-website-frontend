@@ -1648,46 +1648,53 @@ const ProfileDashboard = () => {
                                         </div>
 
                                         {/* Modal Footer */}
-                                        {sub?.meetingLink && (
-                                            <div style={{
-                                                background: 'rgba(0, 0, 0, 0.25)',
-                                                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                                                padding: '25px 35px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                gap: '15px',
-                                                flexWrap: 'wrap'
-                                            }}>
-                                                <div style={{ textAlign: 'left' }}>
-                                                    <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Scheduled feedback slot:</span>
-                                                    <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
-                                                        {sub.meetingDate ? formatDate(sub.meetingDate) + ' at ' + formatTime(sub.meetingDate) : 'Time Pending'}
-                                                    </p>
+                                        <div style={{
+                                            background: 'rgba(0, 0, 0, 0.25)',
+                                            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                            padding: '25px 35px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '20px'
+                                        }}>
+                                            {sub?.psychMeetingLink && (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
+                                                    <div style={{ textAlign: 'left' }}>
+                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Psychologist Feedback Slot:</span>
+                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
+                                                            {sub.psychMeetingDate ? formatDate(sub.psychMeetingDate) + ' at ' + formatTime(sub.psychMeetingDate) : 'Time Pending'}
+                                                        </p>
+                                                    </div>
+                                                    <a href={sub.psychMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
                                                 </div>
-                                                <a
-                                                    href={sub.meetingLink}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    style={{
-                                                        background: '#25D366',
-                                                        color: '#fff',
-                                                        textDecoration: 'none',
-                                                        padding: '12px 28px',
-                                                        borderRadius: '12px',
-                                                        fontSize: '0.85rem',
-                                                        fontWeight: 'bold',
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.1em',
-                                                        boxShadow: '0 6px 15px rgba(37, 211, 102, 0.2)',
-                                                        transition: 'all 0.2s ease',
-                                                        display: 'inline-block'
-                                                    }}
-                                                >
-                                                    Join Meet Session
-                                                </a>
-                                            </div>
-                                        )}
+                                            )}
+                                            {sub?.toMeetingLink && (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
+                                                    <div style={{ textAlign: 'left' }}>
+                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TO Feedback Slot:</span>
+                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
+                                                            {sub.toMeetingDate ? formatDate(sub.toMeetingDate) + ' at ' + formatTime(sub.toMeetingDate) : 'Time Pending'}
+                                                        </p>
+                                                    </div>
+                                                    <a href={sub.toMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
+                                                </div>
+                                            )}
+                                            {sub?.ioMeetingLink && (
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
+                                                    <div style={{ textAlign: 'left' }}>
+                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>IO Feedback Slot:</span>
+                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
+                                                            {sub.ioMeetingDate ? formatDate(sub.ioMeetingDate) + ' at ' + formatTime(sub.ioMeetingDate) : 'Time Pending'}
+                                                        </p>
+                                                    </div>
+                                                    <a href={sub.ioMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
+                                                </div>
+                                            )}
+                                            {!sub?.psychMeetingLink && !sub?.toMeetingLink && !sub?.ioMeetingLink && (
+                                                <div style={{ textAlign: 'center', opacity: 0.5, padding: '10px 0' }}>
+                                                    <span style={{ color: '#aaa', fontSize: '0.85rem', fontStyle: 'italic' }}>No meeting slots scheduled yet.</span>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             );
