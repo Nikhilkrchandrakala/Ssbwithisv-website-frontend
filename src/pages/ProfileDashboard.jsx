@@ -148,7 +148,15 @@ const ProfileDashboard = () => {
             const res = await axios.get(`${baseUrl}/api/submissions`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            setPsychSubmissions(res.data);
+            let subs = res.data;
+            if (profileData && profileData.user) {
+                const myId = profileData.user.id || profileData.user._id;
+                subs = subs.filter(s => {
+                    const sUserId = s.userId?._id || s.userId?.id || s.userId;
+                    return sUserId === myId;
+                });
+            }
+            setPsychSubmissions(subs);
         } catch (e) {
             console.error("Failed to fetch psych submissions", e);
         } finally {
@@ -249,6 +257,10 @@ const ProfileDashboard = () => {
             const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
             let submissionId = activeSub?.id || activeSub?._id;
             
+            if (submissionId === 'undefined' || (typeof submissionId === 'string' && submissionId.startsWith('pending-'))) {
+                submissionId = null;
+            }
+            
             // 1. If no active submission, create a new one first
             if (!submissionId) {
                 // Fetch active assessments to get the first one
@@ -299,7 +311,9 @@ const ProfileDashboard = () => {
 
     const handleTimelineDossierUpload = async (files) => {
         const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
-        if (!activeSub?.id && !activeSub?._id) {
+        let submissionId = activeSub?.id || activeSub?._id;
+        
+        if (!submissionId || submissionId === 'undefined' || submissionId.startsWith('pending-')) {
             toast.error("No active session found to upload dossier.");
             return;
         }
@@ -315,7 +329,7 @@ const ProfileDashboard = () => {
                 ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
                 
-            await axios.post(`${baseUrl}/api/submissions/${activeSub.id || activeSub._id}/upload`, formData, {
+            await axios.post(`${baseUrl}/api/submissions/${submissionId}/upload`, formData, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
