@@ -1101,32 +1101,23 @@ const ProfileDashboard = () => {
                                                     const stepCompleted = {
                                                         1: piqDownloaded,
                                                         2: hasPiq,
-                                                        3: hasPiq && (piqApproved || piqReturned),
-                                                        4: hasPiq && (piqApproved || (piqReturned && hasPiq)),
-                                                        5: dossierDownloaded,
-                                                        6: isTestCompleted && hasDossier,
-                                                        7: hasDossier && (activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'UNDER_REVIEW' || activeSub?.status === 'REPORT_RELEASED')
+                                                        3: dossierDownloaded,
+                                                        4: isTestCompleted && hasDossier
                                                     };
 
-                                                    // Step is accessible if previous step is completed (or it's step 1)
+                                                    // All steps are accessible at any time
                                                     const stepAccessible = {
                                                         1: true,
-                                                        2: stepCompleted[1],
-                                                        3: stepCompleted[2],
-                                                        4: stepCompleted[3] && piqReturned,
-                                                        5: stepCompleted[3] || stepCompleted[4],
-                                                        6: stepCompleted[5],
-                                                        7: stepCompleted[6]
+                                                        2: true,
+                                                        3: true,
+                                                        4: true
                                                     };
 
                                                     const evalSteps = [
                                                         { num: 1, label: 'PIQ Form' },
-                                                        { num: 2, label: 'Preliminary Upload' },
-                                                        { num: 3, label: 'IO Review' },
-                                                        { num: 4, label: 'Final PIQ' },
-                                                        { num: 5, label: 'Dossier' },
-                                                        { num: 6, label: 'Evaluation' },
-                                                        { num: 7, label: 'Review Queue' }
+                                                        { num: 2, label: 'PIQ Upload' },
+                                                        { num: 3, label: 'Dossier' },
+                                                        { num: 4, label: 'Evaluation' }
                                                     ];
 
                                                     const piqDoc = magazines?.find(m =>
@@ -1172,7 +1163,7 @@ const ProfileDashboard = () => {
 
                                                                 {/* Step 1: Download PIQ Form */}
                                                                 {evalActiveStep === 1 && (
-                                                                    <div className={`${styles.evalStepCard} ${stepCompleted[1] ? styles.evalStepDisabledOverlay : ''}`}>
+                                                                    <div className={styles.evalStepCard}>
                                                                         <h5>Download PIQ Form</h5>
                                                                         <p>Download and print your empty Personal Information Questionnaire. Fill it out by hand and keep it ready for the next step.</p>
                                                                         <div className={styles.evalStepActions}>
@@ -1193,11 +1184,11 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                 )}
 
-                                                                {/* Step 2: Preliminary PIQ Upload */}
+                                                                {/* Step 2: PIQ Upload */}
                                                                 {evalActiveStep === 2 && (
-                                                                    <div className={`${styles.evalStepCard} ${stepCompleted[2] ? styles.evalStepDisabledOverlay : ''}`}>
-                                                                        <h5>Upload Preliminary PIQ</h5>
-                                                                        <p>Scan and upload your filled PIQ Form. The Interviewing Officer will review it and may advise corrections if needed.</p>
+                                                                    <div className={styles.evalStepCard}>
+                                                                        <h5>PIQ Upload</h5>
+                                                                        <p>The IO will peruse the PIQ and if required the PIQ might need to be reuploaded. At which time it will replace your original PIQ Upload.</p>
                                                                         <div className={styles.evalStepActions}>
                                                                             <input
                                                                                 type="file"
@@ -1217,86 +1208,20 @@ const ProfileDashboard = () => {
                                                                                 onClick={() => timelinePiqInputRef.current?.click()}
                                                                                 disabled={isPiqUploading}
                                                                             >
-                                                                                {isPiqUploading ? "Uploading..." : "Upload PIQ Form"}
+                                                                                {isPiqUploading ? "Uploading..." : (hasPiq ? "REUPLOAD PIQ" : "Upload PIQ Form")}
                                                                             </button>
                                                                         </div>
                                                                         {hasPiq && (
-                                                                            <div className={styles.evalStepCompleted}>
+                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
                                                                                 <FaCheckCircle /> PIQ uploaded successfully
                                                                             </div>
                                                                         )}
                                                                     </div>
                                                                 )}
 
-                                                                {/* Step 3: IO Review & PIQ Corrections */}
+                                                                {/* Step 3: Download Dossier */}
                                                                 {evalActiveStep === 3 && (
                                                                     <div className={styles.evalStepCard}>
-                                                                        <h5>IO Review & PIQ Corrections</h5>
-                                                                        <p>Your Interviewing Officer will review the PIQ Form. If corrections are needed, they will advise you on how to properly fill the form. You will then re-upload the corrected PIQ in the next step.</p>
-                                                                        <div className={styles.evalStepActions}>
-                                                                            {piqApproved && (
-                                                                                <div className={styles.evalStepCompleted}>
-                                                                                    <FaCheckCircle /> PIQ has been reviewed and approved
-                                                                                </div>
-                                                                            )}
-                                                                            {piqReturned && (
-                                                                                <div className={styles.evalStepPending}>
-                                                                                    ⚠️ PIQ returned for corrections — please proceed to the next step
-                                                                                </div>
-                                                                            )}
-                                                                            {!piqApproved && !piqReturned && hasPiq && (
-                                                                                <div className={styles.evalStepPending}>
-                                                                                    ⏳ PIQ is under review by the Interviewing Officer (Status: {piqStatus})
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                {/* Step 4: Final PIQ Upload */}
-                                                                {evalActiveStep === 4 && (
-                                                                    <div className={styles.evalStepCard}>
-                                                                        <h5>Upload Final PIQ Form</h5>
-                                                                        {piqReturned ? (
-                                                                            <>
-                                                                                <p>Your PIQ was returned for corrections. Make the required changes and upload the corrected PIQ Form below.</p>
-                                                                                <div className={styles.evalStepActions}>
-                                                                                    <input
-                                                                                        type="file"
-                                                                                        ref={timelinePiqInputRef}
-                                                                                        style={{ display: 'none' }}
-                                                                                        accept="image/*,application/pdf"
-                                                                                        multiple
-                                                                                        onChange={async (e) => {
-                                                                                            if (e.target.files && e.target.files.length > 0) {
-                                                                                                const files = Array.from(e.target.files);
-                                                                                                await handleTimelinePiqUpload(files);
-                                                                                            }
-                                                                                        }}
-                                                                                    />
-                                                                                    <button
-                                                                                        className={styles.stepActionButton}
-                                                                                        onClick={() => timelinePiqInputRef.current?.click()}
-                                                                                        disabled={isPiqUploading}
-                                                                                    >
-                                                                                        {isPiqUploading ? "Uploading..." : "Upload Corrected PIQ"}
-                                                                                    </button>
-                                                                                </div>
-                                                                            </>
-                                                                        ) : (
-                                                                            <>
-                                                                                <p>Your PIQ has been approved. No corrections needed — you can proceed to the next step.</p>
-                                                                                <div className={styles.evalStepCompleted}>
-                                                                                    <FaCheckCircle /> Not required — PIQ approved
-                                                                                </div>
-                                                                            </>
-                                                                        )}
-                                                                    </div>
-                                                                )}
-
-                                                                {/* Step 5: Download Dossier */}
-                                                                {evalActiveStep === 5 && (
-                                                                    <div className={`${styles.evalStepCard} ${stepCompleted[5] ? styles.evalStepDisabledOverlay : ''}`}>
                                                                         <h5>Download Dossier</h5>
                                                                         <p>Download the blank Psychology Dossier sheet. You will write your TAT, WAT, SRT answers on this sheet during the evaluation and upload it afterwards.</p>
                                                                         <div className={styles.evalStepActions}>
@@ -1317,9 +1242,9 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                 )}
 
-                                                                {/* Step 6: Candidate Evaluation + Dossier Upload */}
-                                                                {evalActiveStep === 6 && (
-                                                                    <div className={`${styles.evalStepCard} ${stepCompleted[6] ? styles.evalStepDisabledOverlay : ''}`}>
+                                                                {/* Step 4: Candidate Evaluation + Dossier Upload */}
+                                                                {evalActiveStep === 4 && (
+                                                                    <div className={styles.evalStepCard}>
                                                                         <h5>Candidate Evaluation</h5>
                                                                         <p>Start and complete your timed online psychological test. Once the evaluation is completed, upload your handwritten dossier sheets below.</p>
                                                                         <div className={styles.evalStepActions}>
@@ -1371,29 +1296,28 @@ const ProfileDashboard = () => {
                                                                                 </div>
                                                                             )}
                                                                         </div>
-                                                                    </div>
-                                                                )}
 
-                                                                {/* Step 7: Assessor Review Queue */}
-                                                                {evalActiveStep === 7 && (
-                                                                    <div className={styles.evalStepCard}>
-                                                                        <h5>Assessor Review Queue</h5>
-                                                                        <p>Your answers have been transcribed via OCR and are queued for assessor evaluation. You will be notified once your evaluation report is ready.</p>
-                                                                        <div className={styles.evalStepActions}>
-                                                                            {(activeSub?.status === 'REPORT_RELEASED') ? (
-                                                                                <div className={styles.evalStepCompleted}>
-                                                                                    <FaCheckCircle /> Your evaluation report has been released
+                                                                        {isTestCompleted && hasDossier && (
+                                                                            <div style={{ marginTop: '25px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                                                                <h6 style={{ color: '#d2a100', marginBottom: '8px', fontSize: '1.1rem' }}>Assessor Review Status</h6>
+                                                                                <p style={{ fontSize: '0.9rem', color: '#ccc', marginBottom: '15px' }}>Your answers are queued for assessor evaluation. You will be notified once your evaluation report is ready.</p>
+                                                                                <div className={styles.evalStepActions}>
+                                                                                    {(activeSub?.status === 'REPORT_RELEASED') ? (
+                                                                                        <div className={styles.evalStepCompleted}>
+                                                                                            <FaCheckCircle /> Your evaluation report has been released
+                                                                                        </div>
+                                                                                    ) : (activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'UNDER_REVIEW') ? (
+                                                                                        <div className={styles.evalStepPending}>
+                                                                                            ⏳ Your submission is being reviewed by the assessor team
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className={styles.evalStepPending}>
+                                                                                            ⏳ Waiting for evaluation to complete
+                                                                                        </div>
+                                                                                    )}
                                                                                 </div>
-                                                                            ) : (activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'UNDER_REVIEW') ? (
-                                                                                <div className={styles.evalStepPending}>
-                                                                                    ⏳ Your submission is being reviewed by the assessor team
-                                                                                </div>
-                                                                            ) : (
-                                                                                <div className={styles.evalStepPending}>
-                                                                                    ⏳ Waiting for evaluation to complete
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 )}
                                                             </div>
