@@ -1092,7 +1092,7 @@ const ProfileDashboard = () => {
                                                     const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
                                                     const hasPiq = activeSub?.piqFiles && activeSub.piqFiles.length > 0;
                                                     const piqStatus = activeSub?.piqStatus || 'PENDING';
-                                                    const isTestCompleted = activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'TEST_COMPLETED';
+                                                    const isTestCompleted = activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'TEST_COMPLETED' || activeSub?.status === 'PENDING_UPLOAD';
                                                     const hasDossier = activeSub?.uploadedFiles && activeSub.uploadedFiles.length > 0;
                                                     const piqReturned = piqStatus === 'RETURNED';
                                                     const piqApproved = piqStatus === 'APPROVED' || piqStatus === 'PARSED';
