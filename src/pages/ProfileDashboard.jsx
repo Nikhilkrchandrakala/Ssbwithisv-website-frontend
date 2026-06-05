@@ -1121,12 +1121,21 @@ const ProfileDashboard = () => {
                                                     ];
 
                                                     const piqDoc = magazines?.find(m =>
-                                                        m?.pdfTitle?.toLowerCase().includes("personal information questionnaire") ||
+                                                        m?.pdfTitle?.toLowerCase().includes("personal information")
+                                                    ) || magazines?.find(m =>
                                                         m?.pdfTitle?.toLowerCase().includes("piq")
                                                     );
                                                     const piqDownloadUrl = piqDoc
                                                         ? `https://api.ssbwithisv.in/${piqDoc.pdfFilePath}`
-                                                        : "/assets/Blank_PIQ_Form.pdf";
+                                                        : "#";
+
+                                                    const dossierDoc = magazines?.find(m =>
+                                                        m?.pdfTitle?.toLowerCase().includes("psychology dossier") ||
+                                                        m?.pdfTitle?.toLowerCase().includes("dossier")
+                                                    );
+                                                    const dossierDownloadUrl = dossierDoc
+                                                        ? `https://api.ssbwithisv.in/${dossierDoc.pdfFilePath}`
+                                                        : "#";
 
                                                     return (
                                                         <>
@@ -1226,7 +1235,7 @@ const ProfileDashboard = () => {
                                                                         <p>Download the blank Psychology Dossier sheet. You will write your TAT, WAT, SRT answers on this sheet during the evaluation and upload it afterwards.</p>
                                                                         <div className={styles.evalStepActions}>
                                                                             <a
-                                                                                href="/assets/Blank Sheet  Psychology.pdf"
+                                                                                href={dossierDownloadUrl}
                                                                                 target="_blank"
                                                                                 rel="noopener noreferrer"
                                                                                 className={styles.stepDownloadLink}
