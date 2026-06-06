@@ -1101,8 +1101,8 @@ const ProfileDashboard = () => {
                                                     const stepCompleted = {
                                                         1: piqDownloaded,
                                                         2: hasPiq,
-                                                        3: dossierDownloaded,
-                                                        4: isTestCompleted && hasDossier
+                                                        3: isTestCompleted,
+                                                        4: dossierDownloaded && hasDossier
                                                     };
 
                                                     // All steps are accessible at any time
@@ -1116,8 +1116,8 @@ const ProfileDashboard = () => {
                                                     const evalSteps = [
                                                         { num: 1, label: 'PIQ Form' },
                                                         { num: 2, label: 'PIQ Upload' },
-                                                        { num: 3, label: 'Dossier' },
-                                                        { num: 4, label: 'Evaluation' }
+                                                        { num: 3, label: 'Evaluation' },
+                                                        { num: 4, label: 'Dossier' }
                                                     ];
 
                                                     const piqDoc = magazines?.find(m =>
@@ -1228,11 +1228,42 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                 )}
 
-                                                                {/* Step 3: Download Dossier */}
+                                                                {/* Step 3: Candidate Evaluation */}
                                                                 {evalActiveStep === 3 && (
                                                                     <div className={styles.evalStepCard}>
-                                                                        <h5>Download Dossier</h5>
-                                                                        <p>Download the blank Psychology Dossier sheet. You will write your TAT, WAT, SRT answers on this sheet during the evaluation and upload it afterwards.</p>
+                                                                        <h5>Candidate Evaluation</h5>
+                                                                        <p>Start and complete your timed online psychological test.</p>
+                                                                        <div className={styles.evalStepActions}>
+                                                                            {isTestCompleted ? (
+                                                                                <button
+                                                                                    className={styles.stepActionButton}
+                                                                                    style={{ backgroundColor: 'green', cursor: 'not-allowed', opacity: 0.8 }}
+                                                                                    disabled
+                                                                                >
+                                                                                    Evaluation Completed
+                                                                                </button>
+                                                                            ) : (
+                                                                                <button
+                                                                                    className={styles.stepActionButton}
+                                                                                    onClick={() => {
+                                                                                        const token = localStorage.getItem("authToken");
+                                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                                        const base = isLocal ? "http://localhost:5173" : "https://psychbattery.ssbwithisv.in";
+                                                                                        window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
+                                                                                    }}
+                                                                                >
+                                                                                    Start Candidate Evaluation
+                                                                                </button>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Step 4: Dossier (Download + Upload) */}
+                                                                {evalActiveStep === 4 && (
+                                                                    <div className={styles.evalStepCard}>
+                                                                        <h5>Dossier Management</h5>
+                                                                        <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Once the evaluation is completed, upload your handwritten dossier sheets here.</p>
                                                                         <div className={styles.evalStepActions}>
                                                                             <a
                                                                                 href={dossierDownloadUrl}
@@ -1248,63 +1279,40 @@ const ProfileDashboard = () => {
                                                                                 <BiDownload /> Download Psychology Dossier
                                                                             </a>
                                                                         </div>
-                                                                    </div>
-                                                                )}
 
-                                                                {/* Step 4: Candidate Evaluation + Dossier Upload */}
-                                                                {evalActiveStep === 4 && (
-                                                                    <div className={styles.evalStepCard}>
-                                                                        <h5>Candidate Evaluation</h5>
-                                                                        <p>Start and complete your timed online psychological test. Once the evaluation is completed, upload your handwritten dossier sheets below.</p>
-                                                                        <div className={styles.evalStepActions}>
-                                                                            {!isTestCompleted && (
-                                                                                <button
-                                                                                    className={styles.stepActionButton}
-                                                                                    onClick={() => {
-                                                                                        const token = localStorage.getItem("authToken");
-                                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                                        const baseUrl = isLocal
-                                                                                            ? "http://localhost:5173"
-                                                                                            : "https://psych.ssbwithisv.in";
-                                                                                        window.location.href = `${baseUrl}?token=${token}`;
-                                                                                    }}
-                                                                                >
-                                                                                    Start Candidate Evaluation
-                                                                                </button>
-                                                                            )}
-                                                                            {isTestCompleted && !hasDossier && (
-                                                                                <>
-                                                                                    <div className={styles.evalStepCompleted} style={{ marginBottom: '8px' }}>
-                                                                                        <FaCheckCircle /> Evaluation completed
+                                                                        {isTestCompleted && (
+                                                                            <div className={styles.evalStepActions} style={{ marginTop: '20px' }}>
+                                                                                {!hasDossier && (
+                                                                                    <>
+                                                                                        <input
+                                                                                            type="file"
+                                                                                            ref={timelineDossierInputRef}
+                                                                                            style={{ display: 'none' }}
+                                                                                            accept="image/*,application/pdf"
+                                                                                            multiple
+                                                                                            onChange={async (e) => {
+                                                                                                if (e.target.files && e.target.files.length > 0) {
+                                                                                                    const files = Array.from(e.target.files);
+                                                                                                    await handleTimelineDossierUpload(files);
+                                                                                                }
+                                                                                            }}
+                                                                                        />
+                                                                                        <button
+                                                                                            className={styles.stepActionButton}
+                                                                                            onClick={() => timelineDossierInputRef.current?.click()}
+                                                                                            disabled={isPsychUploading}
+                                                                                        >
+                                                                                            {isPsychUploading ? "Uploading..." : "Upload Completed Dossier"}
+                                                                                        </button>
+                                                                                    </>
+                                                                                )}
+                                                                                {hasDossier && (
+                                                                                    <div className={styles.evalStepCompleted}>
+                                                                                        <FaCheckCircle /> Dossier uploaded successfully
                                                                                     </div>
-                                                                                    <input
-                                                                                        type="file"
-                                                                                        ref={timelineDossierInputRef}
-                                                                                        style={{ display: 'none' }}
-                                                                                        accept="image/*,application/pdf"
-                                                                                        multiple
-                                                                                        onChange={async (e) => {
-                                                                                            if (e.target.files && e.target.files.length > 0) {
-                                                                                                const files = Array.from(e.target.files);
-                                                                                                await handleTimelineDossierUpload(files);
-                                                                                            }
-                                                                                        }}
-                                                                                    />
-                                                                                    <button
-                                                                                        className={styles.stepActionButton}
-                                                                                        onClick={() => timelineDossierInputRef.current?.click()}
-                                                                                        disabled={isPsychUploading}
-                                                                                    >
-                                                                                        {isPsychUploading ? "Uploading..." : "Upload Completed Dossier"}
-                                                                                    </button>
-                                                                                </>
-                                                                            )}
-                                                                            {isTestCompleted && hasDossier && (
-                                                                                <div className={styles.evalStepCompleted}>
-                                                                                    <FaCheckCircle /> Evaluation completed & dossier uploaded
-                                                                                </div>
-                                                                            )}
-                                                                        </div>
+                                                                                )}
+                                                                            </div>
+                                                                        )}
 
                                                                         {isTestCompleted && hasDossier && (
                                                                             <div style={{ marginTop: '25px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
