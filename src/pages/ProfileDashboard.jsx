@@ -83,6 +83,7 @@ const ProfileDashboard = () => {
     const [evalActiveStep, setEvalActiveStep] = useState(1);
     const [piqDownloaded, setPiqDownloaded] = useState(() => localStorage.getItem('evalPiqDownloaded') === 'true');
     const [dossierDownloaded, setDossierDownloaded] = useState(() => localStorage.getItem('evalDossierDownloaded') === 'true');
+    const [uploadPiqType, setUploadPiqType] = useState('piq1');
 
     const { data: profileData } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
@@ -131,6 +132,15 @@ const ProfileDashboard = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // Set active tab based on URL query parameter on mount
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get('tab');
+        if (tabParam) {
+            setActiveTab(tabParam);
+        }
+    }, []);
+
     // Fetch Psych Submissions
     useEffect(() => {
         if (activeTab === 'psycheTest') {
@@ -157,6 +167,22 @@ const ProfileDashboard = () => {
                 });
             }
             setPsychSubmissions(subs);
+            if (subs && subs.length > 0) {
+                const latestSub = subs[0];
+                const isCompleted = latestSub.status === 'COMPLETED' || latestSub.status === 'REVIEW_PENDING' || latestSub.status === 'TEST_COMPLETED' || latestSub.status === 'PENDING_UPLOAD' || latestSub.workflowStage === 'EVALUATION_COMPLETED';
+                const hasDossier = latestSub.uploadedFiles && latestSub.uploadedFiles.length > 0;
+                if (isCompleted) {
+                    setEvalActiveStep(4);
+                } else {
+                    const hasPiq1 = latestSub.piq1Status === 'VERIFIED' || latestSub.piq1Status === 'PROCESSING' || (latestSub.piqFiles && latestSub.piqFiles.some(f => f.includes('piq1')));
+                    const hasPiq2 = latestSub.piq2Status === 'VERIFIED' || latestSub.piq2Status === 'PROCESSING' || (latestSub.piqFiles && latestSub.piqFiles.some(f => f.includes('piq2')));
+                    if (hasPiq1 && hasPiq2) {
+                        setEvalActiveStep(3);
+                    } else {
+                        setEvalActiveStep(2);
+                    }
+                }
+            }
         } catch (e) {
             console.error("Failed to fetch psych submissions", e);
         } finally {
@@ -246,7 +272,7 @@ const ProfileDashboard = () => {
         }
     };
 
-    const handleTimelinePiqUpload = async (files) => {
+    const handleTimelinePiqUpload = async (files, piqType = 'piq1') => {
         setIsPiqUploading(true);
         try {
             const token = localStorage.getItem("authToken");
@@ -291,19 +317,20 @@ const ProfileDashboard = () => {
             files.forEach(file => {
                 formData.append('files', file);
             });
+            formData.append('piqType', piqType);
             
-            await axios.post(`${baseUrl}/api/submissions/${submissionId}/piq`, formData, {
+            await axios.post(`${baseUrl}/api/submissions/${submissionId}/piq?piqType=${piqType}`, formData, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
             
-            toast.success("PIQ Form uploaded successfully! Processing with Gemini OCR...");
+            toast.success(`${piqType === 'piq2' ? 'PIQ 2 (Final)' : 'PIQ 1 (Initial)'} Form uploaded successfully!`);
             fetchPsychSubmissions();
         } catch (e) {
             console.error("PIQ Upload failed", e);
-            toast.error("Failed to upload PIQ Form.");
+            toast.error(e.response?.data?.message || "Failed to upload PIQ Form.");
         } finally {
             setIsPiqUploading(false);
         }
@@ -1090,9 +1117,11 @@ const ProfileDashboard = () => {
 
                                                 {(() => {
                                                     const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
-                                                    const hasPiq = activeSub?.piqFiles && activeSub.piqFiles.length > 0;
+                                                    const hasPiq1 = activeSub?.piq1Status === 'VERIFIED' || activeSub?.piq1Status === 'PROCESSING' || (activeSub?.piqFiles && activeSub.piqFiles.some(f => f.includes('piq1')));
+                                                    const hasPiq2 = activeSub?.piq2Status === 'VERIFIED' || activeSub?.piq2Status === 'PROCESSING' || (activeSub?.piqFiles && activeSub.piqFiles.some(f => f.includes('piq2')));
+                                                    const hasPiq = hasPiq1 && hasPiq2;
                                                     const piqStatus = activeSub?.piqStatus || 'PENDING';
-                                                    const isTestCompleted = activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'TEST_COMPLETED' || activeSub?.status === 'PENDING_UPLOAD';
+                                                    const isTestCompleted = activeSub?.status === 'COMPLETED' || activeSub?.status === 'REVIEW_PENDING' || activeSub?.status === 'TEST_COMPLETED' || activeSub?.status === 'PENDING_UPLOAD' || activeSub?.workflowStage === 'EVALUATION_COMPLETED';
                                                     const hasDossier = activeSub?.uploadedFiles && activeSub.uploadedFiles.length > 0;
                                                     const piqReturned = piqStatus === 'RETURNED';
                                                     const piqApproved = piqStatus === 'APPROVED' || piqStatus === 'PARSED';
@@ -1194,11 +1223,19 @@ const ProfileDashboard = () => {
                                                                 )}
 
                                                                 {/* Step 2: PIQ Upload */}
-                                                                {evalActiveStep === 2 && (
-                                                                    <div className={styles.evalStepCard}>
-                                                                        <h5>PIQ Upload</h5>
-                                                                        <p>The IO will peruse the PIQ and if required the PIQ might need to be reuploaded. At which time it will replace your original PIQ Upload.</p>
-                                                                        <div className={styles.evalStepActions}>
+                                                                {evalActiveStep === 2 && (() => {
+                                                                    const piq1Status = activeSub?.piq1Status || (activeSub?.piqFiles && activeSub.piqFiles.length > 0 ? 'VERIFIED' : 'PENDING');
+                                                                    const piq2Status = activeSub?.piq2Status || 'PENDING';
+                                                                    const isPiq1Uploaded = piq1Status === 'VERIFIED' || piq1Status === 'PROCESSING';
+                                                                    const isPiq2Uploaded = piq2Status === 'VERIFIED' || piq2Status === 'PROCESSING';
+                                                                    const isPiq1Verified = piq1Status === 'VERIFIED';
+                                                                    const isPiq2Verified = piq2Status === 'VERIFIED';
+
+                                                                    return (
+                                                                        <div className={styles.evalStepCard}>
+                                                                            <h5>PIQ Document Uploads</h5>
+                                                                            <p>Each candidate must upload two PIQs: Initial Assessment (PIQ 1) and Final/Interview Preparation (PIQ 2).</p>
+                                                                            
                                                                             <input
                                                                                 type="file"
                                                                                 ref={timelinePiqInputRef}
@@ -1208,56 +1245,128 @@ const ProfileDashboard = () => {
                                                                                 onChange={async (e) => {
                                                                                     if (e.target.files && e.target.files.length > 0) {
                                                                                         const files = Array.from(e.target.files);
-                                                                                        await handleTimelinePiqUpload(files);
+                                                                                        await handleTimelinePiqUpload(files, uploadPiqType);
                                                                                     }
                                                                                 }}
                                                                             />
-                                                                            <button
-                                                                                className={styles.stepActionButton}
-                                                                                onClick={() => timelinePiqInputRef.current?.click()}
-                                                                                disabled={isPiqUploading}
-                                                                            >
-                                                                                {isPiqUploading ? "Uploading..." : (hasPiq ? "REUPLOAD PIQ" : "Upload PIQ Form")}
-                                                                            </button>
-                                                                        </div>
-                                                                        {hasPiq && (
-                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                <FaCheckCircle /> PIQ uploaded successfully
+
+                                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginTop: '20px' }}>
+                                                                                {/* PIQ 1 Slot */}
+                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
+                                                                                    <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 1: Initial Assessment PIQ</h6>
+                                                                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Mandatory initial upload for Psychology and TO review.</p>
+                                                                                    <div className={styles.evalStepActions}>
+                                                                                        <button
+                                                                                            className={styles.stepActionButton}
+                                                                                            onClick={() => {
+                                                                                                setUploadPiqType('piq1');
+                                                                                                setTimeout(() => timelinePiqInputRef.current?.click(), 50);
+                                                                                            }}
+                                                                                            disabled={isPiqUploading}
+                                                                                        >
+                                                                                            {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "Re-upload PIQ 1" : "Upload PIQ 1")}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    {isPiq1Uploaded && (
+                                                                                        <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
+                                                                                            <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
+                                                                                            {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+
+                                                                                {/* PIQ 2 Slot */}
+                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: isPiq1Verified ? 1 : 0.5 }}>
+                                                                                    <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 2: Final/Interview Preparation PIQ</h6>
+                                                                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Final preparation PIQ. Enabled only after PIQ 1 is verified.</p>
+                                                                                    <div className={styles.evalStepActions}>
+                                                                                        <button
+                                                                                            className={styles.stepActionButton}
+                                                                                            onClick={() => {
+                                                                                                if (!isPiq1Verified) {
+                                                                                                    toast.error("PIQ 2 can only be uploaded after PIQ 1 has been successfully uploaded and verified.");
+                                                                                                    return;
+                                                                                                }
+                                                                                                setUploadPiqType('piq2');
+                                                                                                setTimeout(() => timelinePiqInputRef.current?.click(), 50);
+                                                                                            }}
+                                                                                            disabled={isPiqUploading || !isPiq1Verified}
+                                                                                        >
+                                                                                            {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "Re-upload PIQ 2" : "Upload PIQ 2")}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    {isPiq2Uploaded && (
+                                                                                        <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
+                                                                                            <FaCheckCircle style={{ color: isPiq2Verified ? 'green' : 'orange' }} />
+                                                                                            {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
+                                                                                        </div>
+                                                                                    )}
+                                                                                    {!isPiq1Verified && (
+                                                                                        <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#ea580c', fontStyle: 'italic' }}>
+                                                                                            ⚠️ Locked until PIQ 1 verification is completed.
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
-                                                                        )}
-                                                                    </div>
-                                                                )}
+                                                                        </div>
+                                                                    );
+                                                                })()}
 
                                                                 {/* Step 3: Candidate Evaluation */}
-                                                                {evalActiveStep === 3 && (
-                                                                    <div className={styles.evalStepCard}>
-                                                                        <h5>Candidate Evaluation</h5>
-                                                                        <p>Start and complete your timed online psychological test.</p>
-                                                                        <div className={styles.evalStepActions}>
-                                                                            {isTestCompleted ? (
-                                                                                <button
-                                                                                    className={styles.stepActionButton}
-                                                                                    style={{ backgroundColor: 'green', cursor: 'not-allowed', opacity: 0.8 }}
-                                                                                    disabled
-                                                                                >
-                                                                                    Evaluation Completed
-                                                                                </button>
-                                                                            ) : (
-                                                                                <button
-                                                                                    className={styles.stepActionButton}
-                                                                                    onClick={() => {
-                                                                                        const token = localStorage.getItem("authToken");
-                                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                                        const base = isLocal ? "http://localhost:5173" : "https://psychbattery.ssbwithisv.in";
-                                                                                        window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
-                                                                                    }}
-                                                                                >
-                                                                                    Start Candidate Evaluation
-                                                                                </button>
+                                                                {evalActiveStep === 3 && (() => {
+                                                                    const userProfile = profileData?.user;
+                                                                    const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
+                                                                    const hasAssessor = userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO;
+                                                                    const isEligibleToStart = hasBatch && hasAssessor;
+
+                                                                    return (
+                                                                        <div className={styles.evalStepCard}>
+                                                                            <h5>Candidate Evaluation</h5>
+                                                                            <p>Start and complete your timed online psychological test.</p>
+                                                                            
+                                                                            {!isEligibleToStart && !isTestCompleted && (
+                                                                                <div style={{ padding: '12px 15px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '10px', color: '#f87171', fontSize: '0.85rem', marginBottom: '15px', textAlign: 'left', lineHeight: '1.4' }}>
+                                                                                    <strong>⚠️ Start Evaluation Disabled:</strong>
+                                                                                    <ul style={{ margin: '5px 0 0 15px', padding: 0 }}>
+                                                                                        {!hasBatch && <li>A batch has not been assigned to your account.</li>}
+                                                                                        {!hasAssessor && <li>An assessor has not been assigned to your account.</li>}
+                                                                                    </ul>
+                                                                                    <span style={{ display: 'block', marginTop: '5px', fontSize: '0.8rem', color: '#fca5a5' }}>Please contact support or the administrator to configure your profile.</span>
+                                                                                </div>
                                                                             )}
+
+                                                                            <div className={styles.evalStepActions}>
+                                                                                {isTestCompleted ? (
+                                                                                    <button
+                                                                                        className={styles.stepActionButton}
+                                                                                        style={{ backgroundColor: 'green', cursor: 'not-allowed', opacity: 0.8 }}
+                                                                                        disabled
+                                                                                    >
+                                                                                        Evaluation Completed
+                                                                                    </button>
+                                                                                ) : (
+                                                                                    <button
+                                                                                        className={styles.stepActionButton}
+                                                                                        onClick={() => {
+                                                                                            if (!isEligibleToStart) {
+                                                                                                toast.error("Please ensure you have a batch and an assessor assigned before starting.");
+                                                                                                return;
+                                                                                            }
+                                                                                            const token = localStorage.getItem("authToken");
+                                                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                                            const base = isLocal ? "http://localhost:5173" : "https://psychbattery.ssbwithisv.in";
+                                                                                            window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
+                                                                                        }}
+                                                                                        disabled={!isEligibleToStart}
+                                                                                        style={!isEligibleToStart ? { opacity: 0.5, cursor: 'not-allowed', backgroundColor: '#4b5563' } : {}}
+                                                                                    >
+                                                                                        Start Candidate Evaluation
+                                                                                    </button>
+                                                                                )}
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                )}
+                                                                    );
+                                                                })()}
 
                                                                 {/* Step 4: Dossier (Download + Upload) */}
                                                                 {evalActiveStep === 4 && (

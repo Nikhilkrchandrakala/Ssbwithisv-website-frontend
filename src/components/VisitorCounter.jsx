@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 // import CountUp from "react-countup";
 
-const API_URL = "https://api.ssbwithisv.in/api";
+const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5001/api"
+    : "https://api.ssbwithisv.in/api";
 
 function VisitorCounter() {
     const [visits, setVisits] = useState(0);

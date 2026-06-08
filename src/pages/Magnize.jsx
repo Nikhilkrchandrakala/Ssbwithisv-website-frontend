@@ -76,7 +76,10 @@ function Magnize() {
         } else {
 
             setDownloadBtn(false)
-            const url = `https://api.ssbwithisv.in/${pdfPath}`;
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:5001"
+                : "https://api.ssbwithisv.in";
+            const url = `${baseUrl}/${pdfPath}`;
 
             const res = await axios.get(url, {
                 responseType: "blob",
@@ -288,7 +291,7 @@ function Magnize() {
 
                                 <div className="card-body magazine-card-body">
                                     <img
-                                        src={`https://api.ssbwithisv.in/${item?.magazineFrontImage}`}
+                                        src={window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? `http://localhost:5001/${item?.magazineFrontImage}` : `https://api.ssbwithisv.in/${item?.magazineFrontImage}`}
                                         className="magazine-card-img"
                                         alt="Magazine Image"
                                     />

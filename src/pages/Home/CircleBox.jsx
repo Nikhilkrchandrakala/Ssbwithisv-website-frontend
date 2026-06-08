@@ -16,7 +16,10 @@ function CircleBox() {
 
     const fetchNumberMonitors = async () => {
         try {
-            const res = await axios.get("https://api.ssbwithisv.in/api/allNumberMonitors");
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:5001"
+                : "https://api.ssbwithisv.in";
+            const res = await axios.get(`${baseUrl}/api/allNumberMonitors`);
 
             if (res.data && res.data.length > 0) {
                 setData(res.data[0]);   // safe

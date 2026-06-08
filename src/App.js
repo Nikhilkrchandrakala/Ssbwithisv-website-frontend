@@ -1,7 +1,7 @@
 import './App.css';
 import './custom.css';
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Home from './pages/Home/Home';
@@ -40,6 +40,11 @@ import PerCourses from './pages/PerCourses';
 import SuccessPage from './components/SuccessPage';
 import BatchPage from './pages/PerCourses';
 
+const ProtectedRoute = () => {
+  const token = localStorage.getItem("authToken");
+  return token ? <Outlet /> : <Navigate to="/SignIn" replace />;
+};
+
 function App() {
 
   const [loading, setLoading] = useState(true);
@@ -72,14 +77,15 @@ function App() {
         <Route path="/RefundCancellation" element={<RefundCancellation />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:slug" element={<BlogsDetails />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
-        <Route path="/OrderHistory" element={<OrderHistory />} />
-        <Route path="/PaymentHistory" element={<PaymentHistory />} />
         <Route path="/Gallery" element={<Gallery />} />
-        {/* <Route path="/PerCourses" element={<PerCourses />} /> */}
         <Route path="/Success" element={<SuccessPage />} />
-        <Route path="/Batches" element={<BatchPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
+          <Route path="/OrderHistory" element={<OrderHistory />} />
+          <Route path="/PaymentHistory" element={<PaymentHistory />} />
+          <Route path="/Batches" element={<BatchPage />} />
+        </Route>
 
         
 

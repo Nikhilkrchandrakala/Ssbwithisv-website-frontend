@@ -8,6 +8,10 @@ import axios from "axios";
 import { number } from "framer-motion";
 import toast from "react-hot-toast";
 
+const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5001"
+    : "https://api.ssbwithisv.in";
+
 function Login() {
     const navigate = useNavigate();
 
@@ -193,7 +197,7 @@ function Login() {
                 await addLead();
                 // await getToken();
                 await axios.post(
-                    "https://api.ssbwithisv.in/api/verifyOtpWithAccessToken", {
+                    `${API_BASE_URL}/api/verifyOtpWithAccessToken`, {
                     accessToken: res.data.message
                 });
                 toast.success("OTP Verified Successfully ")
@@ -212,7 +216,7 @@ function Login() {
 
 
     const addLead = async () => {
-        await axios.post("https://api.ssbwithisv.in/api/addLead", {
+        await axios.post(`${API_BASE_URL}/api/addLead`, {
             email,
             name,
             phoneNumber: phone

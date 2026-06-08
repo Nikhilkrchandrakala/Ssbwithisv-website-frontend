@@ -42,7 +42,10 @@ function HalfOfFame() {
 
     /* ================= API CALL ================= */
     useEffect(() => {
-        fetch("https://api.ssbwithisv.in/api/allCandidates")
+        const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5001"
+            : "https://api.ssbwithisv.in";
+        fetch(`${baseUrl}/api/allCandidates`)
             .then(res => res.json())
             .then(data => {
                 setCandidates(data)   // API returns array

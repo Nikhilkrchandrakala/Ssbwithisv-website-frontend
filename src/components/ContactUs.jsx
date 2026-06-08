@@ -149,8 +149,11 @@ export default function ContactUs({ open, setOpen }) {
         setLoading(false);
 
         try {
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:5001"
+                : "https://api.ssbwithisv.in";
             const response = await axios.post(
-                "https://api.ssbwithisv.in/api/send-email",
+                `${baseUrl}/api/send-email`,
                 {
                     name: formData.name.trim(),
                     email: formData.email.trim(),
