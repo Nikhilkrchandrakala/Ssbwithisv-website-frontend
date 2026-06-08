@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# secrets & deploy keys
+.env
+.env*
+vps_deploy_key
+vps_deploy_key.pub
+
