@@ -1,18 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://api.ssbwithisv.in/api/$1"
-    },
-    {
-      "source": "/admin(/?)",
-      "destination": "https://api.ssbwithisv.in/admin-login"
-    },
-    {
-      "source": "/admin/(.*)",
-      "destination": "https://api.ssbwithisv.in/admin/$1"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
