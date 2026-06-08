@@ -7,6 +7,29 @@ import { BiArrowBack } from 'react-icons/bi'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useVerifyOtpMutation } from '../../redux/api'
 
+// ─── Dynamic base URL (matches Redux API slice) ───
+const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+    ? "http://localhost:5001/api"
+    : "https://api.ssbwithisv.in/api";
+
+// ─── Password strength helpers ───
+const passwordRules = [
+    { key: 'length', label: 'At least 8 characters', test: (p) => p.length >= 8 },
+    { key: 'upper', label: 'One uppercase letter', test: (p) => /[A-Z]/.test(p) },
+    { key: 'number', label: 'One number', test: (p) => /[0-9]/.test(p) },
+    // eslint-disable-next-line no-useless-escape
+    { key: 'special', label: 'One special character (!@#$...)', test: (p) => /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(p) },
+];
+
+const getPasswordStrength = (password) => {
+    if (!password) return { score: 0, label: '', color: '' };
+    const passed = passwordRules.filter(r => r.test(password)).length;
+    if (passed <= 1) return { score: 1, label: 'Weak', color: '#ef4444' };
+    if (passed === 2) return { score: 2, label: 'Fair', color: '#f59e0b' };
+    if (passed === 3) return { score: 3, label: 'Good', color: '#3b82f6' };
+    return { score: 4, label: 'Strong', color: '#22c55e' };
+};
+
 function AccountRecovery() {
     const navigate = useNavigate()
 
@@ -35,7 +58,7 @@ function AccountRecovery() {
     const otpInputRef = useRef(null)
 
 
-    const [verifyOtp] = useVerifyOtpMutation()
+    const [verifyOtp] = useVerifyOtpMutation() // eslint-disable-line no-unused-vars
 
     // Timer effect
     useEffect(() => {
@@ -124,23 +147,23 @@ function AccountRecovery() {
             return false
         }
 
-        if (formData.otp.length !== 6) {
-            setError('OTP must be 6 digits')
+        if (formData.otp.length < 4 || formData.otp.length > 6) {
+            setError('OTP must be between 4 and 6 digits')
             return false
         }
 
         return true
     }
 
-    // Validate password
+    // Validate password (updated with strong rules)
     const validatePassword = () => {
         if (!formData.newPassword.trim()) {
             setError('Please enter new password')
             return false
         }
 
-        if (formData.newPassword.length < 6) {
-            setError('Password must be at least 6 characters')
+        if (!passwordRules.every(r => r.test(formData.newPassword))) {
+            setError('Password must be at least 8 characters with uppercase, number, and special character')
             return false
         }
 
@@ -212,7 +235,7 @@ function AccountRecovery() {
             // ✅ CASE 2: EMAIL → YOUR BACKEND API
             else {
                 const response = await axios.post(
-                    "https://api.ssbwithisv.in/api/send-otp",
+                    `${API_BASE}/send-otp`,
                     {
                         email: identifier.toLowerCase(),
                     },
@@ -330,7 +353,7 @@ function AccountRecovery() {
             else {
 
                 const response = await axios.post(
-                    "https://api.ssbwithisv.in/api/verify-otp",
+                    `${API_BASE}/verify-otp`,
                     {
                         email: identifier.toLowerCase(),
                         otp: formData.otp
@@ -428,7 +451,7 @@ function AccountRecovery() {
             }
 
             const response = await axios.post(
-                'https://api.ssbwithisv.in/api/forgot-password',
+                `${API_BASE}/forgot-password`,
                 requestData,
                 {
                     headers: {
@@ -600,7 +623,7 @@ function AccountRecovery() {
                                     type="text"
                                     name="otp"
                                     className="form-control thm-input"
-                                    placeholder="Enter 6-digit OTP"
+                                    placeholder="Enter OTP"
                                     value={formData.otp}
                                     onChange={handleInputChange}
                                     disabled={isLoading}
@@ -728,9 +751,25 @@ function AccountRecovery() {
                             </div>
 
                             <div className="col-lg-12 mt-2">
-                                <small className="form-text text-muted">
-                                    Password must be at least 6 characters long
-                                </small>
+                                {formData.newPassword && (() => {
+                                    const str = getPasswordStrength(formData.newPassword);
+                                    return (
+                                        <div className="password-strength-section">
+                                            <div className="password-strength-bar">
+                                                <div className="password-strength-fill"
+                                                    style={{ width: `${(str.score / 4) * 100}%`, background: str.color }}></div>
+                                            </div>
+                                            <span className="password-strength-label" style={{ color: str.color }}>{str.label}</span>
+                                            <div className="password-rules">
+                                                {passwordRules.map(rule => (
+                                                    <div key={rule.key} className={`password-rule ${rule.test(formData.newPassword) ? 'passed' : 'failed'}`}>
+                                                        <span>{rule.test(formData.newPassword) ? '✓' : '✗'}</span> {rule.label}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             <div className="col-12 text-center mt-4">

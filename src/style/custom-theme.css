@@ -317,15 +317,7 @@ input[type=number] {
     /* icon ke liye space */
 }
 
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 32%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--secondary-color);
-}
+/* password-toggle: main styles are at the bottom of this file (Auth Revamp section) */
 
 .password-toggle-btn {
     position: absolute;
@@ -364,13 +356,6 @@ input[type=number] {
 .SendOtpBtn:hover {
     background-color: var(--secondary-color);
     color: black;
-}
-
-.SendOtpBtn {
-
-    padding: 3px 12px;
-    border: 2px solid rgba(210, 161, 0, 0.45);
-
 }
 
 .password-toggle:hover {
@@ -680,5 +665,220 @@ textarea.form-control.thm-input:focus {
 
     .previewItem label {
         font-size: 0.75rem;
+    }
+}
+
+/* ============================================================
+   NEW: Auth Revamp Styles
+============================================================ */
+
+/* ─── Field Error Messages ─── */
+.field-error {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding-left: 2px;
+    font-family: 'Inter', sans-serif;
+    animation: fadeInError 0.2s ease;
+}
+
+@keyframes fadeInError {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Step Progress Indicator ─── */
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 40px;
+    padding: 0 20px;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+}
+
+.step-circle {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.4);
+    background: rgba(16, 16, 22, 0.6);
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.step-item.active .step-circle {
+    border-color: #f4c430;
+    color: #f4c430;
+    background: rgba(244, 196, 48, 0.1);
+    box-shadow: 0 0 15px rgba(244, 196, 48, 0.2);
+}
+
+.step-item.completed .step-circle {
+    border-color: #22c55e;
+    color: #fff;
+    background: #22c55e;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+.step-label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.step-item.active .step-label {
+    color: #f4c430;
+}
+
+.step-item.completed .step-label {
+    color: #22c55e;
+}
+
+.step-line {
+    flex: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    margin: 0 8px;
+    margin-bottom: 28px;
+    transition: background 0.3s ease;
+    max-width: 120px;
+}
+
+.step-line.active {
+    background: linear-gradient(90deg, #22c55e, #f4c430);
+}
+
+/* ─── Password Strength Meter ─── */
+.password-strength-section {
+    margin-top: 10px;
+}
+
+.password-strength-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.password-strength-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.password-strength-label {
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ─── Password Rules Checklist ─── */
+.password-rules {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+    margin-top: 8px;
+}
+
+.password-rule {
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s ease;
+}
+
+.password-rule.passed {
+    color: #22c55e;
+}
+
+.password-rule.failed {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.password-rule span {
+    font-weight: 700;
+    font-size: 14px;
+    width: 16px;
+    text-align: center;
+}
+
+/* ─── Fixed: password-toggle centering ─── */
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--secondary-color);
+}
+
+/* ─── Responsive: Step Indicator ─── */
+@media (max-width: 768px) {
+    .step-indicator {
+        gap: 0;
+        padding: 0 10px;
+        margin-bottom: 25px;
+    }
+
+    .step-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .step-label {
+        font-size: 11px;
+    }
+
+    .step-line {
+        max-width: 60px;
+    }
+
+    .password-rules {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .step-item {
+        min-width: 60px;
+    }
+
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+
+    .step-label {
+        font-size: 10px;
+    }
+
+    .step-line {
+        max-width: 40px;
+        margin: 0 4px;
+        margin-bottom: 24px;
     }
 }

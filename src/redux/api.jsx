@@ -67,6 +67,51 @@ export const api = createApi({
             invalidatesTags: ["Auth", "Profile"],
         }),
 
+        /** 🔍 Check if user already exists before OTP */
+        checkUserExists: builder.mutation({
+            query: (body) => ({
+                url: "check-user-exists",
+                method: "POST",
+                body,
+            }),
+        }),
+
+        /** 📧 Send email OTP for signup */
+        sendSignupEmailOtp: builder.mutation({
+            query: (body) => ({
+                url: "signup/send-email-otp",
+                method: "POST",
+                body,
+            }),
+        }),
+
+        /** ✅ Verify email OTP for signup */
+        verifySignupEmailOtp: builder.mutation({
+            query: (body) => ({
+                url: "signup/verify-email-otp",
+                method: "POST",
+                body,
+            }),
+        }),
+
+        /** 📱 Send phone OTP for signup */
+        sendSignupPhoneOtp: builder.mutation({
+            query: (body) => ({
+                url: "signup/send-phone-otp",
+                method: "POST",
+                body,
+            }),
+        }),
+
+        /** ✅ Verify phone OTP for signup */
+        verifySignupPhoneOtp: builder.mutation({
+            query: (body) => ({
+                url: "signup/verify-phone-otp",
+                method: "POST",
+                body,
+            }),
+        }),
+
         /** 👤 Get current user profile */
         userProfile: builder.query({
             query: () => "user/profile",
@@ -189,6 +234,11 @@ export const {
 
 
     useAddLeadMutation,
+    useCheckUserExistsMutation,
+    useSendSignupEmailOtpMutation,
+    useVerifySignupEmailOtpMutation,
+    useSendSignupPhoneOtpMutation,
+    useVerifySignupPhoneOtpMutation,
     useVerifyOtpMutation,
     useUserProfileQuery,
     useUserCoursesQuery,
