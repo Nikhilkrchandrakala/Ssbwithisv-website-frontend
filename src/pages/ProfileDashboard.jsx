@@ -1354,7 +1354,7 @@ const ProfileDashboard = () => {
                                                                                             }
                                                                                             const token = localStorage.getItem("authToken");
                                                                                             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                                            const base = isLocal ? "http://localhost:5173" : "https://psychbattery.ssbwithisv.in";
+                                                                                            const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
                                                                                             window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
                                                                                         }}
                                                                                         disabled={!isEligibleToStart}
