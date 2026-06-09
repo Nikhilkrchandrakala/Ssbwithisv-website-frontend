@@ -304,9 +304,10 @@ const ProfileDashboard = () => {
                 }
                 
                 const subRes = await axios.post(`${baseUrl}/api/submissions`, { 
-                    assessmentId,
-                    status: 'IN_PROGRESS',
-                    startedAt: new Date().toISOString()
+                    assessmentId
+                    // Note: do NOT pass status here — let the server use its default (NOT_STARTED)
+                    // so that we never accidentally overwrite an existing PENDING_UPLOAD or
+                    // COMPLETED submission back to IN_PROGRESS
                 }, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
