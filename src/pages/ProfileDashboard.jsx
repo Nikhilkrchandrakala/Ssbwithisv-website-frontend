@@ -1114,7 +1114,6 @@ const ProfileDashboard = () => {
                                             {/* Evaluation Journey — Tabbed Steps */}
                                             <div className={styles.psycheTimelineContainer}>
                                                 <h4 className={styles.timelineHeader}>Evaluation Journey</h4>
-
                                                 {(() => {
                                                     const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
                                                     const hasPiq1 = activeSub?.piq1Status === 'VERIFIED' || activeSub?.piq1Status === 'PROCESSING' || (activeSub?.piqFiles && activeSub.piqFiles.some(f => f.includes('piq1')));
@@ -1126,6 +1125,11 @@ const ProfileDashboard = () => {
                                                     const piqReturned = piqStatus === 'RETURNED';
                                                     const piqApproved = piqStatus === 'APPROVED' || piqStatus === 'PARSED';
 
+                                                    const userProfile = profileData?.user;
+                                                    const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
+                                                    const hasAssessor = !!(userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO);
+                                                    const isEligibleToStart = !!(hasBatch && hasAssessor);
+
                                                     // Determine completion status of each step
                                                     const stepCompleted = {
                                                         1: piqDownloaded,
@@ -1134,12 +1138,12 @@ const ProfileDashboard = () => {
                                                         4: dossierDownloaded && hasDossier
                                                     };
 
-                                                    // All steps are accessible at any time
+                                                    // Block everything until batch and assessor assigned; also require PIQ 1 upload for evaluation
                                                     const stepAccessible = {
-                                                        1: true,
-                                                        2: true,
-                                                        3: true,
-                                                        4: true
+                                                        1: isEligibleToStart,
+                                                        2: isEligibleToStart,
+                                                        3: isEligibleToStart && hasPiq1,
+                                                        4: isEligibleToStart
                                                     };
 
                                                     const evalSteps = [
@@ -1197,6 +1201,17 @@ const ProfileDashboard = () => {
                                                             </div>
 
                                                             {/* Tab Content */}
+                                                            {!isEligibleToStart && (
+                                                                <div style={{ padding: '15px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '10px', color: '#f87171', fontSize: '0.9rem', marginBottom: '20px', textAlign: 'left', lineHeight: '1.5' }}>
+                                                                    <strong>⚠️ Evaluation Journey Locked:</strong>
+                                                                    <p style={{ margin: '5px 0 0 0' }}>You cannot access the PIQ forms, uploads, or evaluation until a batch and an assessor are assigned to your profile.</p>
+                                                                    <ul style={{ margin: '8px 0 0 20px', padding: 0 }}>
+                                                                        {!hasBatch && <li>A batch has not been assigned to your account.</li>}
+                                                                        {!hasAssessor && <li>An assessor has not been assigned to your account.</li>}
+                                                                    </ul>
+                                                                    <span style={{ display: 'block', marginTop: '8px', fontSize: '0.8rem', color: '#fca5a5' }}>Please contact support or the administrator to configure your profile.</span>
+                                                                </div>
+                                                            )}
                                                             <div className={styles.evalTabContent} key={evalActiveStep}>
 
                                                                 {/* Step 1: Download PIQ Form */}
@@ -1311,62 +1326,60 @@ const ProfileDashboard = () => {
                                                                         </div>
                                                                     );
                                                                 })()}
-
+ 
                                                                 {/* Step 3: Candidate Evaluation */}
-                                                                {evalActiveStep === 3 && (() => {
-                                                                    const userProfile = profileData?.user;
-                                                                    const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
-                                                                    const hasAssessor = userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO;
-                                                                    const isEligibleToStart = hasBatch && hasAssessor;
-
-                                                                    return (
-                                                                        <div className={styles.evalStepCard}>
-                                                                            <h5>Candidate Evaluation</h5>
-                                                                            <p>Start and complete your timed online psychological test.</p>
-                                                                            
-                                                                            {!isEligibleToStart && !isTestCompleted && (
-                                                                                <div style={{ padding: '12px 15px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '10px', color: '#f87171', fontSize: '0.85rem', marginBottom: '15px', textAlign: 'left', lineHeight: '1.4' }}>
-                                                                                    <strong>⚠️ Start Evaluation Disabled:</strong>
-                                                                                    <ul style={{ margin: '5px 0 0 15px', padding: 0 }}>
-                                                                                        {!hasBatch && <li>A batch has not been assigned to your account.</li>}
-                                                                                        {!hasAssessor && <li>An assessor has not been assigned to your account.</li>}
-                                                                                    </ul>
-                                                                                    <span style={{ display: 'block', marginTop: '5px', fontSize: '0.8rem', color: '#fca5a5' }}>Please contact support or the administrator to configure your profile.</span>
-                                                                                </div>
-                                                                            )}
-
-                                                                            <div className={styles.evalStepActions}>
-                                                                                {isTestCompleted ? (
-                                                                                    <button
-                                                                                        className={styles.stepActionButton}
-                                                                                        style={{ backgroundColor: 'green', cursor: 'not-allowed', opacity: 0.8 }}
-                                                                                        disabled
-                                                                                    >
-                                                                                        Evaluation Completed
-                                                                                    </button>
-                                                                                ) : (
-                                                                                    <button
-                                                                                        className={styles.stepActionButton}
-                                                                                        onClick={() => {
-                                                                                            if (!isEligibleToStart) {
-                                                                                                toast.error("Please ensure you have a batch and an assessor assigned before starting.");
-                                                                                                return;
-                                                                                            }
-                                                                                            const token = localStorage.getItem("authToken");
-                                                                                            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                                            const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
-                                                                                            window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
-                                                                                        }}
-                                                                                        disabled={!isEligibleToStart}
-                                                                                        style={!isEligibleToStart ? { opacity: 0.5, cursor: 'not-allowed', backgroundColor: '#4b5563' } : {}}
-                                                                                    >
-                                                                                        Start Candidate Evaluation
-                                                                                    </button>
-                                                                                )}
-                                                                            </div>
+                                                                {evalActiveStep === 3 && (
+                                                                    <div className={styles.evalStepCard}>
+                                                                        <h5>Candidate Evaluation</h5>
+                                                                        <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Then, start and complete your timed online psychological test.</p>
+                                                                        
+                                                                        <div className={styles.evalStepActions} style={{ marginBottom: '20px' }}>
+                                                                            <a
+                                                                                href={dossierDownloadUrl}
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                className={styles.stepDownloadLink}
+                                                                                download="Blank_Sheet_Psychology.pdf"
+                                                                                onClick={() => {
+                                                                                    setDossierDownloaded(true);
+                                                                                    localStorage.setItem('evalDossierDownloaded', 'true');
+                                                                                }}
+                                                                            >
+                                                                                <BiDownload /> Download Psychology Dossier
+                                                                            </a>
                                                                         </div>
-                                                                    );
-                                                                })()}
+ 
+                                                                        <div className={styles.evalStepActions}>
+                                                                            {isTestCompleted ? (
+                                                                                <button
+                                                                                    className={styles.stepActionButton}
+                                                                                    style={{ backgroundColor: 'green', cursor: 'not-allowed', opacity: 0.8 }}
+                                                                                    disabled
+                                                                                >
+                                                                                    Evaluation Completed
+                                                                                </button>
+                                                                            ) : (
+                                                                                <button
+                                                                                    className={styles.stepActionButton}
+                                                                                    onClick={() => {
+                                                                                        if (!isEligibleToStart) {
+                                                                                            toast.error("Please ensure you have a batch and an assessor assigned before starting.");
+                                                                                            return;
+                                                                                        }
+                                                                                        const token = localStorage.getItem("authToken");
+                                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                                        const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
+                                                                                        window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
+                                                                                    }}
+                                                                                    disabled={!isEligibleToStart}
+                                                                                    style={!isEligibleToStart ? { opacity: 0.5, cursor: 'not-allowed', backgroundColor: '#4b5563' } : {}}
+                                                                                >
+                                                                                    Start Candidate Evaluation
+                                                                                </button>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
 
                                                                 {/* Step 4: Dossier (Download + Upload) */}
                                                                 {evalActiveStep === 4 && (
