@@ -2719,6 +2719,15 @@
     box-shadow: 0 6px 20px rgba(210, 161, 0, 0.4);
 }
 
+.stepActionButton:disabled {
+    background: #4b5563 !important;
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+    opacity: 0.6 !important;
+}
+
 @media (max-width: 992px) {
     .psycheCombinedCard {
         grid-template-columns: 1fr;
@@ -3022,5 +3031,155 @@
     
     .evalTabContent {
         padding: 20px;
+    }
+}
+
+/* Premium Locked Section */
+.evalLockedContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 40px;
+    background: rgba(16, 16, 22, 0.7);
+    border: 2px solid rgba(210, 161, 0, 0.3);
+    border-radius: 24px;
+    backdrop-filter: blur(15px);
+    margin: 30px 0;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.4s ease;
+    text-align: center;
+}
+
+.evalLockedHeader {
+    max-width: 600px;
+    margin-bottom: 35px;
+}
+
+.evalLockedIconWrapper {
+    width: 100px;
+    height: 100px;
+    background: rgba(210, 161, 0, 0.1);
+    border: 2px solid rgba(210, 161, 0, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    box-shadow: 0 0 35px rgba(210, 161, 0, 0.15);
+    animation: pulseLock 2.5s infinite;
+}
+
+.evalLockedIcon {
+    font-size: 3rem;
+    color: #d2a100;
+}
+
+.evalLockedHeader h3 {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.evalLockedHeader p {
+    color: #c6c5af;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.evalLockedStatusList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 35px;
+}
+
+.evalLockedStatusCard {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 25px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.evalLockedStatusCard.statusSuccess {
+    background: rgba(72, 187, 120, 0.06);
+    border-color: rgba(72, 187, 120, 0.25);
+}
+
+.evalLockedStatusCard.statusSuccess svg {
+    color: #48bb78;
+}
+
+.evalLockedStatusCard.statusPending {
+    background: rgba(210, 161, 0, 0.06);
+    border-color: rgba(210, 161, 0, 0.25);
+}
+
+.evalLockedStatusCard.statusPending svg {
+    color: #d2a100;
+}
+
+.statusCardIcon {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+}
+
+.statusCardDetails h4 {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+}
+
+.statusCardDetails p {
+    color: #c6c5af;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.evalLockedFooter {
+    max-width: 550px;
+    border-top: 1px solid rgba(210, 161, 0, 0.2);
+    padding-top: 30px;
+    width: 100%;
+}
+
+.evalLockedFooter p {
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.evalLockedFooter span {
+    display: block;
+    color: #c6c5af;
+    font-size: 0.9rem;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+@keyframes pulseLock {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(210, 161, 0, 0.15);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 40px rgba(210, 161, 0, 0.35);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(210, 161, 0, 0.15);
     }
 }

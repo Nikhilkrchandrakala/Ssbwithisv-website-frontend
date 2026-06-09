@@ -21,7 +21,8 @@ import {
 } from "react-icons/bi";
 import {
     FaCamera,
-    FaCheckCircle
+    FaCheckCircle,
+    FaLock
 } from "react-icons/fa";
 import '../style/custom-theme.css';
 import styles from "../style/ProfileDashboard.module.css";
@@ -1170,6 +1171,49 @@ const ProfileDashboard = () => {
                                                         ? `https://api.ssbwithisv.in/${dossierDoc.pdfFilePath}`
                                                         : "#";
 
+                                                                                    if (!isEligibleToStart) {
+                                                        return (
+                                                            <div className={styles.evalLockedContainer}>
+                                                                <div className={styles.evalLockedHeader}>
+                                                                    <div className={styles.evalLockedIconWrapper}>
+                                                                        <FaLock className={styles.evalLockedIcon} />
+                                                                    </div>
+                                                                    <h3>Evaluation Portal Locked</h3>
+                                                                    <p>
+                                                                        Your candidate evaluation space is currently restricted. To access your PIQ forms, timed psychological evaluations, and assessor reviews, a batch and an assessor must be assigned to your profile.
+                                                                    </p>
+                                                                </div>
+                                                                
+                                                                <div className={styles.evalLockedStatusList}>
+                                                                    <div className={`${styles.evalLockedStatusCard} ${hasBatch ? styles.statusSuccess : styles.statusPending}`}>
+                                                                        <div className={styles.statusCardIcon}>
+                                                                            {hasBatch ? <FaCheckCircle /> : <FaLock />}
+                                                                        </div>
+                                                                        <div className={styles.statusCardDetails}>
+                                                                            <h4>Batch Allocation</h4>
+                                                                            <p>{hasBatch ? `Assigned to Batch #${userProfile.batch}` : "Pending batch allocation by administrator"}</p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className={`${styles.evalLockedStatusCard} ${hasAssessor ? styles.statusSuccess : styles.statusPending}`}>
+                                                                        <div className={styles.statusCardIcon}>
+                                                                            {hasAssessor ? <FaCheckCircle /> : <FaLock />}
+                                                                        </div>
+                                                                        <div className={styles.statusCardDetails}>
+                                                                            <h4>Assessor Configuration</h4>
+                                                                            <p>{hasAssessor ? "Assessors configured on your profile" : "Pending assessor allocation for test review"}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className={styles.evalLockedFooter}>
+                                                                    <p>Once your profile is set up, this section will automatically unlock, allowing you to download your PIQ forms and begin your evaluations.</p>
+                                                                    <span>For assistance, please contact SSB With ISV Support or your administrator.</span>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }
+
                                                     return (
                                                         <>
                                                             {/* Tab Bar */}
@@ -1201,17 +1245,6 @@ const ProfileDashboard = () => {
                                                             </div>
 
                                                             {/* Tab Content */}
-                                                            {!isEligibleToStart && (
-                                                                <div style={{ padding: '15px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '10px', color: '#f87171', fontSize: '0.9rem', marginBottom: '20px', textAlign: 'left', lineHeight: '1.5' }}>
-                                                                    <strong>⚠️ Evaluation Journey Locked:</strong>
-                                                                    <p style={{ margin: '5px 0 0 0' }}>You cannot access the PIQ forms, uploads, or evaluation until a batch and an assessor are assigned to your profile.</p>
-                                                                    <ul style={{ margin: '8px 0 0 20px', padding: 0 }}>
-                                                                        {!hasBatch && <li>A batch has not been assigned to your account.</li>}
-                                                                        {!hasAssessor && <li>An assessor has not been assigned to your account.</li>}
-                                                                    </ul>
-                                                                    <span style={{ display: 'block', marginTop: '8px', fontSize: '0.8rem', color: '#fca5a5' }}>Please contact support or the administrator to configure your profile.</span>
-                                                                </div>
-                                                            )}
                                                             <div className={styles.evalTabContent} key={evalActiveStep}>
 
                                                                 {/* Step 1: Download PIQ Form */}
@@ -1277,9 +1310,9 @@ const ProfileDashboard = () => {
                                                                                                 setUploadPiqType('piq1');
                                                                                                 setTimeout(() => timelinePiqInputRef.current?.click(), 50);
                                                                                             }}
-                                                                                            disabled={isPiqUploading}
+                                                                                            disabled={isPiqUploading || isPiq1Uploaded}
                                                                                         >
-                                                                                            {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "Re-upload PIQ 1" : "Upload PIQ 1")}
+                                                                                            {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "PIQ 1 Uploaded" : "Upload PIQ 1")}
                                                                                         </button>
                                                                                     </div>
                                                                                     {isPiq1Uploaded && (
@@ -1305,9 +1338,9 @@ const ProfileDashboard = () => {
                                                                                                 setUploadPiqType('piq2');
                                                                                                 setTimeout(() => timelinePiqInputRef.current?.click(), 50);
                                                                                             }}
-                                                                                            disabled={isPiqUploading || !isPiq1Verified}
+                                                                                            disabled={isPiqUploading || !isPiq1Verified || isPiq2Uploaded}
                                                                                         >
-                                                                                            {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "Re-upload PIQ 2" : "Upload PIQ 2")}
+                                                                                            {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "PIQ 2 Uploaded" : "Upload PIQ 2")}
                                                                                         </button>
                                                                                     </div>
                                                                                     {isPiq2Uploaded && (
