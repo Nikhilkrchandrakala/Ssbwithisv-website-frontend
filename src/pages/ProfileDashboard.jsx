@@ -1130,7 +1130,12 @@ const ProfileDashboard = () => {
                                                     const userProfile = profileData?.user;
                                                     const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
                                                     const hasAssessor = !!(userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO);
-                                                    const isEligibleToStart = !!(hasBatch && hasAssessor);
+                                                    
+                                                    const allowedStagesForEval = ["full_course", "psych", "interview"];
+                                                    const userStages = userProfile?.clinicalStage ? userProfile.clinicalStage.split(",").map(s => s.trim().toLowerCase()) : [];
+                                                    const hasEligibleCourse = userStages.some(stage => allowedStagesForEval.includes(stage));
+                                                    
+                                                    const isEligibleToStart = !!(hasBatch && hasAssessor && hasEligibleCourse);
 
                                                     // Determine completion status of each step
                                                     const stepCompleted = {
@@ -1177,7 +1182,7 @@ const ProfileDashboard = () => {
                                                         ? `https://api.ssbwithisv.in/${dossierDoc.pdfFilePath}`
                                                         : "#";
 
-                                                                                    if (!isEligibleToStart) {
+                                                    if (!isEligibleToStart) {
                                                         return (
                                                             <div className={styles.evalLockedContainer}>
                                                                 <div className={styles.evalLockedHeader}>
@@ -1186,11 +1191,26 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                     <h3>Evaluation Portal Locked</h3>
                                                                     <p>
-                                                                        Your candidate evaluation space is currently restricted. To access your PIQ forms, timed psychological evaluations, and assessor reviews, a batch and an assessor must be assigned to your profile.
+                                                                        Your candidate evaluation space is currently restricted. To access your PIQ forms, timed psychological evaluations, and assessor reviews, you must have an eligible course, a batch, and an assessor assigned to your profile.
                                                                     </p>
                                                                 </div>
                                                                 
                                                                 <div className={styles.evalLockedStatusList}>
+                                                                    <div className={`${styles.evalLockedStatusCard} ${hasEligibleCourse ? styles.statusSuccess : styles.statusPending}`}>
+                                                                        <div className={styles.statusCardIcon}>
+                                                                            {hasEligibleCourse ? <FaCheckCircle /> : <FaLock />}
+                                                                        </div>
+                                                                        <div className={styles.statusCardDetails}>
+                                                                            <h4>Course Eligibility</h4>
+                                                                            <p>
+                                                                                {hasEligibleCourse 
+                                                                                    ? `Eligible course assigned (${userProfile.clinicalStage.split(',').map(s => s.toUpperCase()).join(', ')})` 
+                                                                                    : "Requires allocation of Full Course, Psych Course, or Interview Course"
+                                                                                }
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div className={`${styles.evalLockedStatusCard} ${hasBatch ? styles.statusSuccess : styles.statusPending}`}>
                                                                         <div className={styles.statusCardIcon}>
                                                                             {hasBatch ? <FaCheckCircle /> : <FaLock />}
