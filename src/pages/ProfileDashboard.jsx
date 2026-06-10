@@ -1163,7 +1163,7 @@ const ProfileDashboard = () => {
                                                     const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
                                                     const hasAssessor = !!(userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO);
                                                     
-                                                    const allowedStagesForEval = ["full_course", "psych", "interview"];
+                                                    const allowedStagesForEval = ["full_course", "psych", "psychology", "interview", "gto"];
                                                     const userStages = userProfile?.clinicalStage ? userProfile.clinicalStage.split(",").map(s => s.trim().toLowerCase()) : [];
                                                     const hasEligibleCourse = userStages.some(stage => allowedStagesForEval.includes(stage));
                                                     
