@@ -13,7 +13,7 @@ function Courses() {
     const getPrice = (courseId, fallback) => {
         if (dbCourses && Array.isArray(dbCourses)) {
             const match = dbCourses.find(c => c.courseId === courseId);
-            if (match) return match.price;
+            if (match && typeof match.price === 'number') return match.price;
         }
         return fallback;
     };
