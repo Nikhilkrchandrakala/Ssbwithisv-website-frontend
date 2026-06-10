@@ -1140,13 +1140,18 @@ const ProfileDashboard = () => {
                                                         4: dossierDownloaded && hasDossier
                                                     };
 
-                                                    // Block everything until batch and assessor assigned; also require PIQ 1 upload for evaluation
+                                                    // Step 2 is LOCKED once PIQs are uploaded — user should never re-enter
                                                     const stepAccessible = {
                                                         1: isEligibleToStart,
-                                                        2: isEligibleToStart,
+                                                        2: isEligibleToStart && !hasPiq,
                                                         3: isEligibleToStart && hasPiq1,
                                                         4: isEligibleToStart
                                                     };
+
+                                                    // Auto-redirect: if PIQs are already done and user somehow lands on step 2, push them to step 3
+                                                    if (hasPiq && evalActiveStep === 2) {
+                                                        setTimeout(() => setEvalActiveStep(3), 0);
+                                                    }
 
                                                     const evalSteps = [
                                                         { num: 1, label: 'PIQ Form' },
