@@ -204,29 +204,45 @@ const ProfileDashboard = () => {
         }
         setIsPsychUploading(true);
         try {
-            const formData = new FormData();
-            psychUploadFiles.forEach(file => {
-                formData.append('files', file);
-            });
-            
             const token = localStorage.getItem("authToken");
-            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                ? "http://localhost:5173" 
-                : "https://psych.ssbwithisv.in";
+            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
+            const psychBackendUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
+
+            // Upload files one-by-one to main backend (bypassing Vercel's 4.5MB request limit)
+            const fileUrls = [];
+            for (const file of psychUploadFiles) {
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', file);
                 
-            await axios.post(`${baseUrl}/api/submissions/${submissionId}/upload`, formData, {
+                const uploadRes = await axios.post(`${mainBackendUrl}/api/uploadBatteryImage`, uploadFormData, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                
+                if (uploadRes.data && uploadRes.data.url) {
+                    fileUrls.push(uploadRes.data.url);
+                } else {
+                    throw new Error("Missing url in upload response");
+                }
+            }
+
+            // Post the file URLs array as JSON to psych battery backend
+            await axios.post(`${psychBackendUrl}/api/submissions/${submissionId}/upload`, { fileUrls }, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 }
             });
             
-            toast.success("Answers uploaded successfully! Processing with OCR...");
+            toast.success("Answers uploaded successfully!");
             setPsychUploadFiles([]);
             fetchPsychSubmissions();
         } catch (e) {
             console.error("Upload failed", e);
-            toast.error("Failed to upload answers.");
+            toast.error("Failed to upload answers. Please try again with smaller or fewer files.");
         } finally {
             setIsPsychUploading(false);
         }
@@ -348,28 +364,44 @@ const ProfileDashboard = () => {
         }
         setIsPsychUploading(true);
         try {
-            const formData = new FormData();
-            files.forEach(file => {
-                formData.append('files', file);
-            });
-            
             const token = localStorage.getItem("authToken");
-            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-                ? "http://localhost:5173" 
-                : "https://psych.ssbwithisv.in";
+            const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
+            const psychBackendUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
+            
+            // Upload files one-by-one to main backend (bypassing Vercel's 4.5MB request limit)
+            const fileUrls = [];
+            for (const file of files) {
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', file);
                 
-            await axios.post(`${baseUrl}/api/submissions/${submissionId}/upload`, formData, {
+                const uploadRes = await axios.post(`${mainBackendUrl}/api/uploadBatteryImage`, uploadFormData, {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+                
+                if (uploadRes.data && uploadRes.data.url) {
+                    fileUrls.push(uploadRes.data.url);
+                } else {
+                    throw new Error("Missing url in upload response");
+                }
+            }
+            
+            // Post the file URLs array as JSON to psych battery backend
+            await axios.post(`${psychBackendUrl}/api/submissions/${submissionId}/upload`, { fileUrls }, {
                 headers: { 
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/json'
                 }
             });
             
-            toast.success("Dossier uploaded successfully! Processing with OCR...");
+            toast.success("Dossier uploaded successfully!");
             fetchPsychSubmissions();
         } catch (e) {
             console.error("Dossier upload failed", e);
-            toast.error("Failed to upload Dossier.");
+            toast.error("Failed to upload Dossier. Please try again with smaller or fewer files.");
         } finally {
             setIsPsychUploading(false);
         }
@@ -1573,7 +1605,7 @@ const ProfileDashboard = () => {
                                                         <div key={sub._id} style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid rgba(210, 161, 0, 0.2)' }}>
                                                             <h5 style={{ color: '#d2a100' }}>{sub.assessmentId?.title || 'Psychological Test Battery'}</h5>
                                                             <p style={{ color: '#ccc', fontSize: '0.9rem', marginBottom: '10px' }}>
-                                                                Started: {sub.startedAt ? formatDate(sub.startedAt) + ' ' + formatTime(sub.startedAt) : 'N/A'}
+                                                                Started: {sub.startedAt || sub.createdAt ? formatDate(sub.startedAt || sub.createdAt) + ' ' + formatTime(sub.startedAt || sub.createdAt) : 'N/A'}
                                                             </p>
                                                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px' }}>
                                                                 <span style={{ 
