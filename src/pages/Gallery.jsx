@@ -45,6 +45,13 @@ function Gallery() {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [lightboxOpen, images.length]);
 
+    // Reset body scroll lock when component unmounts to prevent scroll issues on other pages
+    useEffect(() => {
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, []);
+
     const headerData = {
         heading: "Moments of Excellence",
         text: "Explore our journey through images capturing training sessions, successful candidates, and memorable moments.",

@@ -71,6 +71,13 @@ function BatchPage() {
         }
     }, [user]); // Re-run when user data is loaded
 
+    // Reset body scroll lock when component unmounts to prevent scroll issues on other pages
+    useEffect(() => {
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, []);
+
     // Course modules pricing matrix state with baseline defaults
     const [courseModules, setCourseModules] = useState([
         { id: 'ssb_ppdt', name: 'Introduction to SSB & PPDT, Stage 1 Process', price: 1999 },

@@ -79,12 +79,12 @@ function App() {
         <Route path="/blogs/:slug" element={<BlogsDetails />} />
         <Route path="/Gallery" element={<Gallery />} />
         <Route path="/Success" element={<SuccessPage />} />
+        <Route path="/Batches" element={<BatchPage />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/ProfileDashboard" element={<ProfileDashboard />} />
           <Route path="/OrderHistory" element={<OrderHistory />} />
           <Route path="/PaymentHistory" element={<PaymentHistory />} />
-          <Route path="/Batches" element={<BatchPage />} />
         </Route>
 
         
