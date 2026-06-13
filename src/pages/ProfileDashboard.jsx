@@ -193,7 +193,15 @@ const ProfileDashboard = () => {
 
     const handlePsychFileChange = (e) => {
         if (e.target.files) {
-            setPsychUploadFiles(Array.from(e.target.files));
+            const files = Array.from(e.target.files);
+            const maxLimit = 2 * 1024 * 1024; // 2 MB
+            const oversized = files.filter(f => f.size > maxLimit);
+            if (oversized.length > 0) {
+                toast.error(`File size exceeds the 2 MB limit for: ${oversized.map(f => f.name).join(', ')}`);
+                e.target.value = '';
+                return;
+            }
+            setPsychUploadFiles(files);
         }
     };
 
@@ -250,7 +258,15 @@ const ProfileDashboard = () => {
 
     const handlePiqFileChange = (e) => {
         if (e.target.files) {
-            setPiqUploadFiles(Array.from(e.target.files));
+            const files = Array.from(e.target.files);
+            const maxLimit = 500 * 1024; // 500 KB
+            const oversized = files.filter(f => f.size > maxLimit);
+            if (oversized.length > 0) {
+                toast.error(`File size exceeds the 500 KB limit for: ${oversized.map(f => f.name).join(', ')}`);
+                e.target.value = '';
+                return;
+            }
+            setPiqUploadFiles(files);
         }
     };
 
@@ -969,19 +985,6 @@ const ProfileDashboard = () => {
                                                 <div className={styles.coursesGrid}>
                                                     {batchesData.orders.map((order) => (
                                                         <div key={order._id} className={styles.courseCard}>
-                                                            {/* <div className={styles.courseThumbnail}>
-                                                                <img
-                                                                    src={order.slotId?.thumbnail || '/assets/batch-placeholder.jpg'}
-                                                                    alt={order.slotId?.title || 'Batch'}
-                                                                    onError={(e) => {
-                                                                        e.target.src = '/assets/batch-placeholder.jpg';
-                                                                    }}
-                                                                />
-                                                                <div className={styles.courseStatus}>
-                                                                    <FaCheckCircle />
-                                                                    <span>{order.status === 'paid' ? 'Paid' : order.status}</span>
-                                                                </div>
-                                                            </div> */}
                                                             <div className={styles.courseDetails}>
                                                                 <div className={styles.courseTitle}>
                                                                     <h3>
@@ -998,9 +1001,6 @@ const ProfileDashboard = () => {
                                                                         Purchased on {formatDate(order.createdAt)}
                                                                     </div>
                                                                 </div>
-
-                                                                {/* Batch Schedule Information */}
-
 
                                                                 {order?.orderId &&
                                                                     <div className={styles.courseOrderInfo}>
@@ -1340,7 +1340,7 @@ const ProfileDashboard = () => {
                                                                     return (
                                                                         <div className={styles.evalStepCard}>
                                                                             <h5>PIQ Document Uploads</h5>
-                                                                            <p>Each candidate must upload two PIQs: Initial Assessment (PIQ 1) and Final/Interview Preparation (PIQ 2).</p>
+                                                                            <p>Each candidate must upload two PIQs: Initial Assessment (PIQ 1) and Final/Interview Preparation (PIQ 2). <strong>(Max size: 500 KB per file)</strong></p>
                                                                             
                                                                             <input
                                                                                 type="file"
@@ -1351,6 +1351,13 @@ const ProfileDashboard = () => {
                                                                                 onChange={async (e) => {
                                                                                     if (e.target.files && e.target.files.length > 0) {
                                                                                         const files = Array.from(e.target.files);
+                                                                                        const maxLimit = 500 * 1024; // 500 KB
+                                                                                        const oversized = files.filter(f => f.size > maxLimit);
+                                                                                        if (oversized.length > 0) {
+                                                                                            toast.error(`File size exceeds the 500 KB limit for: ${oversized.map(f => f.name).join(', ')}`);
+                                                                                            e.target.value = '';
+                                                                                            return;
+                                                                                        }
                                                                                         await handleTimelinePiqUpload(files, uploadPiqType);
                                                                                     }
                                                                                 }}
@@ -1476,7 +1483,7 @@ const ProfileDashboard = () => {
                                                                 {evalActiveStep === 4 && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Dossier Management</h5>
-                                                                        <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Once the evaluation is completed, upload your handwritten dossier sheets here.</p>
+                                                                        <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Once the evaluation is completed, upload your handwritten dossier sheets here. <strong>(Max size: 2 MB per file)</strong></p>
                                                                         <div className={styles.evalStepActions}>
                                                                             <a
                                                                                 href={dossierDownloadUrl}
@@ -1506,6 +1513,13 @@ const ProfileDashboard = () => {
                                                                                             onChange={async (e) => {
                                                                                                 if (e.target.files && e.target.files.length > 0) {
                                                                                                     const files = Array.from(e.target.files);
+                                                                                                    const maxLimit = 2 * 1024 * 1024; // 2 MB
+                                                                                                    const oversized = files.filter(f => f.size > maxLimit);
+                                                                                                    if (oversized.length > 0) {
+                                                                                                        toast.error(`File size exceeds the 2 MB limit for: ${oversized.map(f => f.name).join(', ')}`);
+                                                                                                        e.target.value = '';
+                                                                                                        return;
+                                                                                                    }
                                                                                                     await handleTimelineDossierUpload(files);
                                                                                                 }
                                                                                             }}
