@@ -1762,20 +1762,22 @@ const ProfileDashboard = () => {
                                             gap: '24px'
                                         }}>
                                             {/* Security Disclaimer Banner */}
-                                            <div style={{
-                                                background: 'rgba(210, 161, 0, 0.05)',
-                                                border: '1px solid rgba(210, 161, 0, 0.15)',
-                                                borderRadius: '16px',
-                                                padding: '15px 20px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '12px'
-                                            }}>
-                                                <BiBrain style={{ color: '#d2a100', fontSize: '1.4rem', shrink: 0 }} />
-                                                <p style={{ color: '#ccc', fontSize: '0.78rem', margin: 0, fontStyle: 'italic', lineHeight: '1.4' }}>
-                                                    Security mandate: Only qualitative written observations and revision guidelines are released. Numerical marks, score sheets, and trait sliders are kept strictly confidential.
-                                                </p>
-                                            </div>
+                                            {(profileData?.user?.role === 'assessor' || profileData?.user?.role === 'admin' || profileData?.user?.role === 'franchise') && (
+                                                <div style={{
+                                                    background: 'rgba(210, 161, 0, 0.05)',
+                                                    border: '1px solid rgba(210, 161, 0, 0.15)',
+                                                    borderRadius: '16px',
+                                                    padding: '15px 20px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '12px'
+                                                }}>
+                                                    <BiBrain style={{ color: '#d2a100', fontSize: '1.4rem', shrink: 0 }} />
+                                                    <p style={{ color: '#ccc', fontSize: '0.78rem', margin: 0, fontStyle: 'italic', lineHeight: '1.4' }}>
+                                                        Security mandate: Only qualitative written observations and revision guidelines are released. Numerical marks, score sheets, and trait sliders are kept strictly confidential.
+                                                    </p>
+                                                </div>
+                                            )}
 
                                             {/* Remarks stack */}
                                             {hasPsych && (
@@ -1846,7 +1848,7 @@ const ProfileDashboard = () => {
                                                             {sub.psychMeetingDate ? formatDate(sub.psychMeetingDate) + ' at ' + formatTime(sub.psychMeetingDate) : 'Time Pending'}
                                                         </p>
                                                     </div>
-                                                    <a href={sub.psychMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
+                                                    <a href={sub.psychMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
                                                 </div>
                                             )}
                                             {sub?.toMeetingLink && (
@@ -1857,7 +1859,7 @@ const ProfileDashboard = () => {
                                                             {sub.toMeetingDate ? formatDate(sub.toMeetingDate) + ' at ' + formatTime(sub.toMeetingDate) : 'Time Pending'}
                                                         </p>
                                                     </div>
-                                                    <a href={sub.toMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
+                                                    <a href={sub.toMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
                                                 </div>
                                             )}
                                             {sub?.ioMeetingLink && (
@@ -1868,7 +1870,7 @@ const ProfileDashboard = () => {
                                                             {sub.ioMeetingDate ? formatDate(sub.ioMeetingDate) + ' at ' + formatTime(sub.ioMeetingDate) : 'Time Pending'}
                                                         </p>
                                                     </div>
-                                                    <a href={sub.ioMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>Join Meet Session</a>
+                                                    <a href={sub.ioMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
                                                 </div>
                                             )}
                                             {!sub?.psychMeetingLink && !sub?.toMeetingLink && !sub?.ioMeetingLink && (

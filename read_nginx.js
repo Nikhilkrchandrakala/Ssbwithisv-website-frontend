@@ -1,4 +1,13 @@
 const { Client } = require('ssh2');
+const fs = require('fs');
+const path = require('path');
+
+// Load env variables from backend .env or local .env
+const backendEnvPath = path.join(__dirname, "../Ssbwithisv-website-backend/Backend/.env");
+if (fs.existsSync(backendEnvPath)) {
+    require("dotenv").config({ path: backendEnvPath });
+}
+require("dotenv").config();
 
 const conn = new Client();
 conn.on('ready', () => {
@@ -18,5 +27,5 @@ conn.on('ready', () => {
   host: '88.222.214.155',
   port: 22,
   username: 'root',
-  password: 'Joint@3services'
+  password: (process.env.VPS_PASS || process.env["Vps-server-Password"] || "").trim()
 });

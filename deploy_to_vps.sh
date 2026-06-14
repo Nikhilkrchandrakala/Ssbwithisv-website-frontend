@@ -1,7 +1,16 @@
 #!/usr/bin/expect -f
 
 set timeout 300
-set password "Joint@3services"
+
+if {[info exists env(VPS_PASS)]} {
+    set password $env(VPS_PASS)
+} elseif {[info exists ::env(Vps-server-Password)]} {
+    set password $::env(Vps-server-Password)
+} else {
+    send_user "Error: VPS_PASS or Vps-server-Password environment variable is not set.\n"
+    exit 1
+}
+
 set ip "88.222.214.155"
 set user "root"
 set local_path "build/"
