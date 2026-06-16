@@ -38,6 +38,14 @@ import ImageUploadPopup from "../components/ImageUploadPopup";
 import axios from "axios";
 import ReactDOM from 'react-dom';
 
+const moduleNames = {
+    'full_course': '10 Days SSB Hackathon (Full Course)',
+    'ssb_ppdt': 'Intro & PPDT (Stage 1 Process)',
+    'psych': 'Psychology Test Preparation Program',
+    'interview': 'Interview Theory Course and Mock Interview',
+    'group_testing': 'Group Testing Course on VTXTM'
+};
+
 const ProfileDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profile');
@@ -86,17 +94,10 @@ const ProfileDashboard = () => {
     const [dossierDownloaded, setDossierDownloaded] = useState(() => localStorage.getItem('evalDossierDownloaded') === 'true');
     const [uploadPiqType, setUploadPiqType] = useState('piq1');
 
-    const { data: profileData } = useUserProfileQuery();
+    const { data: profileData, isLoading: isProfileLoading } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
     const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
     const [selectedTag, setSelectedTag] = useState("all");
-
-    const filteredMagazines = isMagazinesLoading === false && magazines
-        ? [...(selectedTag === "all"
-            ? magazines
-            : magazines.filter(item => item?.tags === selectedTag)
-        )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
-        : [];
 
     const [updateProfile] = useUpdateUserProfileMutation();
 
@@ -104,6 +105,39 @@ const ProfileDashboard = () => {
     const [previewData, setPreviewData] = useState(profileData?.user);
     const [formData, setFormData] = useState({ ...previewData });
     const [tempFormData, setTempFormData] = useState({});
+
+    const userProfile = previewData || profileData?.user;
+    const userStages = (userProfile?.clinicalStage || "")
+        .split(",")
+        .map(s => s.trim().toLowerCase())
+        .filter(Boolean);
+    const hasFullOrPsych = userStages.includes("full_course") || userStages.includes("psych") || userStages.includes("psychology");
+    const hasGTO = userStages.includes("group_testing") || userStages.includes("gto");
+    const hasInterview = userStages.includes("interview");
+    const isGTOOnly = hasGTO && !hasInterview && !hasFullOrPsych;
+    const isIOOnly = hasInterview && !hasFullOrPsych;
+
+    const filteredMagazines = isMagazinesLoading === false && magazines
+        ? [...(selectedTag === "all"
+            ? magazines
+            : magazines.filter(item => item?.tags === selectedTag)
+        )]
+        .filter(mag => {
+            const titleLower = mag?.pdfTitle?.toLowerCase() || '';
+            if (isGTOOnly) {
+                if (titleLower.includes('piq') || titleLower.includes('personal information') || titleLower.includes('dossier')) {
+                    return false;
+                }
+            }
+            if (isIOOnly) {
+                if (titleLower.includes('dossier') || titleLower.includes('psychology')) {
+                    return false;
+                }
+            }
+            return true;
+        })
+        .sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
+        : [];
 
     // Handle click outside popup
     useEffect(() => {
@@ -168,7 +202,9 @@ const ProfileDashboard = () => {
                 });
             }
             setPsychSubmissions(subs);
-            if (subs && subs.length > 0) {
+            if (isIOOnly) {
+                setEvalActiveStep(2);
+            } else if (subs && subs.length > 0) {
                 const latestSub = subs[0];
                 const isCompleted = latestSub.status === 'COMPLETED' || latestSub.status === 'REVIEW_PENDING' || latestSub.status === 'TEST_COMPLETED' || latestSub.status === 'PENDING_UPLOAD' || latestSub.workflowStage === 'EVALUATION_COMPLETED';
                 const hasDossier = latestSub.uploadedFiles && latestSub.uploadedFiles.length > 0;
@@ -182,6 +218,12 @@ const ProfileDashboard = () => {
                     } else {
                         setEvalActiveStep(2);
                     }
+                }
+            } else {
+                if (isIOOnly) {
+                    setEvalActiveStep(2);
+                } else {
+                    setEvalActiveStep(1);
                 }
             }
         } catch (e) {
@@ -428,6 +470,13 @@ const ProfileDashboard = () => {
         if (profileData?.user) {
             setPreviewData(profileData.user);
             setFormData(profileData.user);
+
+            const userStagesList = profileData.user.clinicalStage ? profileData.user.clinicalStage.split(",").map(s => s.trim().toLowerCase()) : [];
+            const hasFullOrPsychCheck = userStagesList.includes("full_course") || userStagesList.includes("psych") || userStagesList.includes("psychology");
+            const hasInterviewCheck = userStagesList.includes("interview");
+            if (hasInterviewCheck && !hasFullOrPsychCheck) {
+                setEvalActiveStep(2);
+            }
         }
     }, [profileData]);
 
@@ -995,24 +1044,64 @@ const ProfileDashboard = () => {
                                                                 <div className={styles.courseMeta}>
                                                                     <div className={styles.coursePrice}>
                                                                         <BiRupee />
-                                                                        <span>{order.price}</span>
+                                                                        <span>{Number(order.price || 0).toFixed(2)}</span>
                                                                     </div>
                                                                     <div className={styles.courseDate}>
                                                                         Purchased on {formatDate(order.createdAt)}
                                                                     </div>
                                                                 </div>
 
-                                                                {order?.orderId &&
-                                                                    <div className={styles.courseOrderInfo}>
-                                                                        <span className={styles.orderIdLabel}>Order ID:</span>
-                                                                        <span className={styles.orderIdValue}>{order.orderId}</span>
+                                                                {/* Dynamic Modules/Course Listing */}
+                                                                <div style={{ marginTop: '16px', marginBottom: '16px' }}>
+                                                                    <span style={{ color: '#d2a100', fontSize: '0.8rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '8px' }}>
+                                                                        Enrolled Courses / Modules:
+                                                                    </span>
+                                                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                                        {order.selectedModules && order.selectedModules.length > 0 ? (
+                                                                            order.selectedModules.map(modId => {
+                                                                                const name = moduleNames[modId] || modId;
+                                                                                return (
+                                                                                    <span key={modId} style={{ background: 'rgba(210, 161, 0, 0.1)', color: '#d2a100', border: '1px solid rgba(210, 161, 0, 0.3)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: '600' }}>
+                                                                                        {name}
+                                                                                    </span>
+                                                                                );
+                                                                            })
+                                                                        ) : (
+                                                                            <span style={{ background: 'rgba(210, 161, 0, 0.1)', color: '#d2a100', border: '1px solid rgba(210, 161, 0, 0.3)', padding: '4px 10px', borderRadius: '6px', fontSize: '0.78rem', fontWeight: '600' }}>
+                                                                                {order.slotId?.isFullCourse ? '10 Days SSB Hackathon (Full Course)' : 'General Batch Access'}
+                                                                            </span>
+                                                                        )}
                                                                     </div>
-                                                                }
+                                                                </div>
+
+                                                                {/* Batch Timeline & Purchase Details */}
+                                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', background: 'rgba(255,255,255,0.02)', padding: '12px 15px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '15px' }}>
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                                        <span style={{ color: '#d2a100', fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: '600' }}>Batch End Date</span>
+                                                                        <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: '500' }}>{order?.slotId?.endTime ? formatDate(order.slotId.endTime) : '—'}</span>
+                                                                    </div>
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                                                        <span style={{ color: '#d2a100', fontSize: '0.7rem', textTransform: 'uppercase', fontWeight: '600' }}>Booking Method</span>
+                                                                        <span style={{ color: '#fff', fontSize: '0.85rem', fontWeight: '500', textTransform: 'capitalize' }}>{order.bookingMethod || 'Standard Payment'}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className={styles.courseOrderInfo}>
+                                                                    <span className={styles.orderIdLabel}>Order ID:</span>
+                                                                    <span className={styles.orderIdValue}>{order.orderId || 'Manual booking/System created'}</span>
+                                                                </div>
 
                                                                 {order.paymentId && (
                                                                     <div className={styles.courseOrderInfo}>
                                                                         <span className={styles.orderIdLabel}>Payment ID:</span>
                                                                         <span className={styles.orderIdValue}>{order.paymentId}</span>
+                                                                    </div>
+                                                                )}
+
+                                                                {order.couponCode && (
+                                                                    <div className={styles.courseOrderInfo}>
+                                                                        <span className={styles.orderIdLabel}>Coupon Used:</span>
+                                                                        <span className={styles.orderIdValue}>{order.couponCode}</span>
                                                                     </div>
                                                                 )}
 
@@ -1067,7 +1156,7 @@ const ProfileDashboard = () => {
                                             </div>
                                         </div>
 
-                                        {isMagazinesLoading ? (
+                                        {isMagazinesLoading || isProfileLoading ? (
                                             <div className={styles.loadingState}>
                                                 <div className="spinner-border text-warning" role="status">
                                                     <span className="visually-hidden">Loading...</span>
@@ -1121,29 +1210,45 @@ const ProfileDashboard = () => {
 
                                         <div className={styles.psycheTestPanel}>
                                             {/* Centered Intro Text */}
-                                            <p className={styles.evalIntroText}>
-                                                Comprehensive timed evaluation simulating real SSB conditions — including TAT, WAT, SRT and SDT modules. Follow the steps below to complete your evaluation journey.
-                                            </p>
+                                            {hasFullOrPsych && (
+                                                <>
+                                                    <p className={styles.evalIntroText}>
+                                                        Comprehensive timed evaluation simulating real SSB conditions — including TAT, WAT, SRT and SDT modules. Follow the steps below to complete your evaluation journey.
+                                                    </p>
 
-                                            {/* Feature Boxes — single row */}
-                                            <div className={styles.evalFeatureRow}>
-                                                <div className={styles.evalFeatureBox}>
-                                                    <strong>Timed Automatic Slides</strong>
-                                                    <p>Simulates real SSB test conditions with precise timing</p>
-                                                </div>
-                                                <div className={styles.evalFeatureBox}>
-                                                    <strong>Handwritten Answer Upload</strong>
-                                                    <p>Write your answers on paper and upload scanned copies</p>
-                                                </div>
-                                                <div className={styles.evalFeatureBox}>
-                                                    <strong>Expert Assessor Review</strong>
-                                                    <p>Personalized feedback from qualified psychologists</p>
-                                                </div>
-                                                <div className={styles.evalFeatureBox}>
-                                                    <strong>Detailed Evaluation Report</strong>
-                                                    <p>Comprehensive psychological profile & improvement areas</p>
-                                                </div>
-                                            </div>
+                                                    {/* Feature Boxes — single row */}
+                                                    <div className={styles.evalFeatureRow}>
+                                                        <div className={styles.evalFeatureBox}>
+                                                            <strong>Timed Automatic Slides</strong>
+                                                            <p>Simulates real SSB test conditions with precise timing</p>
+                                                        </div>
+                                                        <div className={styles.evalFeatureBox}>
+                                                            <strong>Handwritten Answer Upload</strong>
+                                                            <p>Write your answers on paper and upload scanned copies</p>
+                                                        </div>
+                                                        <div className={styles.evalFeatureBox}>
+                                                            <strong>Expert Assessor Review</strong>
+                                                            <p>Personalized feedback from qualified psychologists</p>
+                                                        </div>
+                                                        <div className={styles.evalFeatureBox}>
+                                                            <strong>Detailed Evaluation Report</strong>
+                                                            <p>Comprehensive psychological profile & improvement areas</p>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                            )}
+
+                                            {isGTOOnly && (
+                                                <p className={styles.evalIntroText}>
+                                                    Welcome to your Group Testing (GTO) Portal. Here you can access details of your enrolled Group Testing Course, view scheduled meetings, and check your assessor remarks.
+                                                </p>
+                                            )}
+
+                                            {isIOOnly && (
+                                                <p className={styles.evalIntroText}>
+                                                    Welcome to your Mock Interview & Interview Prep Portal. Follow the steps below to download and upload your PIQ form, join your mock interview sessions, and view assessor feedback.
+                                                </p>
+                                            )}
 
                                             {/* Evaluation Journey — Tabbed Steps */}
                                             <div className={styles.psycheTimelineContainer}>
@@ -1158,21 +1263,17 @@ const ProfileDashboard = () => {
                                                     const hasDossier = activeSub?.uploadedFiles && activeSub.uploadedFiles.length > 0;
                                                     const piqReturned = piqStatus === 'RETURNED';
                                                     const piqApproved = piqStatus === 'APPROVED' || piqStatus === 'PARSED';
-
-                                                    const userProfile = profileData?.user;
+                                                    
                                                     const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
                                                     const hasAssessor = !!(userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO);
-                                                    
-                                                    const allowedStagesForEval = ["full_course", "psych", "psychology", "interview", "gto"];
-                                                    const userStages = userProfile?.clinicalStage ? userProfile.clinicalStage.split(",").map(s => s.trim().toLowerCase()) : [];
+                                                    const allowedStagesForEval = ["full_course", "psych", "psychology", "interview", "gto", "group_testing"];
                                                     const hasEligibleCourse = userStages.some(stage => allowedStagesForEval.includes(stage));
-                                                    
                                                     const isEligibleToStart = !!(hasBatch && hasAssessor && hasEligibleCourse);
 
                                                     // Determine completion status of each step
                                                     const stepCompleted = {
                                                         1: piqDownloaded,
-                                                        2: hasPiq,
+                                                        2: (hasInterview && !hasFullOrPsych) ? hasPiq2 : hasPiq,
                                                         3: isTestCompleted,
                                                         4: dossierDownloaded && hasDossier
                                                     };
@@ -1180,14 +1281,19 @@ const ProfileDashboard = () => {
                                                     // Step 2 is LOCKED once PIQs are uploaded — user should never re-enter
                                                     const stepAccessible = {
                                                         1: isEligibleToStart,
-                                                        2: isEligibleToStart && !hasPiq,
+                                                        2: isEligibleToStart && !((hasInterview && !hasFullOrPsych) ? hasPiq2 : hasPiq),
                                                         3: isEligibleToStart && hasPiq1,
                                                         4: isEligibleToStart
                                                     };
 
                                                     // Auto-redirect: if PIQs are already done and user somehow lands on step 2, push them to step 3
-                                                    if (hasPiq && evalActiveStep === 2) {
+                                                    if (hasPiq && evalActiveStep === 2 && (hasFullOrPsych || !hasInterview)) {
                                                         setTimeout(() => setEvalActiveStep(3), 0);
+                                                    }
+
+                                                    // Auto-redirect for IO-only candidate to ensure they are on step 2
+                                                    if (isIOOnly && evalActiveStep !== 2) {
+                                                        setTimeout(() => setEvalActiveStep(2), 0);
                                                     }
 
                                                     const evalSteps = [
@@ -1195,7 +1301,13 @@ const ProfileDashboard = () => {
                                                         { num: 2, label: 'PIQ Upload' },
                                                         { num: 3, label: 'Evaluation' },
                                                         { num: 4, label: 'Dossier' }
-                                                    ];
+                                                    ].filter(step => {
+                                                        if (hasFullOrPsych) return true;
+                                                        if (hasInterview) {
+                                                            return step.num === 2;
+                                                        }
+                                                        return false; // GTO only gets no steps
+                                                    });
 
                                                     const piqDoc = magazines?.find(m =>
                                                         m?.pdfTitle?.toLowerCase().includes("personal information")
@@ -1223,7 +1335,12 @@ const ProfileDashboard = () => {
                                                                     </div>
                                                                     <h3>Evaluation Portal Locked</h3>
                                                                     <p>
-                                                                        Your candidate evaluation space is currently restricted. To access your PIQ forms, timed psychological evaluations, and assessor reviews, you must have an eligible course, a batch, and an assessor assigned to your profile.
+                                                                        {isGTOOnly 
+                                                                            ? "To access your scheduled GTO meetings and assessor reviews, you must have a batch and an assessor assigned to your profile."
+                                                                            : isIOOnly 
+                                                                                ? "To access your PIQ upload, scheduled Mock Interviews, and assessor reviews, you must have a batch and an assessor assigned to your profile."
+                                                                                : "Your candidate evaluation space is currently restricted. To access your PIQ forms, timed psychological evaluations, and assessor reviews, you must have an eligible course, a batch, and an assessor assigned to your profile."
+                                                                        }
                                                                     </p>
                                                                 </div>
                                                                 
@@ -1237,7 +1354,7 @@ const ProfileDashboard = () => {
                                                                             <p>
                                                                                 {hasEligibleCourse 
                                                                                     ? `Eligible course assigned (${userProfile.clinicalStage.split(',').map(s => s.toUpperCase()).join(', ')})` 
-                                                                                    : "Requires allocation of Full Course, Psych Course, or Interview Course"
+                                                                                    : "Requires allocation of Full Course, Psych Course, Interview Course, or Group Testing Course"
                                                                                 }
                                                                             </p>
                                                                         </div>
@@ -1265,8 +1382,25 @@ const ProfileDashboard = () => {
                                                                 </div>
 
                                                                 <div className={styles.evalLockedFooter}>
-                                                                    <p>Once your profile is set up, this section will automatically unlock, allowing you to download your PIQ forms and begin your evaluations.</p>
+                                                                    <p>
+                                                                        {isGTOOnly 
+                                                                            ? "Once your profile is set up, this section will automatically unlock, allowing you to join your scheduled GTO meetings and access your remarks."
+                                                                            : isIOOnly 
+                                                                                ? "Once your profile is set up, this section will automatically unlock, allowing you to upload your PIQ form and join your scheduled Mock Interviews."
+                                                                                : "Once your profile is set up, this section will automatically unlock, allowing you to download your PIQ forms and begin your evaluations."
+                                                                        }
+                                                                    </p>
                                                                     <span>For assistance, please contact SSB With ISV Support or your administrator.</span>
+                                                                    {(isGTOOnly || isIOOnly) && (
+                                                                        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                                                            <button
+                                                                                className={styles.stepActionButton}
+                                                                                onClick={() => navigate('/batches')}
+                                                                            >
+                                                                                Browse More Courses
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         );
@@ -1275,38 +1409,59 @@ const ProfileDashboard = () => {
                                                     return (
                                                         <>
                                                             {/* Tab Bar */}
-                                                            <div className={styles.evalTabBar}>
-                                                                {evalSteps.map(step => {
-                                                                    const isActive = evalActiveStep === step.num;
-                                                                    const isCompleted = stepCompleted[step.num];
-                                                                    const isDisabled = !stepAccessible[step.num] && !isCompleted;
+                                                            {evalSteps.length > 0 && (
+                                                                <div className={styles.evalTabBar}>
+                                                                    {evalSteps.map(step => {
+                                                                        const isActive = evalActiveStep === step.num;
+                                                                        const isCompleted = stepCompleted[step.num];
+                                                                        const isDisabled = !stepAccessible[step.num] && !isCompleted;
 
-                                                                    let tabClass = styles.evalTab;
-                                                                    if (isActive) tabClass += ` ${styles.evalTabActive}`;
-                                                                    if (isCompleted && !isActive) tabClass += ` ${styles.evalTabCompleted}`;
-                                                                    if (isDisabled) tabClass += ` ${styles.evalTabDisabled}`;
+                                                                        let tabClass = styles.evalTab;
+                                                                        if (isActive) tabClass += ` ${styles.evalTabActive}`;
+                                                                        if (isCompleted && !isActive) tabClass += ` ${styles.evalTabCompleted}`;
+                                                                        if (isDisabled) tabClass += ` ${styles.evalTabDisabled}`;
 
-                                                                    return (
-                                                                        <button
-                                                                            key={step.num}
-                                                                            className={tabClass}
-                                                                            onClick={() => !isDisabled && setEvalActiveStep(step.num)}
-                                                                            disabled={isDisabled}
-                                                                        >
-                                                                            <span className={styles.evalTabNum}>
-                                                                                {isCompleted ? <FaCheckCircle style={{ fontSize: '0.7rem' }} /> : step.num}
-                                                                            </span>
-                                                                            {step.label}
-                                                                        </button>
-                                                                    );
-                                                                })}
-                                                            </div>
+                                                                        return (
+                                                                            <button
+                                                                                key={step.num}
+                                                                                className={tabClass}
+                                                                                onClick={() => !isDisabled && setEvalActiveStep(step.num)}
+                                                                                disabled={isDisabled}
+                                                                            >
+                                                                                <span className={styles.evalTabNum}>
+                                                                                    {isCompleted ? <FaCheckCircle style={{ fontSize: '0.7rem' }} /> : step.num}
+                                                                                </span>
+                                                                                {step.label}
+                                                                            </button>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
 
                                                             {/* Tab Content */}
                                                             <div className={styles.evalTabContent} key={evalActiveStep}>
 
+                                                                {/* GTO Only Message */}
+                                                                {hasGTO && !hasInterview && !hasFullOrPsych && (
+                                                                    <div className={styles.evalStepCard}>
+                                                                        <h5>Group Testing Course</h5>
+                                                                        <p>The timed psychological test battery and PIQ forms are not required for your enrolled course (Group Testing Course on VTXTM).</p>
+                                                                        <p style={{ color: '#aaa', fontSize: '0.9rem', marginTop: '10px' }}>
+                                                                            You can join your scheduled GTO meetings and access your assessor remarks under the **Final Assessment Remarks** section once they are released.
+                                                                        </p>
+                                                                        <div className={styles.evalStepActions} style={{ marginTop: '20px' }}>
+                                                                            <button
+                                                                                className={styles.stepActionButton}
+                                                                                onClick={() => navigate('/batches')}
+                                                                            >
+                                                                                Browse More Courses
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
                                                                 {/* Step 1: Download PIQ Form */}
-                                                                {evalActiveStep === 1 && (
+                                                                {evalActiveStep === 1 && hasFullOrPsych && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Download PIQ Form</h5>
                                                                         <p>Download and print your empty Personal Information Questionnaire. Fill it out by hand and keep it ready for the next step.</p>
@@ -1329,7 +1484,7 @@ const ProfileDashboard = () => {
                                                                 )}
 
                                                                 {/* Step 2: PIQ Upload */}
-                                                                {evalActiveStep === 2 && (() => {
+                                                                {evalActiveStep === 2 && (hasFullOrPsych || hasInterview) && (() => {
                                                                     const piq1Status = activeSub?.piq1Status || (activeSub?.piqFiles && activeSub.piqFiles.length > 0 ? 'VERIFIED' : 'PENDING');
                                                                     const piq2Status = activeSub?.piq2Status || 'PENDING';
                                                                     const isPiq1Uploaded = piq1Status === 'VERIFIED' || piq1Status === 'PROCESSING';
@@ -1339,9 +1494,43 @@ const ProfileDashboard = () => {
 
                                                                     return (
                                                                         <div className={styles.evalStepCard}>
-                                                                            <h5>PIQ Document Uploads</h5>
-                                                                            <p>Each candidate must upload two PIQs: Initial Assessment (PIQ 1) and Final/Interview Preparation (PIQ 2). <strong>(Max size: 500 KB per file)</strong></p>
-                                                                            
+                                                                            <h5>{isIOOnly ? "PIQ Document Upload" : "PIQ Document Uploads"}</h5>
+                                                                            {isIOOnly ? (
+                                                                                <>
+                                                                                    <div style={{ background: 'rgba(210, 161, 0, 0.05)', border: '1px solid rgba(210, 161, 0, 0.2)', padding: '16px', borderRadius: '12px', marginBottom: '20px' }}>
+                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 6px 0', fontSize: '0.95rem', fontWeight: 'bold' }}>About PIQ 2 (Final/Interview Preparation PIQ):</h6>
+                                                                                        <p style={{ margin: 0, fontSize: '0.85rem', color: '#ccc', lineHeight: '1.4' }}>
+                                                                                            This form is crucial for your Mock Interview. It helps the Interviewing Officer (IO) understand your educational background, accomplishments, hobbies, and sports activities to formulate highly personalized questions.
+                                                                                        </p>
+                                                                                    </div>
+                                                                                    <p>For your Mock Interview, you must upload your Final/Interview Preparation PIQ (PIQ 2). <strong>(Max size: 500 KB per file)</strong></p>
+                                                                                    <div className={styles.evalStepActions} style={{ marginBottom: '15px', marginTop: '10px' }}>
+                                                                                        <a
+                                                                                            href={piqDownloadUrl}
+                                                                                            target="_blank"
+                                                                                            rel="noopener noreferrer"
+                                                                                            className={styles.stepDownloadLink}
+                                                                                            download="Blank_PIQ_Form.pdf"
+                                                                                            onClick={() => {
+                                                                                                setPiqDownloaded(true);
+                                                                                                localStorage.setItem('evalPiqDownloaded', 'true');
+                                                                                            }}
+                                                                                        >
+                                                                                            <BiDownload /> Download Blank PIQ Form
+                                                                                        </a>
+                                                                                        <button
+                                                                                            className={styles.stepActionButton}
+                                                                                            style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', marginLeft: '12px' }}
+                                                                                            onClick={() => navigate('/batches')}
+                                                                                        >
+                                                                                            Browse More Courses
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </>
+                                                                            ) : hasFullOrPsych ? (
+                                                                                <p>Each candidate must upload two PIQs: Initial Assessment (PIQ 1) and Final/Interview Preparation (PIQ 2). <strong>(Max size: 500 KB per file)</strong></p>
+                                                                            ) : null}
+
                                                                             <input
                                                                                 type="file"
                                                                                 ref={timelinePiqInputRef}
@@ -1365,45 +1554,49 @@ const ProfileDashboard = () => {
 
                                                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginTop: '20px' }}>
                                                                                 {/* PIQ 1 Slot */}
-                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
-                                                                                    <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 1: Initial Assessment PIQ</h6>
-                                                                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Mandatory initial upload for Psychology and TO review.</p>
-                                                                                    <div className={styles.evalStepActions}>
-                                                                                        <button
-                                                                                            className={styles.stepActionButton}
-                                                                                            onClick={() => {
-                                                                                                setUploadPiqType('piq1');
-                                                                                                setTimeout(() => timelinePiqInputRef.current?.click(), 50);
-                                                                                            }}
-                                                                                            disabled={isPiqUploading || isPiq1Uploaded}
-                                                                                        >
-                                                                                            {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "PIQ 1 Uploaded" : "Upload PIQ 1")}
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    {isPiq1Uploaded && (
-                                                                                        <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                            <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
-                                                                                            {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
+                                                                                {!(hasInterview && !hasFullOrPsych) && (
+                                                                                    <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
+                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 1: Initial Assessment PIQ</h6>
+                                                                                        <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Mandatory initial upload for Psychology and TO review.</p>
+                                                                                        <div className={styles.evalStepActions}>
+                                                                                            <button
+                                                                                                className={styles.stepActionButton}
+                                                                                                onClick={() => {
+                                                                                                    setUploadPiqType('piq1');
+                                                                                                    setTimeout(() => timelinePiqInputRef.current?.click(), 50);
+                                                                                                }}
+                                                                                                disabled={isPiqUploading || isPiq1Uploaded}
+                                                                                            >
+                                                                                                {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "PIQ 1 Uploaded" : "Upload PIQ 1")}
+                                                                                            </button>
                                                                                         </div>
-                                                                                    )}
-                                                                                </div>
+                                                                                        {isPiq1Uploaded && (
+                                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
+                                                                                                <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
+                                                                                                {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )}
 
                                                                                 {/* PIQ 2 Slot */}
-                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: isPiq1Verified ? 1 : 0.5 }}>
+                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: (isPiq1Verified || (hasInterview && !hasFullOrPsych)) ? 1 : 0.5 }}>
                                                                                     <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 2: Final/Interview Preparation PIQ</h6>
-                                                                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Final preparation PIQ. Enabled only after PIQ 1 is verified.</p>
+                                                                                    <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>
+                                                                                        {hasInterview && !hasFullOrPsych ? "Final preparation PIQ for Interview theory and Mock Interview course." : "Final preparation PIQ. Enabled only after PIQ 1 is verified."}
+                                                                                    </p>
                                                                                     <div className={styles.evalStepActions}>
                                                                                         <button
                                                                                             className={styles.stepActionButton}
                                                                                             onClick={() => {
-                                                                                                if (!isPiq1Verified) {
+                                                                                                if (!isPiq1Verified && !(hasInterview && !hasFullOrPsych)) {
                                                                                                     toast.error("PIQ 2 can only be uploaded after PIQ 1 has been successfully uploaded and verified.");
                                                                                                     return;
                                                                                                 }
                                                                                                 setUploadPiqType('piq2');
                                                                                                 setTimeout(() => timelinePiqInputRef.current?.click(), 50);
                                                                                             }}
-                                                                                            disabled={isPiqUploading || !isPiq1Verified || isPiq2Uploaded}
+                                                                                            disabled={isPiqUploading || (!isPiq1Verified && !(hasInterview && !hasFullOrPsych)) || isPiq2Uploaded}
                                                                                         >
                                                                                             {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "PIQ 2 Uploaded" : "Upload PIQ 2")}
                                                                                         </button>
@@ -1414,7 +1607,7 @@ const ProfileDashboard = () => {
                                                                                             {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
                                                                                         </div>
                                                                                     )}
-                                                                                    {!isPiq1Verified && (
+                                                                                    {!isPiq1Verified && !(hasInterview && !hasFullOrPsych) && (
                                                                                         <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#ea580c', fontStyle: 'italic' }}>
                                                                                             ⚠️ Locked until PIQ 1 verification is completed.
                                                                                         </div>
@@ -1424,9 +1617,9 @@ const ProfileDashboard = () => {
                                                                         </div>
                                                                     );
                                                                 })()}
- 
+
                                                                 {/* Step 3: Candidate Evaluation */}
-                                                                {evalActiveStep === 3 && (
+                                                                {evalActiveStep === 3 && hasFullOrPsych && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Candidate Evaluation</h5>
                                                                         <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Then, start and complete your timed online psychological test.</p>
@@ -1478,9 +1671,8 @@ const ProfileDashboard = () => {
                                                                         </div>
                                                                     </div>
                                                                 )}
-
-                                                                {/* Step 4: Dossier (Download + Upload) */}
-                                                                {evalActiveStep === 4 && (
+ 
+                                                                {evalActiveStep === 4 && hasFullOrPsych && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Dossier Management</h5>
                                                                         <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Once the evaluation is completed, upload your handwritten dossier sheets here. <strong>(Max size: 2 MB per file)</strong></p>
@@ -1567,12 +1759,19 @@ const ProfileDashboard = () => {
                                                             </div>
                                                         </>
                                                     );
-                                                })()}
+                                                 })()}
 
                                                 {/* Dynamic Broadcast Feedback Release Button */}
                                                 {(() => {
                                                     const activeSub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
-                                                    if (activeSub && activeSub.status === 'REPORT_RELEASED') {
+                                                    const hasAnyVisible = activeSub && (
+                                                        activeSub.status === 'REPORT_RELEASED' ||
+                                                        activeSub.reportVisibility?.psych ||
+                                                        activeSub.reportVisibility?.gto ||
+                                                        activeSub.reportVisibility?.io ||
+                                                        activeSub.reportVisibility?.to
+                                                    );
+                                                    if (hasAnyVisible) {
                                                         return (
                                                             <div style={{ marginTop: '35px', textAlign: 'center' }}>
                                                                 <button
@@ -1612,51 +1811,56 @@ const ProfileDashboard = () => {
                                                         <span className="visually-hidden">Loading...</span>
                                                     </div>
                                                 </div>
-                                            ) : psychSubmissions && psychSubmissions.length > 0 ? (
+                                                    ) : psychSubmissions && psychSubmissions.length > 0 ? (
                                                 <div className={styles.psychSubmissionsList}>
-                                                    <h4 style={{ color: '#fff', marginBottom: '15px' }}>Your Psych Tests</h4>
-                                                    {psychSubmissions.map(sub => (
-                                                        <div key={sub._id} style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid rgba(210, 161, 0, 0.2)' }}>
-                                                            <h5 style={{ color: '#d2a100' }}>{sub.assessmentId?.title || 'Psychological Test Battery'}</h5>
-                                                            <p style={{ color: '#ccc', fontSize: '0.9rem', marginBottom: '10px' }}>
-                                                                Started: {sub.startedAt || sub.createdAt ? formatDate(sub.startedAt || sub.createdAt) + ' ' + formatTime(sub.startedAt || sub.createdAt) : 'N/A'}
-                                                            </p>
-                                                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px' }}>
-                                                                <span style={{ 
-                                                                    padding: '4px 10px', 
-                                                                    borderRadius: '20px', 
-                                                                    fontSize: '0.8rem',
-                                                                    background: sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? 'rgba(40, 167, 69, 0.2)' : 'rgba(255, 193, 7, 0.2)',
-                                                                    color: sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? '#28a745' : '#ffc107',
-                                                                    border: `1px solid ${sub.status === 'COMPLETED' || sub.status === 'REVIEW_PENDING' ? '#28a745' : '#ffc107'}`
-                                                                }}>
-                                                                    Status: {sub.status}
-                                                                </span>
-                                                            </div>
-                                                            
-                                                            <div style={{ marginTop: '15px' }}>
-                                                                {/* Render specialized meeting links */}
-                                                                {(() => {
-                                                                    const meetings = [];
-                                                                    if (sub.psychMeetingLink && sub.psychMeetingDate) meetings.push({ role: 'Psychologist', date: sub.psychMeetingDate, link: sub.psychMeetingLink });
-                                                                    if (sub.ioMeetingLink && sub.ioMeetingDate) meetings.push({ role: 'Interviewing Officer', date: sub.ioMeetingDate, link: sub.ioMeetingLink });
-                                                                    if (sub.toMeetingLink && sub.toMeetingDate) meetings.push({ role: 'Technical Officer', date: sub.toMeetingDate, link: sub.toMeetingLink });
-                                                                    if (meetings.length === 0 && sub.meetingLink && sub.meetingDate) meetings.push({ role: 'Assessor', date: sub.meetingDate, link: sub.meetingLink });
-
-                                                                        return meetings.map((m, idx) => (
-                                                                            <div key={idx} style={{ marginTop: '15px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                                                                                <a href={m.link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#15803D', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
-                                                                                    Join {m.role} Meeting
-                                                                                </a>
-                                                                                {m.date && <span style={{ color: '#aaa', fontSize: '0.9rem' }}>Scheduled: {formatDate(m.date)}</span>}
-                                                                            </div>
-                                                                        ));
-                                                                    })()}
+                                                    <h4 style={{ color: '#fff', marginBottom: '15px' }}>{isIOOnly ? 'Your Mock Interview' : 'Your Psych Tests'}</h4>
+                                                    {psychSubmissions.map(sub => {
+                                                        const statusToShow = isIOOnly ? (sub.ioStatus || 'PENDING') : sub.status;
+                                                        const isCompletedOrReview = statusToShow === 'COMPLETED' || statusToShow === 'REVIEW_PENDING' || statusToShow === 'UNDER_REVIEW';
+                                                        
+                                                        return (
+                                                            <div key={sub._id} style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid rgba(210, 161, 0, 0.2)' }}>
+                                                                <h5 style={{ color: '#d2a100' }}>{isIOOnly ? 'Mock Interview Status' : (sub.assessmentId?.title || 'Psychological Test Battery')}</h5>
+                                                                <p style={{ color: '#ccc', fontSize: '0.9rem', marginBottom: '10px' }}>
+                                                                    {isIOOnly ? 'Assigned: ' : 'Started: '}{sub.startedAt || sub.createdAt ? formatDate(sub.startedAt || sub.createdAt) + ' ' + formatTime(sub.startedAt || sub.createdAt) : 'N/A'}
+                                                                </p>
+                                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px' }}>
+                                                                    <span style={{ 
+                                                                        padding: '4px 10px', 
+                                                                        borderRadius: '20px', 
+                                                                        fontSize: '0.8rem',
+                                                                        background: isCompletedOrReview ? 'rgba(40, 167, 69, 0.2)' : 'rgba(255, 193, 7, 0.2)',
+                                                                        color: isCompletedOrReview ? '#28a745' : '#ffc107',
+                                                                        border: `1px solid ${isCompletedOrReview ? '#28a745' : '#ffc107'}`
+                                                                    }}>
+                                                                        Status: {statusToShow}
+                                                                    </span>
                                                                 </div>
-                                                        </div>
-                                                    ))}
+                                                                
+                                                                <div style={{ marginTop: '15px' }}>
+                                                                    {/* Render specialized meeting links */}
+                                                                    {(() => {
+                                                                        const meetings = [];
+                                                                        if (sub.psychMeetingLink) meetings.push({ role: 'Psychologist', date: sub.psychMeetingDate, link: sub.psychMeetingLink });
+                                                                        if (sub.ioMeetingLink) meetings.push({ role: 'Interviewing Officer', date: sub.ioMeetingDate, link: sub.ioMeetingLink });
+                                                                        if (sub.toMeetingLink) meetings.push({ role: 'Technical Officer', date: sub.toMeetingDate, link: sub.toMeetingLink });
+                                                                        if (meetings.length === 0 && sub.meetingLink) meetings.push({ role: 'Assessor', date: sub.meetingDate, link: sub.meetingLink });
+ 
+                                                                            return meetings.map((m, idx) => (
+                                                                                <div key={idx} style={{ marginTop: '15px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                                                                    <a href={m.link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#15803D', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
+                                                                                        Join {m.role} Meeting
+                                                                                    </a>
+                                                                                    {m.date && <span style={{ color: '#aaa', fontSize: '0.9rem' }}>Scheduled: {formatDate(m.date)}</span>}
+                                                                                </div>
+                                                                            ));
+                                                                        })()}
+                                                                    </div>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
-                                            ) : batchesData?.orders?.length > 0 ? (
+                                            ) : (batchesData?.orders?.length > 0 || (profileData?.user?.clinicalStage && ["full_course", "psych", "psychology", "interview", "gto", "group_testing"].some(stage => profileData.user.clinicalStage.toLowerCase().includes(stage))) || profileData?.user?.isManuallyCreated) ? (
                                                 null
                                             ) : (
                                                 <div className={styles.psycheLocked}>
@@ -1684,10 +1888,10 @@ const ProfileDashboard = () => {
                             const ioRemarks = sub?.ioRemarks || '';
                             const toRemarks = sub?.toRemarks || '';
 
-                            const hasPsych = profileData?.user?.assignedPsych && psychRemarks;
-                            const hasGto = profileData?.user?.assignedGTO && gtoRemarks;
-                            const hasIo = profileData?.user?.assignedIO && ioRemarks;
-                            const hasTo = profileData?.user?.assignedTO && toRemarks;
+                            const hasPsych = profileData?.user?.assignedPsych && psychRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.psych);
+                            const hasGto = profileData?.user?.assignedGTO && gtoRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.gto);
+                            const hasIo = profileData?.user?.assignedIO && ioRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.io);
+                            const hasTo = profileData?.user?.assignedTO && toRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.to);
 
                             return (
                                 <div style={{
