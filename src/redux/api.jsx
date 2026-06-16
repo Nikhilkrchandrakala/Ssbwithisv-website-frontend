@@ -8,18 +8,44 @@ export const api = createApi({
         "Blogs"
     ],
 
-    baseQuery: fetchBaseQuery({
-        baseUrl: window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-            ? "http://localhost:5001/api/"
-            : "https://api.ssbwithisv.in/api/",
-        prepareHeaders: (headers) => {
-            const token = localStorage.getItem("authToken");
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`);
+    baseQuery: (() => {
+        const rawBaseQuery = fetchBaseQuery({
+            baseUrl: "https://api.ssbwithisv.in/api/",
+            prepareHeaders: (headers) => {
+                const token = localStorage.getItem("authToken");
+                if (token) {
+                    headers.set("authorization", `Bearer ${token}`);
+                }
+                return headers;
+            },
+        });
+
+        const localBaseQuery = fetchBaseQuery({
+            baseUrl: "http://localhost:5001/api/",
+            prepareHeaders: (headers) => {
+                const token = localStorage.getItem("authToken");
+                if (token) {
+                    headers.set("authorization", `Bearer ${token}`);
+                }
+                return headers;
+            },
+        });
+
+        return async (args, api, extraOptions) => {
+            const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+            if (isLocalhost) {
+                try {
+                    const result = await localBaseQuery(args, api, extraOptions);
+                    if (!result.error || result.error.status !== 'FETCH_ERROR') {
+                        return result;
+                    }
+                } catch (e) {
+                    // fall back
+                }
             }
-            return headers;
-        },
-    }),
+            return rawBaseQuery(args, api, extraOptions);
+        };
+    })(),
 
     endpoints: (builder) => ({
 

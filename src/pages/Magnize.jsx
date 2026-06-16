@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useGetAllMagazineQuery } from '../redux/api'
+import toast from "react-hot-toast";
 
 function Magnize() {
 
@@ -38,6 +39,11 @@ function Magnize() {
             : allMagazineData.filter(item => item?.tags === selectedTag)
         )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
         : [];
+
+    const defaultCategories = ["Magazine", "Books", "SSBPrep"];
+    const uniqueCategories = isSuccess
+        ? Array.from(new Set([...defaultCategories, ...allMagazineData.map(item => item?.tags).filter(Boolean)]))
+        : defaultCategories;
 
 
 
@@ -81,20 +87,37 @@ function Magnize() {
                 : "https://api.ssbwithisv.in";
             const url = `${baseUrl}/${pdfPath}`;
 
-            const res = await axios.get(url, {
-                responseType: "blob",
-            });
+            let res;
+            try {
+                res = await axios.get(url, {
+                    responseType: "blob",
+                });
+            } catch (err) {
+                if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                    try {
+                        const fallbackUrl = `https://api.ssbwithisv.in/${pdfPath}`;
+                        res = await axios.get(fallbackUrl, {
+                            responseType: "blob",
+                        });
+                    } catch (fallbackErr) {
+                        console.error("Failed to download PDF from local and fallback server", fallbackErr);
+                    }
+                } else {
+                    console.error("Failed to download PDF", err);
+                }
+            }
 
             if (res) {
                 setDownloadBtn(true)
+                const blob = new Blob([res.data], { type: "application/pdf" });
+                const link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
+                link.click();
+            } else {
+                setDownloadBtn(true);
+                toast.error("Failed to download PDF.");
             }
-
-            const blob = new Blob([res.data], { type: "application/pdf" });
-            const link = document.createElement("a");
-
-            link.href = window.URL.createObjectURL(blob);
-            link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
-            link.click();
         }
     };
 
@@ -258,9 +281,15 @@ function Magnize() {
                                     onChange={(e) => setSelectedTag(e.target.value)}
                                 >
                                     <option value="all">All Resources</option>
-                                    <option value="Magazine">Current Affairs Magazine</option>
-                                    <option value="Books">Books</option>
-                                    <option value="SSBPrep">SSB Prep Material</option>
+                                    {uniqueCategories.map(cat => {
+                                        let displayName = cat;
+                                        if (cat === "Magazine") displayName = "Current Affairs Magazine";
+                                        else if (cat === "Books") displayName = "Books";
+                                        else if (cat === "SSBPrep") displayName = "SSB Prep Material";
+                                        return (
+                                            <option key={cat} value={cat}>{displayName}</option>
+                                        );
+                                    })}
                                 </select>
 
                             </div>
@@ -294,6 +323,11 @@ function Magnize() {
                                         src={window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? `http://localhost:5001/${item?.magazineFrontImage}` : `https://api.ssbwithisv.in/${item?.magazineFrontImage}`}
                                         className="magazine-card-img"
                                         alt="Magazine Image"
+                                        onError={(e) => {
+                                            if (e.target.src.includes('localhost:5001')) {
+                                                e.target.src = `https://api.ssbwithisv.in/${item?.magazineFrontImage}`;
+                                            }
+                                        }}
                                     />
                                 </div>
 

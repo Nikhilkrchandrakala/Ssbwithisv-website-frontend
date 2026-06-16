@@ -43,7 +43,7 @@ const moduleNames = {
     'ssb_ppdt': 'Intro & PPDT (Stage 1 Process)',
     'psych': 'Psychology Test Preparation Program',
     'interview': 'Interview Theory Course and Mock Interview',
-    'group_testing': 'Group Testing Course on VTXTM'
+    'group_testing': <span>Group Testing Course on VTX<sup>TM</sup></span>
 };
 
 const ProfileDashboard = () => {
@@ -138,6 +138,11 @@ const ProfileDashboard = () => {
         })
         .sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
         : [];
+
+    const defaultCategories = ["Magazine", "Books", "SSBPrep"];
+    const uniqueCategories = isMagazinesLoading === false && magazines
+        ? Array.from(new Set([...defaultCategories, ...magazines.map(item => item?.tags).filter(Boolean)]))
+        : defaultCategories;
 
     // Handle click outside popup
     useEffect(() => {
@@ -402,7 +407,7 @@ const ProfileDashboard = () => {
                 }
             });
             
-            toast.success(`${piqType === 'piq2' ? 'PIQ 2 (Final)' : 'PIQ 1 (Initial)'} Form uploaded successfully!`);
+            toast.success(`${isIOOnly ? 'PIQ 1' : (piqType === 'piq2' ? 'PIQ 2 (Final)' : 'PIQ 1 (Initial)')} Form uploaded successfully!`);
             fetchPsychSubmissions();
         } catch (e) {
             console.error("PIQ Upload failed", e);
@@ -1149,9 +1154,15 @@ const ProfileDashboard = () => {
                                                     style={{ background: 'rgba(255, 255, 255, 0.05)', color: '#fff', border: '1px solid rgba(210, 161, 0, 0.3)', borderRadius: '8px', padding: '10px' }}
                                                 >
                                                     <option value="all" style={{ color: '#000' }}>All Resources</option>
-                                                    <option value="Magazine" style={{ color: '#000' }}>Current Affairs Magazine</option>
-                                                    <option value="Books" style={{ color: '#000' }}>Books</option>
-                                                    <option value="SSBPrep" style={{ color: '#000' }}>SSB Prep Material</option>
+                                                    {uniqueCategories.map(cat => {
+                                                        let displayName = cat;
+                                                        if (cat === "Magazine") displayName = "Current Affairs Magazine";
+                                                        else if (cat === "Books") displayName = "Books";
+                                                        else if (cat === "SSBPrep") displayName = "SSB Prep Material";
+                                                        return (
+                                                            <option key={cat} value={cat} style={{ color: '#000' }}>{displayName}</option>
+                                                        );
+                                                    })}
                                                 </select>
                                             </div>
                                         </div>
@@ -1263,7 +1274,6 @@ const ProfileDashboard = () => {
                                                     const hasDossier = activeSub?.uploadedFiles && activeSub.uploadedFiles.length > 0;
                                                     const piqReturned = piqStatus === 'RETURNED';
                                                     const piqApproved = piqStatus === 'APPROVED' || piqStatus === 'PARSED';
-                                                    
                                                     const hasBatch = userProfile?.batch && userProfile.batch.trim() !== "";
                                                     const hasAssessor = !!(userProfile?.assignedPsych || userProfile?.assignedGTO || userProfile?.assignedIO || userProfile?.assignedTO);
                                                     const allowedStagesForEval = ["full_course", "psych", "psychology", "interview", "gto", "group_testing"];
@@ -1273,15 +1283,15 @@ const ProfileDashboard = () => {
                                                     // Determine completion status of each step
                                                     const stepCompleted = {
                                                         1: piqDownloaded,
-                                                        2: (hasInterview && !hasFullOrPsych) ? hasPiq2 : hasPiq,
+                                                        2: (hasInterview && !hasFullOrPsych) ? hasPiq1 : hasPiq,
                                                         3: isTestCompleted,
-                                                        4: dossierDownloaded && hasDossier
+                                                        4: hasDossier
                                                     };
 
                                                     // Step 2 is LOCKED once PIQs are uploaded — user should never re-enter
                                                     const stepAccessible = {
                                                         1: isEligibleToStart,
-                                                        2: isEligibleToStart && !((hasInterview && !hasFullOrPsych) ? hasPiq2 : hasPiq),
+                                                        2: isEligibleToStart && !((hasInterview && !hasFullOrPsych) ? hasPiq1 : hasPiq),
                                                         3: isEligibleToStart && hasPiq1,
                                                         4: isEligibleToStart
                                                     };
@@ -1445,7 +1455,7 @@ const ProfileDashboard = () => {
                                                                 {hasGTO && !hasInterview && !hasFullOrPsych && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Group Testing Course</h5>
-                                                                        <p>The timed psychological test battery and PIQ forms are not required for your enrolled course (Group Testing Course on VTXTM).</p>
+                                                                        <p>The timed psychological test battery and PIQ forms are not required for your enrolled course (Group Testing Course on VTX<sup>TM</sup>).</p>
                                                                         <p style={{ color: '#aaa', fontSize: '0.9rem', marginTop: '10px' }}>
                                                                             You can join your scheduled GTO meetings and access your assessor remarks under the **Final Assessment Remarks** section once they are released.
                                                                         </p>
@@ -1498,12 +1508,12 @@ const ProfileDashboard = () => {
                                                                             {isIOOnly ? (
                                                                                 <>
                                                                                     <div style={{ background: 'rgba(210, 161, 0, 0.05)', border: '1px solid rgba(210, 161, 0, 0.2)', padding: '16px', borderRadius: '12px', marginBottom: '20px' }}>
-                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 6px 0', fontSize: '0.95rem', fontWeight: 'bold' }}>About PIQ 2 (Final/Interview Preparation PIQ):</h6>
+                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 6px 0', fontSize: '0.95rem', fontWeight: 'bold' }}>About PIQ 1 (Initial Assessment PIQ):</h6>
                                                                                         <p style={{ margin: 0, fontSize: '0.85rem', color: '#ccc', lineHeight: '1.4' }}>
                                                                                             This form is crucial for your Mock Interview. It helps the Interviewing Officer (IO) understand your educational background, accomplishments, hobbies, and sports activities to formulate highly personalized questions.
                                                                                         </p>
                                                                                     </div>
-                                                                                    <p>For your Mock Interview, you must upload your Final/Interview Preparation PIQ (PIQ 2). <strong>(Max size: 500 KB per file)</strong></p>
+                                                                                    <p>For your Mock Interview, you must upload your Initial Assessment PIQ (PIQ 1). <strong>(Max size: 500 KB per file)</strong></p>
                                                                                     <div className={styles.evalStepActions} style={{ marginBottom: '15px', marginTop: '10px' }}>
                                                                                         <a
                                                                                             href={piqDownloadUrl}
@@ -1554,65 +1564,67 @@ const ProfileDashboard = () => {
 
                                                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '25px', marginTop: '20px' }}>
                                                                                 {/* PIQ 1 Slot */}
-                                                                                {!(hasInterview && !hasFullOrPsych) && (
-                                                                                    <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
-                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 1: Initial Assessment PIQ</h6>
-                                                                                        <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>Mandatory initial upload for Psychology and TO review.</p>
-                                                                                        <div className={styles.evalStepActions}>
-                                                                                            <button
-                                                                                                className={styles.stepActionButton}
-                                                                                                onClick={() => {
-                                                                                                    setUploadPiqType('piq1');
-                                                                                                    setTimeout(() => timelinePiqInputRef.current?.click(), 50);
-                                                                                                }}
-                                                                                                disabled={isPiqUploading || isPiq1Uploaded}
-                                                                                            >
-                                                                                                {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "PIQ 1 Uploaded" : "Upload PIQ 1")}
-                                                                                            </button>
-                                                                                        </div>
-                                                                                        {isPiq1Uploaded && (
-                                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                                <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
-                                                                                                {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
-                                                                                            </div>
-                                                                                        )}
-                                                                                    </div>
-                                                                                )}
-
-                                                                                {/* PIQ 2 Slot */}
-                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: (isPiq1Verified || (hasInterview && !hasFullOrPsych)) ? 1 : 0.5 }}>
-                                                                                    <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 2: Final/Interview Preparation PIQ</h6>
+                                                                                <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
+                                                                                    <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 1: Initial Assessment PIQ</h6>
                                                                                     <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>
-                                                                                        {hasInterview && !hasFullOrPsych ? "Final preparation PIQ for Interview theory and Mock Interview course." : "Final preparation PIQ. Enabled only after PIQ 1 is verified."}
+                                                                                        {isIOOnly ? "Mandatory upload for personal interview preparation and review." : "Mandatory initial upload for Psychology and TO review."}
                                                                                     </p>
                                                                                     <div className={styles.evalStepActions}>
                                                                                         <button
                                                                                             className={styles.stepActionButton}
                                                                                             onClick={() => {
-                                                                                                if (!isPiq1Verified && !(hasInterview && !hasFullOrPsych)) {
-                                                                                                    toast.error("PIQ 2 can only be uploaded after PIQ 1 has been successfully uploaded and verified.");
-                                                                                                    return;
-                                                                                                }
-                                                                                                setUploadPiqType('piq2');
+                                                                                                setUploadPiqType('piq1');
                                                                                                 setTimeout(() => timelinePiqInputRef.current?.click(), 50);
                                                                                             }}
-                                                                                            disabled={isPiqUploading || (!isPiq1Verified && !(hasInterview && !hasFullOrPsych)) || isPiq2Uploaded}
+                                                                                            disabled={isPiqUploading || isPiq1Uploaded}
                                                                                         >
-                                                                                            {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "PIQ 2 Uploaded" : "Upload PIQ 2")}
+                                                                                            {isPiqUploading && uploadPiqType === 'piq1' ? "Uploading..." : (isPiq1Uploaded ? "PIQ 1 Uploaded" : "Upload PIQ 1")}
                                                                                         </button>
                                                                                     </div>
-                                                                                    {isPiq2Uploaded && (
+                                                                                    {isPiq1Uploaded && (
                                                                                         <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                            <FaCheckCircle style={{ color: isPiq2Verified ? 'green' : 'orange' }} />
-                                                                                            {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
-                                                                                        </div>
-                                                                                    )}
-                                                                                    {!isPiq1Verified && !(hasInterview && !hasFullOrPsych) && (
-                                                                                        <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#ea580c', fontStyle: 'italic' }}>
-                                                                                            ⚠️ Locked until PIQ 1 verification is completed.
+                                                                                            <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
+                                                                                            {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
+
+                                                                                {/* PIQ 2 Slot */}
+                                                                                {!isIOOnly && (
+                                                                                    <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: isPiq1Verified ? 1 : 0.5 }}>
+                                                                                        <h6 style={{ color: '#d2a100', margin: '0 0 8px 0', fontSize: '1rem' }}>PIQ 2: Final/Interview Preparation PIQ</h6>
+                                                                                        <p style={{ fontSize: '0.85rem', color: '#aaa', margin: '0 0 12px 0' }}>
+                                                                                            Final preparation PIQ. Enabled only after PIQ 1 is verified.
+                                                                                        </p>
+                                                                                        <div className={styles.evalStepActions}>
+                                                                                            <button
+                                                                                                className={styles.stepActionButton}
+                                                                                                onClick={() => {
+                                                                                                    if (!isPiq1Verified) {
+                                                                                                        toast.error("PIQ 2 can only be uploaded after PIQ 1 has been successfully uploaded and verified.");
+                                                                                                        return;
+                                                                                                    }
+                                                                                                    setUploadPiqType('piq2');
+                                                                                                    setTimeout(() => timelinePiqInputRef.current?.click(), 50);
+                                                                                                }}
+                                                                                                disabled={isPiqUploading || !isPiq1Verified || isPiq2Uploaded}
+                                                                                            >
+                                                                                                {isPiqUploading && uploadPiqType === 'piq2' ? "Uploading..." : (isPiq2Uploaded ? "PIQ 2 Uploaded" : "Upload PIQ 2")}
+                                                                                            </button>
+                                                                                        </div>
+                                                                                        {isPiq2Uploaded && (
+                                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
+                                                                                                <FaCheckCircle style={{ color: isPiq2Verified ? 'green' : 'orange' }} />
+                                                                                                {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
+                                                                                            </div>
+                                                                                        )}
+                                                                                        {!isPiq1Verified && (
+                                                                                            <div style={{ marginTop: '10px', fontSize: '0.8rem', color: '#ea580c', fontStyle: 'italic' }}>
+                                                                                                ⚠️ Locked until PIQ 1 verification is completed.
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                )}
                                                                             </div>
                                                                         </div>
                                                                     );
@@ -1675,22 +1687,7 @@ const ProfileDashboard = () => {
                                                                 {evalActiveStep === 4 && hasFullOrPsych && (
                                                                     <div className={styles.evalStepCard}>
                                                                         <h5>Dossier Management</h5>
-                                                                        <p>Download the blank Psychology Dossier sheet to write your answers during the evaluation. Once the evaluation is completed, upload your handwritten dossier sheets here. <strong>(Max size: 2 MB per file)</strong></p>
-                                                                        <div className={styles.evalStepActions}>
-                                                                            <a
-                                                                                href={dossierDownloadUrl}
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer"
-                                                                                className={styles.stepDownloadLink}
-                                                                                download="Blank_Sheet_Psychology.pdf"
-                                                                                onClick={() => {
-                                                                                    setDossierDownloaded(true);
-                                                                                    localStorage.setItem('evalDossierDownloaded', 'true');
-                                                                                }}
-                                                                            >
-                                                                                <BiDownload /> Download Psychology Dossier
-                                                                            </a>
-                                                                        </div>
+                                                                        <p>Once the evaluation is completed, upload your handwritten dossier sheets here. <strong>(Max size: 2 MB per file)</strong></p>
 
                                                                         {isTestCompleted && (
                                                                             <div className={styles.evalStepActions} style={{ marginTop: '20px' }}>
@@ -1811,33 +1808,49 @@ const ProfileDashboard = () => {
                                                         <span className="visually-hidden">Loading...</span>
                                                     </div>
                                                 </div>
-                                                    ) : psychSubmissions && psychSubmissions.length > 0 ? (
+                                                    ) : (psychSubmissions && psychSubmissions.length > 0 && !isGTOOnly) ? (
                                                 <div className={styles.psychSubmissionsList}>
-                                                    <h4 style={{ color: '#fff', marginBottom: '15px' }}>{isIOOnly ? 'Your Mock Interview' : 'Your Psych Tests'}</h4>
+                                                    {!isIOOnly && <h4 style={{ color: '#fff', marginBottom: '15px' }}>Your Psych Tests</h4>}
                                                     {psychSubmissions.map(sub => {
                                                         const statusToShow = isIOOnly ? (sub.ioStatus || 'PENDING') : sub.status;
-                                                        const isCompletedOrReview = statusToShow === 'COMPLETED' || statusToShow === 'REVIEW_PENDING' || statusToShow === 'UNDER_REVIEW';
                                                         
                                                         return (
-                                                            <div key={sub._id} style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '20px', borderRadius: '12px', marginBottom: '15px', border: '1px solid rgba(210, 161, 0, 0.2)' }}>
-                                                                <h5 style={{ color: '#d2a100' }}>{isIOOnly ? 'Mock Interview Status' : (sub.assessmentId?.title || 'Psychological Test Battery')}</h5>
-                                                                <p style={{ color: '#ccc', fontSize: '0.9rem', marginBottom: '10px' }}>
-                                                                    {isIOOnly ? 'Assigned: ' : 'Started: '}{sub.startedAt || sub.createdAt ? formatDate(sub.startedAt || sub.createdAt) + ' ' + formatTime(sub.startedAt || sub.createdAt) : 'N/A'}
-                                                                </p>
-                                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '15px' }}>
+                                                            <div key={sub._id} style={{ 
+                                                                background: 'rgba(255, 255, 255, 0.02)', 
+                                                                backdropFilter: 'blur(10px)', 
+                                                                padding: '24px', 
+                                                                borderRadius: '16px', 
+                                                                marginBottom: '20px', 
+                                                                border: '1px solid rgba(255, 255, 255, 0.08)',
+                                                                boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)' 
+                                                            }}>
+                                                                <h5 style={{ 
+                                                                    color: '#fff', 
+                                                                    fontSize: '1.25rem', 
+                                                                    fontWeight: 'bold', 
+                                                                    margin: '0', 
+                                                                    display: 'flex', 
+                                                                    alignItems: 'center', 
+                                                                    flexWrap: 'wrap', 
+                                                                    gap: '12px' 
+                                                                }}>
+                                                                    <span>{isIOOnly ? 'Mock Interview Status' : (sub.assessmentId?.title || 'Psychological Test Battery')}</span>
                                                                     <span style={{ 
-                                                                        padding: '4px 10px', 
-                                                                        borderRadius: '20px', 
-                                                                        fontSize: '0.8rem',
-                                                                        background: isCompletedOrReview ? 'rgba(40, 167, 69, 0.2)' : 'rgba(255, 193, 7, 0.2)',
-                                                                        color: isCompletedOrReview ? '#28a745' : '#ffc107',
-                                                                        border: `1px solid ${isCompletedOrReview ? '#28a745' : '#ffc107'}`
+                                                                        color: statusToShow === 'COMPLETED' ? '#22c55e' : '#f59e0b', 
+                                                                        background: statusToShow === 'COMPLETED' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+                                                                        border: `1px solid ${statusToShow === 'COMPLETED' ? '#22c55e' : '#f59e0b'}`,
+                                                                        borderRadius: '6px',
+                                                                        padding: '3px 8px',
+                                                                        fontSize: '0.78rem',
+                                                                        textTransform: 'uppercase',
+                                                                        letterSpacing: '0.05em',
+                                                                        fontWeight: 'bold'
                                                                     }}>
-                                                                        Status: {statusToShow}
+                                                                        {statusToShow}
                                                                     </span>
-                                                                </div>
+                                                                </h5>
                                                                 
-                                                                <div style={{ marginTop: '15px' }}>
+                                                                <div>
                                                                     {/* Render specialized meeting links */}
                                                                     {(() => {
                                                                         const meetings = [];
@@ -1847,11 +1860,73 @@ const ProfileDashboard = () => {
                                                                         if (meetings.length === 0 && sub.meetingLink) meetings.push({ role: 'Assessor', date: sub.meetingDate, link: sub.meetingLink });
  
                                                                             return meetings.map((m, idx) => (
-                                                                                <div key={idx} style={{ marginTop: '15px', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                                                                                    <a href={m.link} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', background: '#15803D', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontWeight: 'bold' }}>
-                                                                                        Join {m.role} Meeting
-                                                                                    </a>
-                                                                                    {m.date && <span style={{ color: '#aaa', fontSize: '0.9rem' }}>Scheduled: {formatDate(m.date)}</span>}
+                                                                                <div key={idx} style={{ 
+                                                                                    marginTop: '20px', 
+                                                                                    padding: '16px 20px', 
+                                                                                    background: 'rgba(255, 255, 255, 0.03)', 
+                                                                                    border: '1px solid rgba(255, 255, 255, 0.06)', 
+                                                                                    borderRadius: '12px',
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'space-between',
+                                                                                    flexWrap: 'wrap',
+                                                                                    gap: '15px'
+                                                                                }}>
+                                                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                                                        <div style={{ 
+                                                                                            background: 'rgba(59, 130, 246, 0.1)', 
+                                                                                            color: '#3b82f6', 
+                                                                                            borderRadius: '10px', 
+                                                                                            width: '44px', 
+                                                                                            height: '44px', 
+                                                                                            display: 'flex', 
+                                                                                            alignItems: 'center', 
+                                                                                            justifyContent: 'center',
+                                                                                            border: '1px solid rgba(59, 130, 246, 0.2)'
+                                                                                        }}>
+                                                                                            <BiCalendar style={{ fontSize: '1.4rem' }} />
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <h6 style={{ color: '#fff', margin: '0 0 4px 0', fontSize: '0.98rem', fontWeight: 'bold' }}>
+                                                                                                {m.role === 'Interviewing Officer' ? 'Interviewing Officer Mock Interview' : `${m.role} Feedback Session`}
+                                                                                            </h6>
+                                                                                            {m.date ? (
+                                                                                                <p style={{ color: '#aaa', margin: 0, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                                                                    <BiTime style={{ color: '#3b82f6' }} /> Scheduled: {formatDate(m.date)} at {formatTime(m.date)}
+                                                                                                </p>
+                                                                                            ) : (
+                                                                                                <p style={{ color: '#888', margin: 0, fontSize: '0.85rem', fontStyle: 'italic' }}>
+                                                                                                    Meeting schedule pending
+                                                                                                </p>
+                                                                                            )}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <a 
+                                                                                            href={m.link} 
+                                                                                            target="_blank" 
+                                                                                            rel="noopener noreferrer" 
+                                                                                            style={{ 
+                                                                                                display: 'inline-flex', 
+                                                                                                alignItems: 'center', 
+                                                                                                gap: '8px', 
+                                                                                                background: '#16a34a', 
+                                                                                                color: '#fff', 
+                                                                                                padding: '10px 22px', 
+                                                                                                borderRadius: '10px', 
+                                                                                                textDecoration: 'none', 
+                                                                                                fontWeight: 'bold',
+                                                                                                fontSize: '0.88rem',
+                                                                                                boxShadow: '0 4px 14px rgba(22, 163, 74, 0.3)',
+                                                                                                transition: 'all 0.2s ease',
+                                                                                                cursor: 'pointer'
+                                                                                            }}
+                                                                                            onMouseOver={(e) => { e.currentTarget.style.background = '#15803d'; }}
+                                                                                            onMouseOut={(e) => { e.currentTarget.style.background = '#16a34a'; }}
+                                                                                        >
+                                                                                            Join Meeting
+                                                                                        </a>
+                                                                                    </div>
                                                                                 </div>
                                                                             ));
                                                                         })()}
@@ -1984,106 +2059,65 @@ const ProfileDashboard = () => {
                                             )}
 
                                             {/* Remarks stack */}
-                                            {hasPsych && (
-                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
-                                                    <h4 style={{ color: '#d2a100', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
-                                                        1. Psychologist Observations & Timeline Analysis
-                                                    </h4>
-                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                                                        "{psychRemarks}"
-                                                    </p>
-                                                </div>
-                                            )}
+                                            {(() => {
+                                                let stepIndex = 1;
+                                                return (
+                                                    <>
+                                                        {hasPsych && (
+                                                            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                                <h4 style={{ color: '#d2a100', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                                    {stepIndex++}. Psychologist Observations & Timeline Analysis
+                                                                </h4>
+                                                                <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                                    "{psychRemarks}"
+                                                                </p>
+                                                            </div>
+                                                        )}
 
-                                            {hasGto && (
-                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
-                                                    <h4 style={{ color: '#3b82f6', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
-                                                        2. GTO Group Dynamic & Outdoor Observations
-                                                    </h4>
-                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                                                        "{gtoRemarks}"
-                                                    </p>
-                                                </div>
-                                            )}
+                                                        {hasGto && (
+                                                            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                                <h4 style={{ color: '#3b82f6', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                                    {stepIndex++}. GTO Group Dynamic & Outdoor Observations
+                                                                </h4>
+                                                                <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                                    "{gtoRemarks}"
+                                                                </p>
+                                                            </div>
+                                                        )}
 
-                                            {hasIo && (
-                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
-                                                    <h4 style={{ color: '#f59e0b', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
-                                                        3. Personal Interview (IO) Observations
-                                                    </h4>
-                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                                                        "{ioRemarks}"
-                                                    </p>
-                                                </div>
-                                            )}
+                                                        {hasIo && (
+                                                            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                                <h4 style={{ color: '#f59e0b', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                                    {stepIndex++}. Personal Interview (IO) Observations
+                                                                </h4>
+                                                                <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                                    "{ioRemarks}"
+                                                                </p>
+                                                            </div>
+                                                        )}
 
-                                            {hasTo && (
-                                                <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
-                                                    <h4 style={{ color: '#10b981', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
-                                                        4. Technical Officer Observations
-                                                    </h4>
-                                                    <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
-                                                        "{toRemarks}"
-                                                    </p>
-                                                </div>
-                                            )}
+                                                        {hasTo && (
+                                                            <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '24px', borderRadius: '20px' }}>
+                                                                <h4 style={{ color: '#10b981', fontWeight: '900', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.15em', margin: '0 0 12px 0' }}>
+                                                                    {stepIndex++}. Technical Officer Observations
+                                                                </h4>
+                                                                <p style={{ color: '#eee', margin: 0, fontSize: '0.92rem', fontStyle: 'italic', fontFamily: 'Georgia, serif', lineHeight: '1.6', whiteSpace: 'pre-wrap' }}>
+                                                                    "{toRemarks}"
+                                                                </p>
+                                                            </div>
+                                                        )}
 
-                                            {!hasPsych && !hasGto && !hasIo && !hasTo && (
-                                                <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.5 }}>
-                                                    <p style={{ color: '#ccc', fontStyle: 'italic', fontSize: '0.95rem' }}>No qualitative assessment comments have been released yet.</p>
-                                                </div>
-                                            )}
+                                                        {!hasPsych && !hasGto && !hasIo && !hasTo && (
+                                                            <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.5 }}>
+                                                                <p style={{ color: '#ccc', fontStyle: 'italic', fontSize: '0.95rem' }}>No qualitative assessment comments have been released yet.</p>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
 
-                                        {/* Modal Footer */}
-                                        <div style={{
-                                            background: 'rgba(0, 0, 0, 0.25)',
-                                            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                                            padding: '25px 35px',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            gap: '20px'
-                                        }}>
-                                            {sub?.psychMeetingLink && (
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
-                                                    <div style={{ textAlign: 'left' }}>
-                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Psychologist Feedback Slot:</span>
-                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
-                                                            {sub.psychMeetingDate ? formatDate(sub.psychMeetingDate) + ' at ' + formatTime(sub.psychMeetingDate) : 'Time Pending'}
-                                                        </p>
-                                                    </div>
-                                                    <a href={sub.psychMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
-                                                </div>
-                                            )}
-                                            {sub?.toMeetingLink && (
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
-                                                    <div style={{ textAlign: 'left' }}>
-                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>TO Feedback Slot:</span>
-                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
-                                                            {sub.toMeetingDate ? formatDate(sub.toMeetingDate) + ' at ' + formatTime(sub.toMeetingDate) : 'Time Pending'}
-                                                        </p>
-                                                    </div>
-                                                    <a href={sub.toMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
-                                                </div>
-                                            )}
-                                            {sub?.ioMeetingLink && (
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '15px', flexWrap: 'wrap' }}>
-                                                    <div style={{ textAlign: 'left' }}>
-                                                        <span style={{ color: '#aaa', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>IO Feedback Slot:</span>
-                                                        <p style={{ color: '#fff', margin: '2px 0 0 0', fontSize: '0.88rem', fontWeight: 'bold' }}>
-                                                            {sub.ioMeetingDate ? formatDate(sub.ioMeetingDate) + ' at ' + formatTime(sub.ioMeetingDate) : 'Time Pending'}
-                                                        </p>
-                                                    </div>
-                                                    <a href={sub.ioMeetingLink} target="_blank" rel="noopener noreferrer" style={{ background: '#15803D', color: '#fff', textDecoration: 'none', padding: '12px 28px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', boxShadow: '0 6px 15px rgba(21, 128, 61, 0.2)', transition: 'all 0.2s ease', display: 'inline-block' }}>JOIN Meeting</a>
-                                                </div>
-                                            )}
-                                            {!sub?.psychMeetingLink && !sub?.toMeetingLink && !sub?.ioMeetingLink && (
-                                                <div style={{ textAlign: 'center', opacity: 0.5, padding: '10px 0' }}>
-                                                    <span style={{ color: '#aaa', fontSize: '0.85rem', fontStyle: 'italic' }}>No meeting slots scheduled yet.</span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
+                                     </div>
                                 </div>
                             );
                         })()}
