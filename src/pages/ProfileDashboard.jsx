@@ -108,6 +108,8 @@ const ProfileDashboard = () => {
     const [isPsychUploading, setIsPsychUploading] = useState(false);
     const [piqUploadFiles, setPiqUploadFiles] = useState([]);
     const [isPiqUploading, setIsPiqUploading] = useState(false);
+    const [hasCompletedTheory, setHasCompletedTheory] = useState(false);
+    const [isRegisteringConsent, setIsRegisteringConsent] = useState(false);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
     // Evaluation Journey tabbed UI states
@@ -1724,23 +1726,65 @@ const ProfileDashboard = () => {
                                                                                     Evaluation Completed
                                                                                 </button>
                                                                             ) : (
-                                                                                <button
-                                                                                    className={styles.stepActionButton}
-                                                                                    onClick={() => {
-                                                                                        if (!isEligibleToStart) {
-                                                                                            toast.error("Please ensure you have a batch and an assessor assigned before starting.");
-                                                                                            return;
-                                                                                        }
-                                                                                        const token = localStorage.getItem("authToken");
-                                                                                        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-                                                                                        const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
-                                                                                        window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
-                                                                                    }}
-                                                                                    disabled={!isEligibleToStart}
-                                                                                    style={!isEligibleToStart ? { opacity: 0.5, cursor: 'not-allowed', backgroundColor: '#4b5563' } : {}}
-                                                                                >
-                                                                                    Start Candidate Evaluation
-                                                                                </button>
+                                                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '100%' }}>
+                                                                                    <div style={{ padding: '15px', background: 'rgba(210, 161, 0, 0.05)', border: '1px solid rgba(210, 161, 0, 0.2)', borderRadius: '12px', textAlign: 'left' }}>
+                                                                                        <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer', margin: 0 }}>
+                                                                                            <input 
+                                                                                                type="checkbox" 
+                                                                                                checked={hasCompletedTheory} 
+                                                                                                onChange={(e) => setHasCompletedTheory(e.target.checked)}
+                                                                                                style={{ marginTop: '5px', cursor: 'pointer', width: '18px', height: '18px' }}
+                                                                                            />
+                                                                                            <span style={{ fontSize: '0.9rem', color: '#ccc', lineHeight: '1.5' }}>
+                                                                                                <strong style={{ color: '#d2a100', display: 'block', marginBottom: '4px' }}>Psychology Test Attempt Confirmation:</strong> 
+                                                                                                Have you completed the theory sessions of Psychology Tests? I confirm that I have completed the theory sessions and consent to start my official evaluation. I understand that my attempt timestamp will be recorded and no retest request will be allowed.
+                                                                                            </span>
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <button
+                                                                                            className={styles.stepActionButton}
+                                                                                            onClick={async () => {
+                                                                                                if (!isEligibleToStart) {
+                                                                                                    toast.error("Please ensure you have a batch and an assessor assigned before starting.");
+                                                                                                    return;
+                                                                                                }
+                                                                                                if (!hasCompletedTheory) {
+                                                                                                    toast.error("Please confirm that you have completed the theory sessions first.");
+                                                                                                    return;
+                                                                                                }
+                                                                                                
+                                                                                                const confirmStart = window.confirm("Are you absolutely sure you want to start the Psychology Test Evaluation now? Once started, your attempt will be recorded and cannot be reset.");
+                                                                                                if (!confirmStart) return;
+                                                                                                
+                                                                                                setIsRegisteringConsent(true);
+                                                                                                try {
+                                                                                                    const token = localStorage.getItem("authToken");
+                                                                                                    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+                                                                                                    const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
+                                                                                                    const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
+                                                                                                    
+                                                                                                    // Register consent in main backend
+                                                                                                    await axios.put(`${mainBackendUrl}/api/user/register-psych-consent`, {}, {
+                                                                                                        headers: { Authorization: `Bearer ${token}` }
+                                                                                                    });
+                                                                                                    
+                                                                                                    // Redirect to psych battery
+                                                                                                    window.location.href = `${base}/auth-sync?token=${encodeURIComponent(token)}`;
+                                                                                                } catch (err) {
+                                                                                                    console.error("Failed to register consent:", err);
+                                                                                                    toast.error(err?.response?.data?.message || "Failed to record your consent. Please try again.");
+                                                                                                } finally {
+                                                                                                    setIsRegisteringConsent(false);
+                                                                                                }
+                                                                                            }}
+                                                                                            disabled={!isEligibleToStart || !hasCompletedTheory || isRegisteringConsent}
+                                                                                            style={(!isEligibleToStart || !hasCompletedTheory || isRegisteringConsent) ? { opacity: 0.5, cursor: 'not-allowed', backgroundColor: '#4b5563' } : {}}
+                                                                                        >
+                                                                                            {isRegisteringConsent ? "Starting..." : "Start Candidate Evaluation"}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </div>
                                                                             )}
                                                                         </div>
                                                                     </div>
