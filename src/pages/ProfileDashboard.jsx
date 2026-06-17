@@ -1737,7 +1737,7 @@ const ProfileDashboard = () => {
                                                                                             />
                                                                                             <span style={{ fontSize: '0.9rem', color: '#ccc', lineHeight: '1.5' }}>
                                                                                                 <strong style={{ color: '#d2a100', display: 'block', marginBottom: '4px' }}>Psychology Test Attempt Confirmation:</strong> 
-                                                                                                Have you completed the theory sessions of Psychology Tests? I confirm that I have completed the theory sessions and consent to start my official evaluation. I understand that my attempt timestamp will be recorded and no retest request will be allowed.
+                                                                                                I confirm that I have completed the theory sessions of Psychology Tests and consent to start my official evaluation. I understand that my mock psych test attempt timestamp will be recorded and no retest request will be allowed.
                                                                                             </span>
                                                                                         </label>
                                                                                     </div>
@@ -2064,10 +2064,10 @@ const ProfileDashboard = () => {
                         {/* Immersive Qualitative Assessor Feedback Modal */}
                         {showFeedbackModal && (() => {
                             const sub = psychSubmissions && psychSubmissions.length > 0 ? psychSubmissions[0] : null;
-                            const psychRemarks = sub?.psychRemarks || sub?.assessorRemarks || '';
-                            const gtoRemarks = sub?.gtoRemarks || '';
-                            const ioRemarks = sub?.ioRemarks || '';
-                            const toRemarks = sub?.toRemarks || '';
+                            const psychRemarks = sub?.releasedPsychRemarks !== undefined ? sub.releasedPsychRemarks : (sub?.psychRemarks || sub?.assessorRemarks || '');
+                            const gtoRemarks = sub?.releasedGtoRemarks !== undefined ? sub.releasedGtoRemarks : (sub?.gtoRemarks || '');
+                            const ioRemarks = sub?.releasedIoRemarks !== undefined ? sub.releasedIoRemarks : (sub?.ioRemarks || '');
+                            const toRemarks = sub?.releasedToRemarks !== undefined ? sub.releasedToRemarks : (sub?.toRemarks || '');
 
                             const hasPsych = profileData?.user?.assignedPsych && psychRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.psych);
                             const hasGto = profileData?.user?.assignedGTO && gtoRemarks && (sub?.status === 'REPORT_RELEASED' || sub?.reportVisibility?.gto);
