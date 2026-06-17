@@ -46,6 +46,28 @@ const moduleNames = {
     'group_testing': <span>Group Testing Course on VTX<sup>TM</sup></span>
 };
 
+const getFileUrl = (path, activeSub) => {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) return path;
+    const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    if (path.startsWith('db://')) {
+        const psychBaseUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
+        const token = localStorage.getItem("authToken");
+        const subId = activeSub?._id || activeSub?.id || "";
+        const idx = activeSub?.piqFiles ? activeSub.piqFiles.indexOf(path) : 0;
+        const safeIdx = idx !== -1 ? idx : 0;
+        return `${psychBaseUrl}/api/submissions/${subId}/piq-file/${safeIdx}?token=${token}`;
+    }
+    const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${mainBackendUrl}${cleanPath}`;
+};
+
+const getFileName = (path) => {
+    if (!path) return '';
+    return path.substring(path.lastIndexOf('/') + 1);
+};
+
 const ProfileDashboard = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('profile');
@@ -1291,15 +1313,13 @@ const ProfileDashboard = () => {
                                                     // Step 2 is LOCKED once PIQs are uploaded — user should never re-enter
                                                     const stepAccessible = {
                                                         1: isEligibleToStart,
-                                                        2: isEligibleToStart && !((hasInterview && !hasFullOrPsych) ? hasPiq1 : hasPiq),
+                                                        2: isEligibleToStart,
                                                         3: isEligibleToStart && hasPiq1,
                                                         4: isEligibleToStart
                                                     };
 
                                                     // Auto-redirect: if PIQs are already done and user somehow lands on step 2, push them to step 3
-                                                    if (hasPiq && evalActiveStep === 2 && (hasFullOrPsych || !hasInterview)) {
-                                                        setTimeout(() => setEvalActiveStep(3), 0);
-                                                    }
+                                                    
 
                                                     // Auto-redirect for IO-only candidate to ensure they are on step 2
                                                     if (isIOOnly && evalActiveStep !== 2) {
@@ -1582,13 +1602,34 @@ const ProfileDashboard = () => {
                                                                                         </button>
                                                                                     </div>
                                                                                     {isPiq1Uploaded && (
-                                                                                        <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                            <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
-                                                                                            {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
+                                                                                        <div style={{ marginTop: '10px' }}>
+                                                                                            <div className={styles.evalStepCompleted}>
+                                                                                                <FaCheckCircle style={{ color: isPiq1Verified ? 'green' : 'orange' }} /> 
+                                                                                                {isPiq1Verified ? "PIQ 1 Verified & Parsed" : "PIQ 1 Uploaded (Verification Pending)"}
+                                                                                            </div>
+                                                                                            {(() => {
+                                                                                                const piq1Files = (activeSub?.piqFiles || []).filter(f => f.includes('/piq1_') || !f.includes('/piq2_'));
+                                                                                                if (piq1Files.length === 0) return null;
+                                                                                                return (
+                                                                                                    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                                                                        <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'bold' }}>Uploaded PIQ 1:</span>
+                                                                                                        {piq1Files.map((f, i) => (
+                                                                                                            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '8px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                                                                                <span style={{ fontSize: '0.8rem', color: '#fff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                                                                                                                    {getFileName(f)}
+                                                                                                                </span>
+                                                                                                                <a href={getFileUrl(f, activeSub)} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: '#d2a100', textDecoration: 'none', fontWeight: 'bold' }}>
+                                                                                                                    View File
+                                                                                                                </a>
+                                                                                                            </div>
+                                                                                                        ))}
+                                                                                                    </div>
+                                                                                                );
+                                                                                            })()}
                                                                                         </div>
                                                                                     )}
                                                                                 </div>
-
+                                
                                                                                 {/* PIQ 2 Slot */}
                                                                                 {!isIOOnly && (
                                                                                     <div style={{ padding: '15px', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', opacity: isPiq1Verified ? 1 : 0.5 }}>
@@ -1613,9 +1654,30 @@ const ProfileDashboard = () => {
                                                                                             </button>
                                                                                         </div>
                                                                                         {isPiq2Uploaded && (
-                                                                                            <div className={styles.evalStepCompleted} style={{ marginTop: '10px' }}>
-                                                                                                <FaCheckCircle style={{ color: isPiq2Verified ? 'green' : 'orange' }} />
-                                                                                                {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
+                                                                                            <div style={{ marginTop: '10px' }}>
+                                                                                                <div className={styles.evalStepCompleted}>
+                                                                                                    <FaCheckCircle style={{ color: isPiq2Verified ? 'green' : 'orange' }} />
+                                                                                                    {isPiq2Verified ? "PIQ 2 Verified & Parsed" : "PIQ 2 Uploaded"}
+                                                                                                </div>
+                                                                                                {(() => {
+                                                                                                    const piq2Files = (activeSub?.piqFiles || []).filter(f => f.includes('/piq2_'));
+                                                                                                    if (piq2Files.length === 0) return null;
+                                                                                                    return (
+                                                                                                        <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                                                                                            <span style={{ fontSize: '0.85rem', color: '#888', fontWeight: 'bold' }}>Uploaded PIQ 2:</span>
+                                                                                                            {piq2Files.map((f, i) => (
+                                                                                                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.03)', padding: '8px 12px', borderRadius: '6px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                                                                                                                    <span style={{ fontSize: '0.8rem', color: '#fff', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                                                                                                                        {getFileName(f)}
+                                                                                                                    </span>
+                                                                                                                    <a href={getFileUrl(f, activeSub)} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.8rem', color: '#d2a100', textDecoration: 'none', fontWeight: 'bold' }}>
+                                                                                                                        View File
+                                                                                                                    </a>
+                                                                                                                </div>
+                                                                                                            ))}
+                                                                                                        </div>
+                                                                                                    );
+                                                                                                })()}
                                                                                             </div>
                                                                                         )}
                                                                                         {!isPiq1Verified && (

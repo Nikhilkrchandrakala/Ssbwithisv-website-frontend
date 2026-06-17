@@ -214,17 +214,19 @@ function SignIn() {
                         </div>
 
                         {/* Password */}
-                        <div className="col-lg-12 password-wrapper mt-3">
-                            <input type={showPassword ? "text" : "password"} name="password"
-                                className={`form-control thm-input ${fieldErrors.password ? 'is-invalid' : ''}`}
-                                placeholder="Password" value={formData.password}
-                                onChange={handleInputChange}
-                                onBlur={() => validateField('password', formData.password)}
-                                disabled={isDisabled} autoComplete="current-password"
-                            />
-                            <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                            </span>
+                        <div className="col-lg-12 mt-3">
+                            <div className="password-wrapper">
+                                <input type={showPassword ? "text" : "password"} name="password"
+                                    className={`form-control thm-input ${fieldErrors.password ? 'is-invalid' : ''}`}
+                                    placeholder="Password" value={formData.password}
+                                    onChange={handleInputChange}
+                                    onBlur={() => validateField('password', formData.password)}
+                                    disabled={isDisabled} autoComplete="current-password"
+                                />
+                                <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                                    {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                </span>
+                            </div>
                             {fieldErrors.password && <div className="field-error">{fieldErrors.password}</div>}
                         </div>
 

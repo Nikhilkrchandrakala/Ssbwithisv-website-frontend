@@ -344,14 +344,16 @@ function SignUp() {
                                 </div>
 
                                 {/* Password */}
-                                <div className="col-lg-12 password-wrapper">
-                                    <input type={showPassword ? "text" : "password"}
-                                        className={`form-control thm-input password-input ${fieldErrors.password ? 'is-invalid' : ''}`}
-                                        placeholder="Create Password" value={password} onChange={handlePasswordChange}
-                                        onBlur={() => validateField("password", password)} required />
-                                    <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                                        {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                    </span>
+                                <div className="col-lg-12">
+                                    <div className="password-wrapper">
+                                        <input type={showPassword ? "text" : "password"}
+                                            className={`form-control thm-input password-input ${fieldErrors.password ? 'is-invalid' : ''}`}
+                                            placeholder="Create Password" value={password} onChange={handlePasswordChange}
+                                            onBlur={() => validateField("password", password)} required />
+                                        <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                        </span>
+                                    </div>
 
                                     {/* Password strength meter */}
                                     {password && (
@@ -376,14 +378,16 @@ function SignUp() {
                                 </div>
 
                                 {/* Confirm Password */}
-                                <div className="col-lg-12 password-wrapper mt-3">
-                                    <input type={showConfirmPassword ? "text" : "password"}
-                                        className={`form-control thm-input ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
-                                        placeholder="Repeat Password" value={confirmPassword} onChange={handleConfirmPasswordChange}
-                                        onBlur={() => validateField("confirmPassword", confirmPassword)} required />
-                                    <span className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                        {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                    </span>
+                                <div className="col-lg-12 mt-3">
+                                    <div className="password-wrapper">
+                                        <input type={showConfirmPassword ? "text" : "password"}
+                                            className={`form-control thm-input ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
+                                            placeholder="Repeat Password" value={confirmPassword} onChange={handleConfirmPasswordChange}
+                                            onBlur={() => validateField("confirmPassword", confirmPassword)} required />
+                                        <span className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                        </span>
+                                    </div>
                                     {fieldErrors.confirmPassword && <div className="field-error">{fieldErrors.confirmPassword}</div>}
                                 </div>
 

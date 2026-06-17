@@ -882,3 +882,9 @@ textarea.form-control.thm-input:focus {
         margin-bottom: 24px;
     }
 }
+
+/* Hide default browser password reveal and clear buttons */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
