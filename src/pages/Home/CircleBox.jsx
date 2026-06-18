@@ -81,11 +81,9 @@ function CircleBox() {
                     </p>
 
                     <p className={styles.titleOfThirdSection}>
-                        <span className={styles.text}>Handholding till recommendation</span>
-                        <span className={styles.divider}>/</span>
-                        <span className={styles.text}>Over 50% candidates recommended</span>
-                        <span className={styles.divider}>/</span>
-                        <span className={styles.text}>Virtual GTO Training Experience</span>
+                        <span className={styles.boxText}>
+                            Handholding till recommendation &nbsp;/&nbsp; Over 50% candidates recommended &nbsp;/&nbsp; Virtual GTO Training Experience &nbsp;/&nbsp; Repeat online classes infinite times
+                        </span>
                     </p>
 
                     {/* <div className={styles.whySection}>

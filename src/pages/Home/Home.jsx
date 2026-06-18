@@ -44,7 +44,9 @@ function Home() {
         title: "Indian Military",
         title1: "Leadership",
 
-        subtitleTwo: "Integrated SSB Virtuosos"
+        subtitleTwo: "Integrated SSB Virtuosos",
+
+        text: "Online SSB mentoring by DIPR certified ex-SSB assessors"
 
     };
 
@@ -185,6 +187,7 @@ function Home() {
                 title={navbarData.title}
                 title1={navbarData.title1}
                 subtitleTwo={navbarData.subtitleTwo}
+                text={navbarData.text}
             />
             <CircleBox />
 

@@ -119,13 +119,17 @@ const Courses = () => {
                 {/* <div className={styles.whoContainer}> */}
 
                 {/* <Heading h1="Who Should Join Our SSB Coaching Program" /> */}
-               
 
 
 
-                <div style={{border:'none' , background:'none' ,marginTop:'0px' , marginBottom:'20px'}} className="mvk-benefits">
 
-                    <h3> Who should join our SSB coaching program?</h3>
+                <div className={`${styles.coursesBenefits} mvk-benefits`}>
+
+                    <HeadingTwo
+                        h1="Who should join our"
+                        t1="SSB coaching program?"
+                        style={{ fontSize: '15px', fontWeight: '500', marginBottom: '8px' }}
+                    />
 
                     <ul>
                         <li>

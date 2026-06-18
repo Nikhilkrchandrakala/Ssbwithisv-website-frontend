@@ -6,10 +6,15 @@ import toast from 'react-hot-toast';
 
 function Form() {
     const [formData, setFormData] = useState({
-        name: '',
-        email: '',
+        firstName: '',
+        lastName: '',
         phone: '',
-        subject: '',
+        email: '',
+        ssbExperience: '',
+        nextSsb: '',
+        ssbCenter: '',
+        ssbPreparation: '',
+        ssbEntry: '',
         message: ''
     });
 
@@ -21,13 +26,22 @@ function Form() {
     const validate = () => {
         const newErrors = {};
 
-        // Name validation
-        if (!formData.name.trim()) {
-            newErrors.name = 'Name is required';
-        } else if (formData.name.length < 2) {
-            newErrors.name = 'Name must be at least 2 characters';
-        } else if (!/^[a-zA-Z\s]*$/.test(formData.name)) {
-            newErrors.name = 'Name can only contain letters and spaces';
+        // First Name validation
+        if (!formData.firstName.trim()) {
+            newErrors.firstName = 'First name is required';
+        } else if (formData.firstName.length < 2) {
+            newErrors.firstName = 'First name must be at least 2 characters';
+        } else if (!/^[a-zA-Z\s]*$/.test(formData.firstName)) {
+            newErrors.firstName = 'First name can only contain letters and spaces';
+        }
+
+        // Last Name validation
+        if (!formData.lastName.trim()) {
+            newErrors.lastName = 'Last name is required';
+        } else if (formData.lastName.length < 2) {
+            newErrors.lastName = 'Last name must be at least 2 characters';
+        } else if (!/^[a-zA-Z\s]*$/.test(formData.lastName)) {
+            newErrors.lastName = 'Last name can only contain letters and spaces';
         }
 
         // Email validation
@@ -37,20 +51,36 @@ function Form() {
             newErrors.email = 'Please enter a valid email address';
         }
 
-        // Phone validation (supports various formats)
+        // Phone validation
         if (!formData.phone.trim()) {
-            newErrors.phone = 'Phone number is required';
-        } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/[\s\-\(\)]/g, ''))) {
-            newErrors.phone = 'Please enter a valid phone number';
-        } else if (formData.phone.replace(/[\s\-\(\)]/g, '').length < 10) {
-            newErrors.phone = 'Phone number must be at least 10 digits';
+            newErrors.phone = 'Mobile number is required';
+        } else if (formData.phone.length !== 10) {
+            newErrors.phone = 'Mobile number must be exactly 10 digits';
         }
 
-        // Subject validation
-        if (!formData.subject.trim()) {
-            newErrors.subject = 'Subject is required';
-        } else if (formData.subject.length < 3) {
-            newErrors.subject = 'Subject must be at least 3 characters';
+        // SSB Experience validation
+        if (!formData.ssbExperience) {
+            newErrors.ssbExperience = 'Please select your SSB experience';
+        }
+
+        // Next SSB validation
+        if (!formData.nextSsb.trim()) {
+            newErrors.nextSsb = 'Next SSB details are required';
+        }
+
+        // SSB Center validation
+        if (!formData.ssbCenter.trim()) {
+            newErrors.ssbCenter = 'Board / Selection Center is required';
+        }
+
+        // SSB Preparation validation
+        if (!formData.ssbPreparation.trim()) {
+            newErrors.ssbPreparation = 'Preparation details are required';
+        }
+
+        // SSB Entry validation
+        if (!formData.ssbEntry.trim()) {
+            newErrors.ssbEntry = 'SSB Entry is required';
         }
 
         // Message validation
@@ -58,8 +88,6 @@ function Form() {
             newErrors.message = 'Message is required';
         } else if (formData.message.length < 10) {
             newErrors.message = 'Message must be at least 10 characters';
-        } else if (formData.message.length > 1000) {
-            newErrors.message = 'Message must be less than 1000 characters';
         }
 
         return newErrors;
@@ -82,27 +110,9 @@ function Form() {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        // Format phone number as user types
-        let formattedValue = value;
-        if (name === 'phone') {
-            // Remove all non-numeric characters except plus sign
-            const numericValue = value.replace(/[^\d+]/g, '');
-
-            // Format phone number (simple format: XXX-XXX-XXXX)
-            if (numericValue.length <= 3) {
-                formattedValue = numericValue;
-            } else if (numericValue.length <= 6) {
-                formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(3)}`;
-            } else if (numericValue.length <= 10) {
-                formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(3, 6)}-${numericValue.slice(6, 10)}`;
-            } else {
-                formattedValue = `${numericValue.slice(0, 3)}-${numericValue.slice(3, 6)}-${numericValue.slice(6, 10)}`;
-            }
-        }
-
         setFormData({
             ...formData,
-            [name]: formattedValue
+            [name]: value
         });
 
         // Clear error for this field if user starts typing
@@ -119,10 +129,15 @@ function Form() {
 
         // Mark all fields as touched
         setTouched({
-            name: true,
+            firstName: true,
+            lastName: true,
             email: true,
             phone: true,
-            subject: true,
+            ssbExperience: true,
+            nextSsb: true,
+            ssbCenter: true,
+            ssbPreparation: true,
+            ssbEntry: true,
             message: true
         });
 
@@ -141,28 +156,33 @@ function Form() {
         setLoading(false);
 
         try {
+            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+                ? "http://localhost:5001"
+                : "https://api.ssbwithisv.in";
             const response = await axios.post(
-                "https://api.ssbwithisv.in/api/send-email",
+                `${baseUrl}/api/send-email`,
                 {
-                    name: formData.name.trim(),
+                    name: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
                     email: formData.email.trim(),
                     phone: formData.phone,
-                    subject: formData.subject.trim(),
-                    message: formData.message.trim(),
+                    subject: "New Website Enquiry",
+                    message: `Enquiry Form Details:
+- First Name: ${formData.firstName.trim()}
+- Last Name: ${formData.lastName.trim()}
+- Mobile Number: ${formData.phone}
+- Email Address: ${formData.email.trim()}
+- SSB Experience: ${formData.ssbExperience}
+- Next SSB Date: ${formData.nextSsb.trim()}
+- Board / Selection Center: ${formData.ssbCenter.trim()}
+- How preparing: ${formData.ssbPreparation.trim()}
+- Which entry: ${formData.ssbEntry.trim()}
+- Message: ${formData.message.trim()}`,
+                    replyTo: formData.email.trim(),
                 },
                 {
                     headers: { "Content-Type": "application/json" },
                 }
             );
-
-            // console.log(response.data);
-
-            // ✅ Run Google conversion script here
-            // if (window.gtag) {
-            //     window.gtag('event', 'conversion', {
-            //         send_to: 'AW-16493985261/xmkVCNug_5sZEO37-Lg9'
-            //     });
-            // }
 
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
@@ -174,10 +194,15 @@ function Form() {
 
             // Reset form
             setFormData({
-                name: '',
-                email: '',
+                firstName: '',
+                lastName: '',
                 phone: '',
-                subject: '',
+                email: '',
+                ssbExperience: '',
+                nextSsb: '',
+                ssbCenter: '',
+                ssbPreparation: '',
+                ssbEntry: '',
                 message: ''
             });
 
@@ -190,13 +215,10 @@ function Form() {
         } catch (error) {
             console.error(error);
             if (error.response) {
-                // Server responded with error status
                 toast.error(`Error: ${error.response.data.message || 'Failed to send email'}`);
             } else if (error.request) {
-                // Request was made but no response
                 toast.error('Network error. Please check your connection.');
             } else {
-                // Something else happened
                 toast.error('Failed to send email');
             }
         } finally {
@@ -220,21 +242,71 @@ function Form() {
                 <form className="enquiry-form" onSubmit={handleSubmit} noValidate>
                     <div className="row g-4">
 
-                        {/* Name Field */}
+                        {/* First Name Field */}
                         <div className="col-md-6">
                             <div className="form-group">
                                 <input
                                     type="text"
-                                    name="name"
-                                    placeholder="Your Name"
+                                    name="firstName"
+                                    placeholder="First Name"
                                     onChange={handleChange}
-                                    onBlur={() => handleBlur('name')}
-                                    value={formData.name}
-                                    className={hasError('name') ? 'error' : ''}
+                                    onBlur={() => handleBlur('firstName')}
+                                    value={formData.firstName}
+                                    className={hasError('firstName') ? 'error' : ''}
                                     required
                                 />
-                                {hasError('name') && (
-                                    <div className="error-message">{errors.name}</div>
+                                {hasError('firstName') && (
+                                    <div className="error-message">{errors.firstName}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Last Name Field */}
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    onChange={handleChange}
+                                    onBlur={() => handleBlur('lastName')}
+                                    value={formData.lastName}
+                                    className={hasError('lastName') ? 'error' : ''}
+                                    required
+                                />
+                                {hasError('lastName') && (
+                                    <div className="error-message">{errors.lastName}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Phone Field */}
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    placeholder="Mobile Number (10 digits)"
+                                    value={formData.phone}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/\D/g, ""); // remove non-numbers
+                                        if (value.length <= 10) {
+                                            setFormData({ ...formData, phone: value });
+                                            if (errors.phone) {
+                                                const newErrors = { ...errors };
+                                                delete newErrors.phone;
+                                                setErrors(newErrors);
+                                            }
+                                        }
+                                    }}
+                                    onBlur={() => handleBlur("phone")}
+                                    className={hasError("phone") ? "error" : ""}
+                                    inputMode="numeric"
+                                    maxLength={10}
+                                    required
+                                />
+                                {hasError('phone') && (
+                                    <div className="error-message">{errors.phone}</div>
                                 )}
                             </div>
                         </div>
@@ -245,7 +317,7 @@ function Form() {
                                 <input
                                     type="email"
                                     name="email"
-                                    placeholder="Your Email"
+                                    placeholder="Email Address"
                                     onChange={handleChange}
                                     onBlur={() => handleBlur('email')}
                                     value={formData.email}
@@ -258,49 +330,123 @@ function Form() {
                             </div>
                         </div>
 
-                        {/* Phone Field */}
-                        <div className="col-md-6">
+                        {/* SSB Experience Radio Buttons */}
+                        <div className="col-12">
                             <div className="form-group">
-                                <input
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="Enter 10 digit mobile number"
-                                    value={formData.phone}
-                                    onChange={(e) => {
-                                        const value = e.target.value.replace(/\D/g, ""); // remove non-numbers
-                                        if (value.length <= 10) {
-                                            setFormData({ ...formData, phone: value });
-                                        }
-                                    }}
-                                    onBlur={() => handleBlur("phone")}
-                                    className={hasError("phone") ? "error" : ""}
-                                    inputMode="numeric"      // numeric keyboard
-                                    pattern="[0-9]{10}"      // exactly 10 digits
-                                    maxLength={10}
-                                    required
-                                />
-
-                                {hasError('phone') && (
-                                    <div className="error-message">{errors.phone}</div>
+                                <label className="form-label-custom">What is your SSB experience?</label>
+                                <div className="radio-group-custom">
+                                    <label className={`radio-label-custom ${formData.ssbExperience === 'Fresher' ? 'active' : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="ssbExperience"
+                                            value="Fresher"
+                                            checked={formData.ssbExperience === 'Fresher'}
+                                            onChange={handleChange}
+                                            onBlur={() => handleBlur('ssbExperience')}
+                                        />
+                                        Fresher
+                                    </label>
+                                    <label className={`radio-label-custom ${formData.ssbExperience === 'Screened Out' ? 'active' : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="ssbExperience"
+                                            value="Screened Out"
+                                            checked={formData.ssbExperience === 'Screened Out'}
+                                            onChange={handleChange}
+                                            onBlur={() => handleBlur('ssbExperience')}
+                                        />
+                                        Screened Out
+                                    </label>
+                                    <label className={`radio-label-custom ${formData.ssbExperience === 'Conference Out' ? 'active' : ''}`}>
+                                        <input
+                                            type="radio"
+                                            name="ssbExperience"
+                                            value="Conference Out"
+                                            checked={formData.ssbExperience === 'Conference Out'}
+                                            onChange={handleChange}
+                                            onBlur={() => handleBlur('ssbExperience')}
+                                        />
+                                        Conference Out
+                                    </label>
+                                </div>
+                                {hasError('ssbExperience') && (
+                                    <div className="error-message">{errors.ssbExperience}</div>
                                 )}
                             </div>
                         </div>
 
-                        {/* Subject Field */}
+                        {/* Next SSB Field */}
                         <div className="col-md-6">
                             <div className="form-group">
                                 <input
                                     type="text"
-                                    name="subject"
-                                    placeholder="Subject"
+                                    name="nextSsb"
+                                    placeholder="When is your next SSB? (Please mention month & date)"
                                     onChange={handleChange}
-                                    onBlur={() => handleBlur('subject')}
-                                    value={formData.subject}
-                                    className={hasError('subject') ? 'error' : ''}
+                                    onBlur={() => handleBlur('nextSsb')}
+                                    value={formData.nextSsb}
+                                    className={hasError('nextSsb') ? 'error' : ''}
                                     required
                                 />
-                                {hasError('subject') && (
-                                    <div className="error-message">{errors.subject}</div>
+                                {hasError('nextSsb') && (
+                                    <div className="error-message">{errors.nextSsb}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Board / Selection Center Field */}
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    name="ssbCenter"
+                                    placeholder="In which board/selection center is your next SSB/AFSB?"
+                                    onChange={handleChange}
+                                    onBlur={() => handleBlur('ssbCenter')}
+                                    value={formData.ssbCenter}
+                                    className={hasError('ssbCenter') ? 'error' : ''}
+                                    required
+                                />
+                                {hasError('ssbCenter') && (
+                                    <div className="error-message">{errors.ssbCenter}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Which SSB Entry Field */}
+                        <div className="col-md-6">
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    name="ssbEntry"
+                                    placeholder="Which entry of SSB are you going for?"
+                                    onChange={handleChange}
+                                    onBlur={() => handleBlur('ssbEntry')}
+                                    value={formData.ssbEntry}
+                                    className={hasError('ssbEntry') ? 'error' : ''}
+                                    required
+                                />
+                                {hasError('ssbEntry') && (
+                                    <div className="error-message">{errors.ssbEntry}</div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* How are you preparing Field */}
+                        <div className="col-12">
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    name="ssbPreparation"
+                                    placeholder="How are you preparing for SSB?"
+                                    onChange={handleChange}
+                                    onBlur={() => handleBlur('ssbPreparation')}
+                                    value={formData.ssbPreparation}
+                                    className={hasError('ssbPreparation') ? 'error' : ''}
+                                    required
+                                />
+                                {hasError('ssbPreparation') && (
+                                    <div className="error-message">{errors.ssbPreparation}</div>
                                 )}
                             </div>
                         </div>
@@ -310,7 +456,7 @@ function Form() {
                             <div className="form-group">
                                 <textarea
                                     name="message"
-                                    placeholder="Write Your Message (minimum 10 characters)"
+                                    placeholder="Write your message? (minimum 10 characters)"
                                     onChange={handleChange}
                                     onBlur={() => handleBlur('message')}
                                     value={formData.message}
@@ -321,9 +467,6 @@ function Form() {
                                 {hasError('message') && (
                                     <div className="error-message">{errors.message}</div>
                                 )}
-                                {/* <div className="character-count">
-                                    {formData.message.length}/1000 characters
-                                </div> */}
                             </div>
                         </div>
 
@@ -334,19 +477,6 @@ function Form() {
                                 disabled={!loading || Object.keys(errors).length > 0}
                             />
                         </div>
-
-                        {/* {Object.keys(errors).length > 0 && (
-                            <div className="col-12">
-                                <div className="form-errors-summary">
-                                    <p>Please fix the following errors:</p>
-                                    <ul>
-                                        {Object.entries(errors).map(([field, error]) => (
-                                            <li key={field}>{error}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        )} */}
 
                     </div>
                 </form>

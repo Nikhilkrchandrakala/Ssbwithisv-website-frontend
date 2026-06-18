@@ -9,7 +9,39 @@ import { store } from './redux/store';
 
 // Force HTTPS redirect
 if (window.location.protocol === 'http:' && !window.location.hostname.includes('localhost')) {
-    window.location.replace(`https://${window.location.hostname}${window.location.pathname}${window.location.search}`);
+}
+
+// Disable copy/cut/selectstart/contextmenu globally (except on input/textarea elements)
+if (typeof window !== 'undefined') {
+    const isInputField = (el) => {
+        if (!el) return false;
+        const tagName = el.tagName;
+        return tagName === 'INPUT' || tagName === 'TEXTAREA' || el.isContentEditable;
+    };
+
+    document.addEventListener('copy', (e) => {
+        if (!isInputField(e.target)) {
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener('cut', (e) => {
+        if (!isInputField(e.target)) {
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener('contextmenu', (e) => {
+        if (!isInputField(e.target)) {
+            e.preventDefault();
+        }
+    });
+
+    document.addEventListener('selectstart', (e) => {
+        if (!isInputField(e.target)) {
+            e.preventDefault();
+        }
+    });
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

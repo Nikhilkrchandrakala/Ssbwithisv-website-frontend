@@ -37,7 +37,7 @@ const PhilosophySection = () => {
 
             {/* TOP TEXT */}
             <div className="top-text">
-                <div style={{ marginTop: '0' }} className="d-flex justify-content-center headingOfMargin">
+                <div style={{ marginTop: '0', marginBottom: '0' }} className="d-flex justify-content-center headingOfMargin">
 
                     <HeadingTwo h1='Mentoring' t1='philosophy' />
                 </div>
