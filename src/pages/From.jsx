@@ -166,18 +166,14 @@ function Form() {
                     email: formData.email.trim(),
                     phone: formData.phone,
                     subject: "New Website Enquiry",
-                    message: `Enquiry Form Details:
-- First Name: ${formData.firstName.trim()}
-- Last Name: ${formData.lastName.trim()}
-- Mobile Number: ${formData.phone}
-- Email Address: ${formData.email.trim()}
-- SSB Experience: ${formData.ssbExperience}
-- Next SSB Date: ${formData.nextSsb.trim()}
-- Board / Selection Center: ${formData.ssbCenter.trim()}
-- How preparing: ${formData.ssbPreparation.trim()}
-- Which entry: ${formData.ssbEntry.trim()}
-- Message: ${formData.message.trim()}`,
                     replyTo: formData.email.trim(),
+                    // Individual fields for clean email formatting
+                    ssbExperience: formData.ssbExperience,
+                    nextSsb: formData.nextSsb.trim(),
+                    ssbCenter: formData.ssbCenter.trim(),
+                    ssbPreparation: formData.ssbPreparation.trim(),
+                    ssbEntry: formData.ssbEntry.trim(),
+                    message: formData.message.trim(),
                 },
                 {
                     headers: { "Content-Type": "application/json" },
