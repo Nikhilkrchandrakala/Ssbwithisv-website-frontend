@@ -52,7 +52,7 @@ const getFileUrl = (path, activeSub) => {
     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
     if (path.startsWith('db://')) {
         const psychBaseUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
         const subId = activeSub?._id || activeSub?.id || "";
         const idx = activeSub?.piqFiles ? activeSub.piqFiles.indexOf(path) : 0;
         const safeIdx = idx !== -1 ? idx : 0;
@@ -215,7 +215,7 @@ const ProfileDashboard = () => {
     const fetchPsychSubmissions = async () => {
         setLoadingPsych(true);
         try {
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
             const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
                 ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
@@ -283,7 +283,7 @@ const ProfileDashboard = () => {
         }
         setIsPsychUploading(true);
         try {
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
             const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
             const psychBackendUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
@@ -353,7 +353,7 @@ const ProfileDashboard = () => {
                 formData.append('files', file);
             });
             
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
             const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
                 ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
@@ -379,7 +379,7 @@ const ProfileDashboard = () => {
     const handleTimelinePiqUpload = async (files, piqType = 'piq1') => {
         setIsPiqUploading(true);
         try {
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
             const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
                 ? "http://localhost:5173" 
                 : "https://psych.ssbwithisv.in";
@@ -451,7 +451,7 @@ const ProfileDashboard = () => {
         }
         setIsPsychUploading(true);
         try {
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
             const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
             const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
             const psychBackendUrl = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";
@@ -763,6 +763,7 @@ const ProfileDashboard = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
         localStorage.removeItem("userData");
         navigate('/');
         window.location.reload();
@@ -1759,7 +1760,7 @@ const ProfileDashboard = () => {
                                                                                                 
                                                                                                 setIsRegisteringConsent(true);
                                                                                                 try {
-                                                                                                    const token = localStorage.getItem("authToken");
+                                                                                                    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
                                                                                                     const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
                                                                                                     const mainBackendUrl = isLocal ? "http://localhost:5001" : "https://api.ssbwithisv.in";
                                                                                                     const base = isLocal ? "http://localhost:5173" : "https://psych.ssbwithisv.in";

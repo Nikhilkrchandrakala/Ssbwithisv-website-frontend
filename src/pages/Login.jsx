@@ -291,25 +291,6 @@ function Login() {
                             </div>
                         </div>
 
-                        <div className="col-lg-12">
-                            <input
-                                type="Password"
-                                className="form-control custom-input"
-                                placeholder="Your Password"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="col-lg-12">
-                            <input
-                                type="Re Password"
-                                className="form-control custom-input"
-                                placeholder="Your Re Password"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
 
                         {otpSent && (
                             <div className="col-lg-12">

@@ -41,7 +41,7 @@ import SuccessPage from './components/SuccessPage';
 import BatchPage from './pages/PerCourses';
 
 const ProtectedRoute = () => {
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
   return token ? <Outlet /> : <Navigate to="/SignIn" replace />;
 };
 

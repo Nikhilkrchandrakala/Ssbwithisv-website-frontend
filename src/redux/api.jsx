@@ -12,7 +12,7 @@ export const api = createApi({
         const rawBaseQuery = fetchBaseQuery({
             baseUrl: "https://api.ssbwithisv.in/api/",
             prepareHeaders: (headers) => {
-                const token = localStorage.getItem("authToken");
+                const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
                 if (token) {
                     headers.set("authorization", `Bearer ${token}`);
                 }
@@ -23,7 +23,7 @@ export const api = createApi({
         const localBaseQuery = fetchBaseQuery({
             baseUrl: "http://localhost:5001/api/",
             prepareHeaders: (headers) => {
-                const token = localStorage.getItem("authToken");
+                const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
                 if (token) {
                     headers.set("authorization", `Bearer ${token}`);
                 }

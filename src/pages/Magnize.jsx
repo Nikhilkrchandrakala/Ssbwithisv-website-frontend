@@ -69,7 +69,7 @@ function Magnize() {
 
     // import axios from "axios";
 
-    const token = localStorage.getItem('authToken')
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     // console.log(token)
 
     const navigate = useNavigate()

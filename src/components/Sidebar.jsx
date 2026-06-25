@@ -36,7 +36,9 @@ const Sidebar = ({ open, onClose }) => {
     const handleLogout = () => {
         // 🔹 LocalStorage clear
         localStorage.removeItem("authToken");
+        sessionStorage.removeItem("authToken");
         localStorage.removeItem("userData");
+        sessionStorage.removeItem("userData");
         localStorage.removeItem("lastLoginType");
         // localStorage.removeItem("rememberMe");
         // localStorage.removeItem("cookieConsent");

@@ -26,7 +26,7 @@ function AuthRoute() {
     const [checkingAuth, setCheckingAuth] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
 
         if (token && !isTokenExpired(token)) {
             navigate("/", { replace: true });
@@ -34,7 +34,9 @@ function AuthRoute() {
             if (token) {
                 // Clear stale/expired session keys
                 localStorage.removeItem("authToken");
+                sessionStorage.removeItem("authToken");
                 localStorage.removeItem("userData");
+                sessionStorage.removeItem("userData");
             }
             setCheckingAuth(false); // token nahi mila ya expired tha, ab page render hone do
         }

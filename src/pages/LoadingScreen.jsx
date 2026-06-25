@@ -29,6 +29,7 @@ export default function LoadingScreen() {
         if (isError) {
             console.log("Token expired or invalid");
             localStorage.removeItem("authToken");
+            sessionStorage.removeItem("authToken");
             // window.location.href = "/login";
         }
 
