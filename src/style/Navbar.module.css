@@ -5,6 +5,14 @@
     overflow: hidden;
 }
 
+.pageWrapper.sidebarOpen {
+    z-index: 9999999 !important;
+}
+
+.pageWrapper.sidebarOpen .pageWrapperMain {
+    z-index: 9999999 !important;
+}
+
 .bgVideo {
     position: absolute;
     inset: 0;
@@ -111,15 +119,14 @@
 
 /* .subtitle, */
 .subtitleTwo {
-
-    font-weight: 800;
+    font-weight: 500;
     font-size: 24px;
     line-height: 38px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: #ffffff;
     margin-top: 40px;
-    font-family: var(--pre);
+    font-family: var(--font-family);
 }
 
 .subtitle {
@@ -745,7 +752,7 @@
     }
 
     .subtitleTwo {
-        margin-top: 27px;
+        margin-top: 20px;
     }
 }
 

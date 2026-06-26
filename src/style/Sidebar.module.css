@@ -6,7 +6,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
-    z-index: 90;
+    z-index: 9999998 !important;
 }
 
 .overlay.show {
@@ -27,10 +27,10 @@
             #3b3930 0%,
             #2a291f 50%,
             #1f1f1a 100%);
-    padding: 60px 60px 40px;
+    padding: 30px 40px 20px; /* Reduced vertical padding for better spacing and visibility without scrolling */
     transform: translateX(100%);
     transition: transform 0.45s ease;
-    z-index: 999999;
+    z-index: 9999999 !important;
     color: #c6c5af;
     display: flex;
     justify-content: flex-end;
@@ -38,23 +38,230 @@
 }
 
 .sidebarContainer {
+    width: 100%;
     max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(100vh - 50px);
 }
 
 .sidebar.open {
     transform: translateX(0);
 }
 
-/* Close button */
+.sidebarHeader {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.topRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.brandText {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(198, 197, 175, 0.5);
+    font-family: "Poppins", sans-serif;
+}
+
 .closeBtn {
-    position: absolute;
-    top: 15px;
-    right: 40px;
-    font-size: 26px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     color: #c6c5af;
-    background: none;
-    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    font-size: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    padding: 0;
+}
+
+.closeBtn:hover {
+    background: rgba(210, 161, 0, 0.2);
+    color: #ffffff;
+    border-color: var(--secondary-color);
+    transform: scale(1.08) rotate(90deg);
+}
+
+.closeBtn:active {
+    transform: scale(0.95);
+}
+
+.profileCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 15px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #a88100 100%);
+    color: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(210, 161, 0, 0.25);
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.avatarImg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+}
+
+.avatarInitials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    color: #000000;
+    position: absolute;
+    inset: 0;
+}
+
+.profileInfo {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+    text-align: left;
+}
+
+.userName {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "Poppins", sans-serif;
+    letter-spacing: 0.3px;
+}
+
+.userSubtitle {
+    font-size: 11px;
+    color: rgba(198, 197, 175, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 1px;
+    font-family: "Poppins", sans-serif;
+}
+
+.logoutBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    color: #c6c5af;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    outline: none;
+    flex-shrink: 0;
+}
+
+.logoutBtn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+.logoutBtn:active {
+    transform: scale(0.95);
+}
+
+.welcomeCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.welcomeInfo {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.welcomeTitle {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    font-family: "Poppins", sans-serif;
+}
+
+.welcomeSubtitle {
+    font-size: 11px;
+    color: rgba(198, 197, 175, 0.7);
+    margin-top: 2px;
+    font-family: "Poppins", sans-serif;
+}
+
+.signInBtn {
+    background: transparent;
+    border: 1px solid var(--secondary-color);
+    color: var(--secondary-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    flex-shrink: 0;
+}
+
+.signInBtn:hover {
+    background: var(--secondary-color);
+    color: #000000;
+    transform: translateY(-1px);
 }
 
 /* Containers */
@@ -63,11 +270,11 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px; /* Reduced margin to optimize screen space */
 }
 
 .bottomLine {
-    margin-top: 40px;
+    margin-top: 20px; /* Reduced margin to optimize screen space */
 }
 
 /* Line */
@@ -124,7 +331,19 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
+}
+
+@media (min-height: 700px) {
+    .menu {
+        gap: 16px; /* Spreads out beautifully on medium viewports */
+    }
+}
+
+@media (min-height: 850px) {
+    .menu {
+        gap: 24px; /* Spreads out beautifully on tall viewports */
+    }
 }
 
 /* Base link */
@@ -185,7 +404,7 @@
 
 /* Contact */
 .contact {
-    margin-top: 30px;
+    margin-top: 15px; /* Reduced margin to fit links without scroll */
     font-size: 14px;
     display: flex;
     gap: 20px;
@@ -211,7 +430,7 @@
 @media (max-width: 768px) {
     .sidebar {
         /* width: 100%; */
-        padding: 70px 30px 30px;
+        padding: 30px 20px 20px; /* Compact mobile padding */
     }
 
     .menu a {
@@ -221,10 +440,6 @@
 
 /* Small phones */
 @media (max-width: 480px) {
-    .closeBtn {
-        right: 20px;
-    }
-
     .menu a {
         font-size: 15px;
     }

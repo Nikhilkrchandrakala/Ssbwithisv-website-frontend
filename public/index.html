@@ -89,7 +89,13 @@
   <script src="https://cdn-in.pagesense.io/js/60070446894/c47efbddcb31458ab634e57373f70600.js"></script>
 
   <!-- Zoho SalesIQ Widget -->
-  <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script>
+  <script>
+    window.$zoho = window.$zoho || {};
+    $zoho.salesiq = $zoho.salesiq || { ready: function () { } };
+    $zoho.salesiq.ready = function () {
+      $zoho.salesiq.floatbutton.visible("hide");
+    };
+  </script>
   <script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siqc08ba46cfbc1f55a60348a1fa7a43c8c13ee00806f8a303d6411d3b3493cae77" defer></script>
 </body>
 

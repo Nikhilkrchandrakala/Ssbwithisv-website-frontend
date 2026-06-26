@@ -13,7 +13,7 @@ function Navbar({ video, subtitle, title, title1, subtitleTwo, banner, text }) {
     const navigate = useNavigate()
 
     return (
-        <div className={styles.pageWrapper}>
+        <div className={`${styles.pageWrapper} ${open ? styles.sidebarOpen : ""}`}>
 
             {/* 🔥 BACKGROUND VIDEO */}
             <video

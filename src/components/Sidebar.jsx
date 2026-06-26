@@ -5,6 +5,15 @@ import axios from "axios";
 import CustomButton from "./CustomButton";
 import { useUserProfileQuery, useGetContactSettingsQuery } from "../redux/api";
 import ContactUs from "./ContactUs";
+import { BiX, BiLogOut } from "react-icons/bi";
+
+const getInitials = (name) => {
+    if (!name) return "";
+    const parts = name.split(" ").filter(Boolean);
+    if (parts.length === 0) return "";
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
 const Sidebar = ({ open, onClose }) => {
     const navigate = useNavigate();
@@ -80,45 +89,67 @@ const Sidebar = ({ open, onClose }) => {
                 <div className={styles.sidebarContainer}>
 
 
-                    {/* Close */}
-                    <button className={styles.closeBtn} onClick={onClose}>
-                        ✕
-                    </button>
-
-
-
-                    {blogs?.user?.name ? (
-                        <div className="mb-4 d-flex justify-content-between align-items-center" style={{ color: "#c6c5af", fontSize: "16px", fontWeight: "bold", width: "100%", paddingRight: "30px" }}>
-                            <span>{blogs?.user?.name}</span>
-                            <button
-                                onClick={handleLogout}
-                                style={{
-                                    background: "none",
-                                    border: "none",
-                                    color: "#c6c5af",
-                                    cursor: "pointer",
-                                    fontSize: "21px",
-                                    padding: "0 5px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                                title="Log Out"
-                            >
-                                <i className="fa fa-sign-out"></i>
+                    {/* Header Row */}
+                    <div className={styles.sidebarHeader}>
+                        <div className={styles.topRow}>
+                            <span className={styles.brandText}>Navigation</span>
+                            <button className={styles.closeBtn} onClick={onClose} title="Close Menu">
+                                <BiX />
                             </button>
                         </div>
-                    ) :
 
-                        (<div className="mb-4 d-flex justify-content-between">
-                            {/* <button style={{ color: 'var( --white)' }} onClick={() => navigate('/SignUp')} >Sign Up</button> */}
-                            <button style={{ color: 'var( --white)' }} onClick={() => navigate('/SignIn')}>Sign In</button>
-                        </div>)
-                    }
+                        {blogs?.user?.name ? (
+                            <div className={styles.profileCard}>
+                                <div className={styles.avatar}>
+                                    {blogs.user.profileImage ? (
+                                        <img
+                                            src={blogs.user.profileImage}
+                                            alt={blogs.user.name}
+                                            className={styles.avatarImg}
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                                e.target.nextSibling.style.display = 'flex';
+                                            }}
+                                        />
+                                    ) : null}
+                                    <span
+                                        className={styles.avatarInitials}
+                                        style={{ display: blogs.user.profileImage ? 'none' : 'flex' }}
+                                    >
+                                        {getInitials(blogs.user.name)}
+                                    </span>
+                                </div>
+                                <div className={styles.profileInfo}>
+                                    <span className={styles.userName}>{blogs.user.name}</span>
+                                    <span className={styles.userSubtitle}>{blogs.user.email || "SSB Aspirant"}</span>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className={styles.logoutBtn}
+                                    title="Log Out"
+                                >
+                                    <BiLogOut />
+                                </button>
+                            </div>
+                        ) : (
+                            <div className={styles.welcomeCard}>
+                                <div className={styles.welcomeInfo}>
+                                    <span className={styles.welcomeTitle}>Welcome</span>
+                                    <span className={styles.welcomeSubtitle}>Sign in to access your profile</span>
+                                </div>
+                                <button
+                                    onClick={() => navigate('/SignIn')}
+                                    className={styles.signInBtn}
+                                >
+                                    Sign In
+                                </button>
+                            </div>
+                        )}
 
-                    <div className={styles.topLine}>
-                        <span className={styles.line}></span>
-                        <span className={`${styles.dot} ${styles.dotLeftToRight}`}></span>
+                        <div className={styles.topLine}>
+                            <span className={styles.line}></span>
+                            <span className={`${styles.dot} ${styles.dotLeftToRight}`}></span>
+                        </div>
                     </div>
 
 
@@ -260,38 +291,32 @@ const Sidebar = ({ open, onClose }) => {
 
 
                     </nav>
+                    <div className={styles.sidebarFooter}>
+                        <div className={styles.bottomLine}>
+                            <span className={`${styles.dot} ${styles.dotRightToLeft}`}></span>
+                            <span className={styles.line}></span>
+                        </div>
 
+                        <div className={styles.contact}>
+                            {/* WhatsApp */}
+                            <a
+                                href={`https://wa.me/91${whatsappNumRaw}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.contactItem}
+                            >
+                                <i className="fa fa-whatsapp"></i> +91 {whatsappNumFormatted}
+                            </a>
 
-                    <div className={styles.bottomLine}>
-                        <span className={`${styles.dot} ${styles.dotRightToLeft}`}></span>
-                        <span className={styles.line}></span>
+                            {/* Phone Call */}
+                            <a
+                                href={`tel:+91${callNumRaw}`}
+                                className={styles.contactItem}
+                            >
+                                <i className="fa fa-phone"></i> +91 {callNumFormatted}
+                            </a>
+                        </div>
                     </div>
-
-
-
-                    <div className={styles.contact}>
-                        {/* WhatsApp */}
-                        <a
-                            href={`https://wa.me/91${whatsappNumRaw}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.contactItem}
-                        >
-                            <i className="fa fa-whatsapp"></i> +91 {whatsappNumFormatted}
-                        </a>
-
-                        {/* Phone Call */}
-                        <a
-                            href={`tel:+91${callNumRaw}`}
-                            className={styles.contactItem}
-                        >
-                            <i className="fa fa-phone"></i> +91 {callNumFormatted}
-                        </a>
-                    </div>
-
-                    {/* <div className={styles.footerMarginBottom}>
-                       
-                    </div> */}
 
                 </div>
             </aside>
