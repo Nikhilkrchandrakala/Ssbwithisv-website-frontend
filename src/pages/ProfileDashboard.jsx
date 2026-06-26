@@ -31,7 +31,8 @@ import {
     useUpdateUserProfileMutation,
     useUserProfileQuery,
     useUserCoursesQuery,
-    useGetAllMagazineQuery
+    useGetAllMagazineQuery,
+    useGetMyDownloadsQuery
 } from "../redux/api";
 import toast from "react-hot-toast";
 import ImageUploadPopup from "../components/ImageUploadPopup";
@@ -121,6 +122,7 @@ const ProfileDashboard = () => {
     const { data: profileData, isLoading: isProfileLoading } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
     const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
+    const { data: myDownloads = [], isLoading: isMyDownloadsLoading } = useGetMyDownloadsQuery();
     const [selectedTag, setSelectedTag] = useState("all");
 
     const [updateProfile] = useUpdateUserProfileMutation();
@@ -141,31 +143,14 @@ const ProfileDashboard = () => {
     const isGTOOnly = hasGTO && !hasInterview && !hasFullOrPsych;
     const isIOOnly = hasInterview && !hasFullOrPsych;
 
-    const filteredMagazines = isMagazinesLoading === false && magazines
-        ? [...(selectedTag === "all"
-            ? magazines
-            : magazines.filter(item => item?.tags === selectedTag)
-        )]
-        .filter(mag => {
-            const titleLower = mag?.pdfTitle?.toLowerCase() || '';
-            if (isGTOOnly) {
-                if (titleLower.includes('piq') || titleLower.includes('personal information') || titleLower.includes('dossier')) {
-                    return false;
-                }
-            }
-            if (isIOOnly) {
-                if (titleLower.includes('dossier') || titleLower.includes('psychology')) {
-                    return false;
-                }
-            }
-            return true;
-        })
-        .sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
-        : [];
+    // Filter user's personal downloads by selected tag (sorted by downloadedAt from API)
+    const filteredMagazines = selectedTag === "all"
+        ? myDownloads
+        : myDownloads.filter(item => item?.tags === selectedTag);
 
     const defaultCategories = ["Magazine", "Books", "SSBPrep"];
-    const uniqueCategories = isMagazinesLoading === false && magazines
-        ? Array.from(new Set([...defaultCategories, ...magazines.map(item => item?.tags).filter(Boolean)]))
+    const uniqueCategories = myDownloads.length > 0
+        ? Array.from(new Set([...defaultCategories, ...myDownloads.map(item => item?.tags).filter(Boolean)]))
         : defaultCategories;
 
     // Handle click outside popup
@@ -1192,7 +1177,7 @@ const ProfileDashboard = () => {
                                             </div>
                                         </div>
 
-                                        {isMagazinesLoading || isProfileLoading ? (
+                                        {isMyDownloadsLoading || isProfileLoading ? (
                                             <div className={styles.loadingState}>
                                                 <div className="spinner-border text-warning" role="status">
                                                     <span className="visually-hidden">Loading...</span>
@@ -1212,6 +1197,11 @@ const ProfileDashboard = () => {
                                                         <div className={styles.magInfo}>
                                                             <h4>{mag.pdfTitle}</h4>
                                                             <p className={styles.magTags}>{mag.tags}</p>
+                                                            {mag.downloadedAt && (
+                                                                <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>
+                                                                    Downloaded on {new Date(mag.downloadedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                                </p>
+                                                            )}
                                                             <a
                                                                 href={mag.pdfFilePath.startsWith('/assets') ? mag.pdfFilePath : `https://api.ssbwithisv.in/${mag.pdfFilePath}`}
                                                                 target="_blank"
@@ -1219,7 +1209,7 @@ const ProfileDashboard = () => {
                                                                 className={styles.downloadLink}
                                                                 download
                                                             >
-                                                                <BiDownload /> Download PDF
+                                                                <BiDownload /> Download Again
                                                             </a>
                                                         </div>
                                                     </div>
@@ -1228,7 +1218,14 @@ const ProfileDashboard = () => {
                                         ) : (
                                             <div className={styles.emptyState}>
                                                 <BiDownload className={styles.emptyIcon} />
-                                                <p>No downloads available at the moment.</p>
+                                                <h3>No Downloads Yet</h3>
+                                                <p>You haven't downloaded any resources yet.</p>
+                                                <button
+                                                    className={styles.browseCoursesBtn}
+                                                    onClick={() => navigate('/magazine')}
+                                                >
+                                                    Browse Our Monthly Magazine
+                                                </button>
                                             </div>
                                         )}
                                     </div>

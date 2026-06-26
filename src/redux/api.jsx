@@ -242,6 +242,22 @@ export const api = createApi({
             invalidatesTags: ["Auth", "Profile"],
         }),
 
+        /** 📥 Track a magazine download for the logged-in user */
+        trackDownload: builder.mutation({
+            query: (body) => ({
+                url: "trackDownload",
+                method: "POST",
+                body,
+            }),
+            invalidatesTags: ["Profile"],
+        }),
+
+        /** 📋 Get all magazines downloaded by the logged-in user */
+        getMyDownloads: builder.query({
+            query: () => "user/myDownloads",
+            providesTags: ["Profile"],
+        }),
+
 
 
 
@@ -285,13 +301,9 @@ export const {
     useGetContactSettingsQuery,
 
     useApplyCouponMutation,
-    useCheckPurchaseQuery
+    useCheckPurchaseQuery,
 
-
-
-
-
-
-
+    useTrackDownloadMutation,
+    useGetMyDownloadsQuery,
 
 } = api;

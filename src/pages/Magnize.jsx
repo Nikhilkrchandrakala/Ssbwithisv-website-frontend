@@ -6,7 +6,7 @@ import CustomButton from '../components/CustomButton'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { useGetAllMagazineQuery } from '../redux/api'
+import { useGetAllMagazineQuery, useTrackDownloadMutation } from '../redux/api'
 import toast from "react-hot-toast";
 
 function Magnize() {
@@ -32,6 +32,7 @@ function Magnize() {
 
 
     const { data: allMagazineData = [], isSuccess } = useGetAllMagazineQuery();
+    const [trackDownload] = useTrackDownloadMutation();
 
     const filteredMagazines = isSuccess
         ? [...(selectedTag === "all"
@@ -114,6 +115,13 @@ function Magnize() {
                 link.href = window.URL.createObjectURL(blob);
                 link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
                 link.click();
+
+                // Silently track this download against the user's account
+                if (item?._id) {
+                    trackDownload({ magazineId: item._id }).catch(() => {
+                        // Tracking failure is non-critical — don't disrupt download
+                    });
+                }
             } else {
                 setDownloadBtn(true);
                 toast.error("Failed to download PDF.");

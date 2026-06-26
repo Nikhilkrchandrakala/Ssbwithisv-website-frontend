@@ -2241,119 +2241,208 @@
 /* Downloads Styles */
 .downloadsGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     margin-top: 20px;
 }
 
 .downloadCard {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(210, 161, 0, 0.2);
-    border-radius: 20px;
+    background: #0e0e12;
+    border: 1px solid rgba(210, 161, 0, 0.15);
+    border-radius: 14px;
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Gold shimmer border on hover */
+.downloadCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, transparent 0%, rgba(210, 161, 0, 0.7) 50%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 3;
 }
 
 .downloadCard:hover {
-    transform: translateY(-5px);
-    border-color: #d2a100;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px) scale(1.015);
+    box-shadow: 0 16px 40px rgba(210, 161, 0, 0.18),
+                0 6px 16px rgba(0, 0, 0, 0.6);
+    border-color: rgba(210, 161, 0, 0.4);
 }
 
+.downloadCard:hover::before {
+    opacity: 1;
+}
+
+/* Magazine cover image — fixed height, consistent across all card sizes */
 .magImage {
-    aspect-ratio: 1 / 1.414; /* Standard A4 portrait ratio */
-    height: auto;
-    overflow: hidden;
     position: relative;
-    background: rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #0a0a0d;
+    flex-shrink: 0;
 }
 
 .magImage img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Shows entire cover */
-    transition: transform 0.5s ease;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Gradient overlay on hover */
+.magImage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.75) 0%,
+        rgba(0, 0, 0, 0.2) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 1;
+}
+
+.downloadCard:hover .magImage::after {
+    opacity: 1;
 }
 
 .downloadCard:hover .magImage img {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
+/* Info panel below image */
 .magInfo {
-    padding: 20px;
+    padding: 14px 16px 16px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     flex: 1;
+    background: linear-gradient(135deg, #111115 0%, #0e0e12 100%);
 }
 
 .magInfo h4 {
-    color: #fff;
-    font-size: 1.2rem;
+    color: #f0ece0;
+    font-size: 0.88rem;
     margin: 0;
     font-weight: 600;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .magTags {
     color: #d2a100;
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     margin: 0;
-    font-weight: 500;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
+/* Download link button */
 .downloadLink {
-    margin-top: auto;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    background: #d2a100;
+    gap: 7px;
+    background: linear-gradient(135deg, #d2a100 0%, #f0c020 100%);
     color: #000;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.3px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 3px 10px rgba(210, 161, 0, 0.2);
 }
 
 .downloadLink:hover {
-    background: #e0c214;
+    background: linear-gradient(135deg, #e0b010 0%, #ffd030 100%);
+    color: #000;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(210, 161, 0, 0.3);
+    box-shadow: 0 5px 18px rgba(210, 161, 0, 0.4);
 }
 
 @media (max-width: 1200px) {
     .downloadsGrid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
     }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 900px) {
     .downloadsGrid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
     }
 }
 
 @media (max-width: 768px) {
     .downloadsGrid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
-    
+
     .magImage {
-        height: 300px;
+        height: 160px;
+    }
+
+    .magInfo {
+        padding: 12px;
+    }
+
+    .magInfo h4 {
+        font-size: 0.82rem;
     }
 }
 
 @media (max-width: 480px) {
     .downloadsGrid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .magImage {
+        height: 130px;
+    }
+
+    .magInfo {
+        padding: 10px;
+        gap: 4px;
+    }
+
+    .magInfo h4 {
+        font-size: 0.75rem;
+    }
+
+    .downloadLink {
+        font-size: 0.7rem;
+        padding: 7px 8px;
+        gap: 5px;
     }
 }
 

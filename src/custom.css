@@ -871,6 +871,7 @@ p {
 
 /* FORM */
 .enquiry-form input,
+.enquiry-form select,
 .enquiry-form textarea {
     width: 100%;
     background: transparent;
@@ -881,6 +882,15 @@ p {
     font-size: 15px;
     outline: none;
     font-family: var(--font-family);
+}
+
+.enquiry-form select option {
+    background: #0b0b0b;
+    color: var(--theme-white);
+}
+
+.enquiry-form select:focus {
+    border-color: var(--secondary-color);
 }
 
 /* TEXTAREA HEIGHT */
@@ -918,6 +928,38 @@ p {
     background: var(--secondary-color);
     border-color: var(--secondary-color);
     color: var(--dark-gray);
+}
+
+.form-help-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--secondary-color, #d2a100);
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.form-help-link:hover {
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.form-help-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--secondary-color, #d2a100);
+    transition: width 0.3s ease;
+}
+
+.form-help-link:hover::after {
+    width: 100%;
+    background-color: #fff;
 }
 
 .form-label-custom {
@@ -1012,19 +1054,61 @@ p {
 .magazine-card {
     position: relative;
     overflow: hidden;
+    border: none;
+    border-radius: 12px;
+    background: #0e0e12;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    margin-top: 0 !important;
 }
 
-/* Overlay */
+/* Card hover lift + glow */
+.magazine-card:hover {
+    transform: translateY(-10px) scale(1.025);
+    box-shadow: 0 20px 50px rgba(210, 161, 0, 0.22),
+                0 8px 20px rgba(0, 0, 0, 0.55);
+}
+
+/* Gold border shimmer on hover */
+.magazine-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, transparent 0%, rgba(210, 161, 0, 0.6) 50%, transparent 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.magazine-card:hover::before {
+    opacity: 1;
+}
+
+/* Overlay shown on hover with download button */
 .magazine-hover {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.45) 50%,
+        rgba(0, 0, 0, 0.1) 100%
+    );
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
+    padding-bottom: 28px;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
     z-index: 2;
 }
 
@@ -1034,88 +1118,81 @@ p {
     visibility: visible;
 }
 
-/* Button */
+/* Download button inside overlay */
 .download-btn {
-    padding: 12px 22px;
-    background: #ffffff;
+    padding: 11px 26px;
+    background: linear-gradient(135deg, #d2a100 0%, #f0c020 100%);
     color: #000;
-    font-weight: 600;
-    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50px;
     text-decoration: none;
-    transition: transform 0.3s ease;
+    letter-spacing: 0.4px;
+    transform: translateY(12px);
+    transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+                box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(210, 161, 0, 0.35);
+    border: none;
+    cursor: pointer;
+}
+
+.magazine-card:hover .download-btn {
+    transform: translateY(0);
 }
 
 .download-btn:hover {
-    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(210, 161, 0, 0.55);
+    background: linear-gradient(135deg, #e0b010 0%, #ffd030 100%);
 }
 
-
-.magazine-card {
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-    margin-top: 20px;
-}
-
-/* Card hover lift */
-.magazine-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.45);
-}
-
-/* Header */
+/* Header — slim, dark, with title */
 .magazine-card-head {
-    background: #1f1f21;
-    border-radius: 0 !important;
-    padding: 18px;
-    text-align: center;
-    height: 60px;
-    /* min-height: ; */
+    background: linear-gradient(135deg, #1a1a1e 0%, #111115 100%);
+    border-bottom: 1px solid rgba(210, 161, 0, 0.15);
+    border-radius: 12px 12px 0 0;
+    padding: 12px 16px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .magazine-card-title {
-    /* font-family: "Inter", sans-serif; */
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--theme-white);
+    font-size: 13px;
+    font-weight: 600;
+    color: #e0dcc8;
     margin: 0;
-
-
-    /* font-family: "Inter", sans-serif; */
-    /* font-size: 12px; */
-    font-weight: 500;
-    /* color: var(--theme-white);
-    margin: 0; */
-
+    text-align: center;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
-    /* sirf 2 lines */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-
-    line-height: 1.4;
-    max-height: calc(1.4em * 2);
+    line-height: 1.45;
+    letter-spacing: 0.2px;
 }
 
+/* Image body — strict portrait ratio like a real magazine */
 .magazine-card-body {
     padding: 0;
-    height: 500px;
     width: 100%;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
+    background: #0a0a0d;
+    border-radius: 0 0 12px 12px;
 }
 
 .magazine-card-img {
     height: 100%;
     width: 100%;
-    object-fit: fill;
+    object-fit: cover;
+    object-position: top center;
     display: block;
-    transition: all ease-in 0.3s;
+    transition: transform 0.55s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .magazine-card:hover .magazine-card-img {
-    transform: scale(1.1);
+    transform: scale(1.08);
 }
 
 /* ========== Hall fo fame card  css ========= */
@@ -1915,16 +1992,16 @@ p {
     .magazine-card-body {
         padding: 0;
         width: 100%;
-        height: 400px;
+        /* aspect-ratio auto on mobile, let it flow */
         overflow: hidden;
     }
 
     .magazine-card-img {
         height: 100%;
         width: 100%;
-        object-fit: fill;
+        object-fit: cover;
+        object-position: top center;
         display: block;
-        transition: all ease-in 0.3s;
     }
 
 }
@@ -2005,7 +2082,7 @@ p {
     }
 
     .magazine-card-body {
-        height: 14rem;
+        /* aspect-ratio maintained; no fixed height needed */
     }
 
     .journey-title {
@@ -2031,33 +2108,26 @@ p {
     }
 
     .magazine-card-title {
-        font-family: "Inter", sans-serif;
         font-size: 12px;
-        font-weight: 500;
-        color: var(--theme-white);
+        font-weight: 600;
+        color: #e0dcc8;
         margin: 0;
-
+        text-align: center;
         display: -webkit-box;
         -webkit-line-clamp: 2;
-        /* sirf 2 lines */
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-
-        line-height: 1.4;
-        max-height: calc(1.4em * 2);
-        /* 2 lines height fix */
+        line-height: 1.45;
     }
 
     .magazine-card-head {
-        padding: 10px;
-        height: 55px;
+        padding: 10px 12px;
+        min-height: 48px;
         display: flex;
         justify-content: center;
         align-items: center;
-        /* min-height: ; */
     }
-
 
 }
 
@@ -3685,3 +3755,349 @@ p {
         font-size: 11px;
     }
 }
+
+/* ============ Zoho Success Splash Message Banner ============ */
+.wf_customMessageBox {
+    font-family: 'Inter', sans-serif;
+    color: #E0C214;
+    background: #141414;
+    box-shadow: 0 4px 25px rgba(224, 194, 20, 0.25);
+    max-width: 90%;
+    width: max-content;
+    word-break: break-word;
+    z-index: 11000;
+    border-radius: 8px;
+    border: 1px solid #E0C214;
+    min-width: 280px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wf_customCircle {
+    position: relative;
+    background-color: #E0C214;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    margin-right: 12px;
+}
+
+.wf_customCheckMark {
+    box-sizing: unset !important;
+    position: absolute;
+    transform: rotate(45deg) translate(-50%, -50%);
+    left: 6px;
+    top: 9px;
+    height: 8px;
+    width: 3px;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+}
+
+@keyframes slideDownFade {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* ============ Zoho Fullscreen Success Modal ============ */
+.wf_success_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000000;
+    animation: fadeIn 0.3s ease;
+}
+
+.wf_success_modal {
+    background: #0b0b0b;
+    border: 2px solid #E0C214;
+    box-shadow: 0 10px 40px rgba(224, 194, 20, 0.3);
+    border-radius: 20px;
+    padding: 40px 30px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: scaleUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.wf_success_close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wf_success_close:hover {
+    color: #E0C214;
+}
+
+.wf_success_icon_container {
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.wf_success_circle {
+    position: relative;
+    background-color: #E0C214;
+    border-radius: 100%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(224, 194, 20, 0.4);
+}
+
+.wf_success_checkmark {
+    box-sizing: unset !important;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    height: 22px;
+    width: 10px;
+    border-bottom: 4px solid #000;
+    border-right: 4px solid #000;
+}
+
+.wf_success_title {
+    color: #E0C214;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 15px;
+    letter-spacing: 0.5px;
+}
+
+.wf_success_text {
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.wf_success_btn {
+    background: linear-gradient(135deg, #d2a100 0%, #f0c020 100%);
+    color: #000 !important;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 14px 32px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 4px 15px rgba(210, 161, 0, 0.3);
+    display: inline-block;
+    width: 100%;
+}
+
+.wf_success_btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(210, 161, 0, 0.5);
+    background: linear-gradient(135deg, #e0b010 0%, #ffd030 100%);
+    color: #000 !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* =====================================
+   Zoho Enquiry Form Section-wise Reorganization
+===================================== */
+.form-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.form-section:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(224, 194, 20, 0.2);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.form-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #E0C214;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(224, 194, 20, 0.15);
+}
+
+.section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(224, 194, 20, 0.1);
+    color: #E0C214;
+    border: 1px solid rgba(224, 194, 20, 0.35);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+@media (max-width: 576px) {
+    .form-section {
+        padding: 20px 16px;
+    }
+}
+
+/* Multi-step form styles */
+.form-steps-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 35px;
+    padding: 0 10px;
+}
+
+.step-indicator-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-indicator-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #141414;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.step-indicator-label {
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.step-indicator-item.active .step-indicator-number {
+    border-color: #E0C214;
+    color: #E0C214;
+    background: rgba(224, 194, 20, 0.1);
+    box-shadow: 0 0 15px rgba(224, 194, 20, 0.25);
+}
+
+.step-indicator-item.active .step-indicator-label {
+    color: #E0C214;
+}
+
+.step-indicator-item.completed .step-indicator-number {
+    border-color: #E0C214;
+    color: #141414;
+    background: #E0C214;
+}
+
+.step-indicator-item.completed .step-indicator-label {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.step-indicator-line {
+    flex: 1;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 0 10px;
+    margin-bottom: 26px; /* align with the circles vertically */
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.step-indicator-line.active {
+    background-color: #E0C214;
+}
+
+/* Animations */
+.form-step-content {
+    animation: stepFadeIn 0.4s ease forwards;
+}
+
+@keyframes stepFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
