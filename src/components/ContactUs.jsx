@@ -71,19 +71,6 @@ export default function ContactUs({ open, setOpen }) {
                     }}
                 />
 
-                {/* Dialog title */}
-                <div style={{ marginBottom: '16px', marginTop: '8px' }}>
-                    <h2
-                        style={{
-                            color: '#ffffff',
-                            fontSize: '22px',
-                            fontWeight: 600,
-                            letterSpacing: '0.5px',
-                        }}
-                    >
-                        Enquire with us
-                    </h2>
-                </div>
 
                 {/* Zoho CRM Web Form container */}
                 <div
