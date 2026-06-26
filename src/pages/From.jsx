@@ -324,6 +324,9 @@ function Form({ isModal = false }) {
             bodyFormData.set('service', 'smarturl');
         }
 
+        // Convert FormData to URLSearchParams (application/x-www-form-urlencoded) expected by Zoho Web-to-Lead
+        const urlEncodedData = new URLSearchParams(bodyFormData);
+
         // Disable submit button/loading state via UI indicator
         const submitBtn = document.querySelector('.crmWebToEntityForm .formsubmit');
         if (submitBtn) {
@@ -333,7 +336,10 @@ function Form({ isModal = false }) {
         toast.promise(
             fetch('https://crm.zoho.in/crm/WebToLeadForm', {
                 method: 'POST',
-                body: bodyFormData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body: urlEncodedData.toString(),
                 cache: 'no-cache'
             })
             .then(async (response) => {
@@ -502,8 +508,7 @@ function Form({ isModal = false }) {
                         </div>
 
                         {/* Section 1: Personal Details */}
-                        {currentStep === 1 && (
-                            <div className="col-12 form-step-content">
+                        <div className="col-12 form-step-content" style={{ display: currentStep === 1 ? 'block' : 'none' }}>
                                 <div className="form-section">
                                     <div className="form-section-header">
                                         <span className="section-number">01</span> Personal Details
@@ -666,11 +671,9 @@ function Form({ isModal = false }) {
                                     </div>
                                 </div>
                             </div>
-                        )}
 
                         {/* Section 2: Your SSB details */}
-                        {currentStep === 2 && (
-                            <div className="col-12 form-step-content">
+                        <div className="col-12 form-step-content" style={{ display: currentStep === 2 ? 'block' : 'none' }}>
                                 <div className="form-section">
                                     <div className="form-section-header">
                                         <span className="section-number">02</span> Your SSB details
@@ -840,11 +843,9 @@ function Form({ isModal = false }) {
                                     </div>
                                 </div>
                             </div>
-                        )}
 
                         {/* Section 3: Are you famaliar with us? */}
-                        {currentStep === 3 && (
-                            <div className="col-12 form-step-content">
+                        <div className="col-12 form-step-content" style={{ display: currentStep === 3 ? 'block' : 'none' }}>
                                 <div className="form-section">
                                     <div className="form-section-header">
                                         <span className="section-number">03</span> Are you famaliar with us?
@@ -929,7 +930,6 @@ function Form({ isModal = false }) {
                                     </div>
                                 </div>
                             </div>
-                        )}
 
                         {/* Form Buttons */}
                         <div className="col-12 text-center d-flex justify-content-center gap-3 mb-4 mt-4">
