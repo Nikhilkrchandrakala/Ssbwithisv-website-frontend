@@ -1,10 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react'
 import '../../style/custom-theme.css'
+import '../../style/MagazineGateForm.css'
 import { useNavigate } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
-import SocialLoginButtons from '../../components/SocialLoginButtons'
 import { BiArrowBack } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { FaRegUser, FaRegCalendarAlt } from 'react-icons/fa';
+import { GiStarMedal } from 'react-icons/gi';
+import toast from "react-hot-toast";
 import {
     useRegisterMutation,
     useAddLeadMutation,
@@ -14,6 +17,7 @@ import {
     useSendSignupPhoneOtpMutation,
     useVerifySignupPhoneOtpMutation,
 } from '../../redux/api'
+
 
 // ─── Password strength helpers ───
 const passwordRules = [
@@ -33,10 +37,28 @@ const getPasswordStrength = (password) => {
     return { score: 4, label: 'Strong', color: '#22c55e' };
 };
 
+const BOARD_OPTIONS = [
+    '1 AFSB', '2 AFSB', '3 AFSB', '4 AFSB', '5 AFSB',
+    '33 SSB Bhopal (Navy)', 'NSB Vizag (Navy)', '12 SSB Bangalore (Navy)',
+    'SSB (Kolkata) (Navy)', '31 | 32 SSB Selection Center North (Kapurthala)',
+    '11 | 14 | 18 | 19 | 34 SSB Selection Center East Prayagraj',
+    '20 | 21 | 22 SSB Bhopal', '17 | 24 SSB Bangalore',
+    'Not allotted yet', 'Not known right now', 'CGSB (NOIDA)', 'NOT IN THIS LIST'
+];
+
+const ENTRY_OPTIONS = [
+    '10+2 B. Tech. entry (Navy)', '10+2 TES', 'AFCAT',
+    'Army Service entry (PCSL, SCO, ACC, AMC)', 'CDS',
+    'Navy Service entry (CW, SD List)', 'NCC special entry', 'NDA',
+    'SSC (JAG)', 'SSC (Tech) Army',
+    'SSC Navy (Executive, Law, Pilot, Naval Air Operations, Engineering, Electrical, Logistics, Naval Armament, Education)',
+    'Territorial Army', 'TGC'
+];
+
 function SignUp() {
     const navigate = useNavigate()
 
-    // ─── Step state (1=Info, 2=Email OTP, 3=Phone OTP) ───
+    // ─── Step state (1=Info, 2=Email OTP, 3=Phone OTP, 4=SSB Profile) ───
     const [step, setStep] = useState(1);
 
     // ─── Form states ───
@@ -45,6 +67,21 @@ function SignUp() {
     const [phone, setPhone] = useState("");
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    
+    // ─── Step 4 SSB Profile Form State ───
+    const [dob, setDob] = useState("");
+    const [ssbAspirant, setSsbAspirant] = useState("-None-");
+    const [servingCandidate, setServingCandidate] = useState("-None-");
+    const [vtxHeard, setVtxHeard] = useState("-None-");
+    const [youtubeSubscribed, setYoutubeSubscribed] = useState("-None-");
+    const [podcastSubscribed, setPodcastSubscribed] = useState("-None-");
+    const [ssbExperience, setSsbExperience] = useState("-None-");
+    const [nextSsbDate, setNextSsbDate] = useState("");
+    const [ssbBoards, setSsbBoards] = useState([]);
+    const [ssbEntries, setSsbEntries] = useState([]);
+    const [city, setCity] = useState("");
+    const [state, setState] = useState("");
+
     const [serviceConsent, setServiceConsent] = useState(false);
 
     // OTP states
@@ -250,20 +287,55 @@ function SignUp() {
             const pToken = verifyResult.phoneVerifyToken;
             setPhoneVerifyToken(pToken);
 
-            // Register user
+            // Successfully verified! Move to Step 4 (SSB Details Profile)
+            setStep(4);
+            setErrorMsg("");
+            setSuccessMsg("Phone verified successfully! Please fill in your SSB profile details to complete registration.");
+        } catch (err) {
+            console.error("Phone OTP verification error:", err);
+            setErrorMsg(err?.data?.message || "Phone OTP verification failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // ─── STEP 4: Submit Full Profile and Register ───
+    const handleSSBSubmitAndRegister = async (e) => {
+        e.preventDefault();
+        
+        // Basic validations for Step 4
+        if (ssbAspirant === "-None-") { setErrorMsg("Please select if you are an SSB Aspirant."); return; }
+        if (servingCandidate === "-None-") { setErrorMsg("Please select if you are a serving candidate."); return; }
+        
+        setErrorMsg(""); setLoading(true);
+        try {
+            // Register user with all fields (Signup + SSB Details)
             const regResult = await register({
                 name, email, phone, password,
                 emailVerifyToken,
-                phoneVerifyToken: pToken,
+                phoneVerifyToken,
+                dob,
+                ssbAspirant,
+                servingCandidate,
+                vtxHeard,
+                youtubeSubscribed,
+                podcastSubscribed,
+                ssbExperience,
+                nextSsbDate,
+                ssbBoards,
+                ssbEntries,
+                city,
+                state
             }).unwrap();
 
             if (regResult) {
-                // Add lead
+                // Add lead locally in DB if needed
                 try {
                     await addLeadStudent({ name, email, phoneNumber: phone }).unwrap();
                 } catch (leadErr) {
                     console.error("Add lead error:", leadErr);
                 }
+                toast.success("Registration completed successfully!");
                 navigate('/SignIn', { state: { registered: true } });
             }
         } catch (err) {
@@ -302,6 +374,7 @@ function SignUp() {
                             { num: 1, label: 'Your Info' },
                             { num: 2, label: 'Verify Email' },
                             { num: 3, label: 'Verify Phone' },
+                            { num: 4, label: 'SSB Profile' },
                         ].map((s, i) => (
                             <React.Fragment key={s.num}>
                                 <div className={`step-item ${step >= s.num ? 'active' : ''} ${step > s.num ? 'completed' : ''}`}>
@@ -310,7 +383,7 @@ function SignUp() {
                                     </div>
                                     <div className="step-label">{s.label}</div>
                                 </div>
-                                {i < 2 && <div className={`step-line ${step > s.num ? 'active' : ''}`}></div>}
+                                {i < 3 && <div className={`step-line ${step > s.num ? 'active' : ''}`}></div>}
                             </React.Fragment>
                         ))}
                     </div>
@@ -543,18 +616,155 @@ function SignUp() {
                                 {/* Register Button */}
                                 <div className="col-12 d-flex justify-content-center mt-4">
                                     <CustomButton
-                                        text={loading ? "Creating Account..." : "VERIFY & SIGN UP"}
+                                        text={loading ? "Verifying..." : "VERIFY & CONTINUE"}
                                         onClick={handleVerifyPhoneAndRegister}
                                         disabled={loading || phoneOtp.length < 4 || phoneOtp.length > 6}
                                     />
                                 </div>
-
+ 
                                 {/* Back */}
                                 <div className="col-12 text-center mt-3">
                                     <div className="thm-account-link" onClick={() => { setStep(2); setErrorMsg(""); setSuccessMsg(""); }}
                                         style={{ cursor: 'pointer' }}>
                                         ← Back to email verification
                                     </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* ═══════════════ STEP 4: SSB PROFILE ═══════════════ */}
+                        {step === 4 && (
+                            <div className="row col-xl-9 g-3 col-lg-10 mx-auto justify-content-center mgf-wrapper" style={{ border: 'none', background: 'transparent', padding: 0 }}>
+                                <div className="col-lg-12 text-center mb-2">
+                                    <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
+                                        Complete your <strong style={{ color: '#f4c430' }}>SSB Profile</strong> to finish setup.
+                                    </p>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Date of Birth</label>
+                                    <input className="mgf-input" type="date"
+                                        value={dob}
+                                        onChange={e => setDob(e.target.value)} />
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Are you an SSB Aspirant? <span className="mgf-required">*</span></label>
+                                    <select className="mgf-select"
+                                        value={ssbAspirant} onChange={e => setSsbAspirant(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Serving candidate? <span className="mgf-required">*</span></label>
+                                    <select className="mgf-select"
+                                        value={servingCandidate} onChange={e => setServingCandidate(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">SSB Experience</label>
+                                    <select className="mgf-select" value={ssbExperience} onChange={e => setSsbExperience(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Fresher">Fresher</option>
+                                        <option value="Screen Out">Screen Out</option>
+                                        <option value="Conference Out">Conference Out</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Heard about VTX™?</label>
+                                    <select className="mgf-select" value={vtxHeard} onChange={e => setVtxHeard(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Subscribed to YouTube?</label>
+                                    <select className="mgf-select" value={youtubeSubscribed} onChange={e => setYoutubeSubscribed(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Subscribed to Podcast?</label>
+                                    <select className="mgf-select" value={podcastSubscribed} onChange={e => setPodcastSubscribed(e.target.value)}>
+                                        <option value="-None-">Select…</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">Next SSB Date</label>
+                                    <input className="mgf-input" type="date"
+                                        value={nextSsbDate} onChange={e => setNextSsbDate(e.target.value)} />
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">City</label>
+                                    <input className="mgf-input" placeholder="New Delhi"
+                                        value={city} onChange={e => setCity(e.target.value)} />
+                                </div>
+
+                                <div className="col-lg-6 mgf-field">
+                                    <label className="mgf-label">State</label>
+                                    <input className="mgf-input" placeholder="Delhi"
+                                        value={state} onChange={e => setState(e.target.value)} />
+                                </div>
+
+                                <div className="col-lg-12 mgf-field mt-3">
+                                    <label className="mgf-label">SSB Board / Centre (Select all that apply)</label>
+                                    <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
+                                        {BOARD_OPTIONS.map(opt => (
+                                            <label key={opt} className="mgf-checkbox-item">
+                                                <input type="checkbox"
+                                                    checked={ssbBoards.includes(opt)}
+                                                    onChange={() => {
+                                                        setSsbBoards(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                                                    }} />
+                                                <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="col-lg-12 mgf-field mt-3">
+                                    <label className="mgf-label">SSB Entry (Select all that apply)</label>
+                                    <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
+                                        {ENTRY_OPTIONS.map(opt => (
+                                            <label key={opt} className="mgf-checkbox-item">
+                                                <input type="checkbox"
+                                                    checked={ssbEntries.includes(opt)}
+                                                    onChange={() => {
+                                                        setSsbEntries(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                                                    }} />
+                                                <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Messages */}
+                                {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center', margin: 0 }}>{successMsg}</p></div>}
+                                {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px', margin: 0 }}>{errorMsg}</p></div>}
+
+                                <div className="col-12 d-flex justify-content-center mt-4">
+                                    <CustomButton
+                                        text={loading ? "COMPLETING REGISTRATION..." : "FINISH & REGISTER"}
+                                        onClick={handleSSBSubmitAndRegister}
+                                        disabled={loading}
+                                    />
                                 </div>
                             </div>
                         )}

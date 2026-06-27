@@ -134,6 +134,20 @@ function MagazineGateForm({ onSuccess }) {
                     fetch(`${apiBase}/api/user/zoho-form-filled`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', 'token': token },
+                        body: JSON.stringify({
+                            dob: data.dob,
+                            ssbAspirant: data.aspirant,
+                            servingCandidate: data.serving,
+                            vtxHeard: data.vtx,
+                            youtubeSubscribed: data.youtube,
+                            podcastSubscribed: data.podcast,
+                            ssbExperience: data.experience,
+                            nextSsbDate: data.nextSsb,
+                            ssbBoards: data.boards,
+                            ssbEntries: data.entries,
+                            city: data.city,
+                            state: data.state
+                        })
                     }).catch(() => {});
                 }
                 localStorage.setItem('zohoFormFilled', 'true');
