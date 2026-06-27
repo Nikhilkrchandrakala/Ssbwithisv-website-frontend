@@ -443,9 +443,9 @@ function SignUp() {
                                 </div>
 
                                 {/* Social Login */}
-                                <div className="col-12">
+                                {/* <div className="col-12">
                                     <SocialLoginButtons />
-                                </div>
+                                </div> */}
                             </div>
                         )}
 
