@@ -1,5 +1,4 @@
-// Footer.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/Footer.module.css";
 import VisitorCounter from "../components/VisitorCounter";
@@ -9,6 +8,15 @@ import { useGetContactSettingsQuery } from "../redux/api";
 
 function Footer() {
     const navigate = useNavigate();
+    const [hideJoinBtn, setHideJoinBtn] = useState(!localStorage.getItem("cookieConsent"));
+
+    useEffect(() => {
+        const handleConsentChange = () => {
+            setHideJoinBtn(!localStorage.getItem("cookieConsent"));
+        };
+        window.addEventListener("cookieConsentChanged", handleConsentChange);
+        return () => window.removeEventListener("cookieConsentChanged", handleConsentChange);
+    }, []);
 
     const { data: contactSettings } = useGetContactSettingsQuery();
 
@@ -49,11 +57,13 @@ function Footer() {
                 </div>
 
                 {/* Modern Floating Action Docks */}
-                <div className="modern-floating-dock-left">
-                    <button className="dock-join-btn" onClick={() => navigate('/Batches')}>
-                        <span>Join SSB Batch</span>
-                    </button>
-                </div>
+                {!hideJoinBtn && (
+                    <div className="modern-floating-dock-left">
+                        <button className="dock-join-btn" onClick={() => navigate('/Batches')}>
+                            <span>Join SSB Batch</span>
+                        </button>
+                    </div>
+                )}
 
                 <div className="modern-floating-dock-right">
                     <div className="dock-actions">

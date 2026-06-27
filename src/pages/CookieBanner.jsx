@@ -24,6 +24,7 @@ export default function CookieBanner() {
             })
         );
         setShow(false);
+        window.dispatchEvent(new Event("cookieConsentChanged"));
     };
 
     const rejectNonEssential = () => {
@@ -37,6 +38,7 @@ export default function CookieBanner() {
             })
         );
         setShow(false);
+        window.dispatchEvent(new Event("cookieConsentChanged"));
     };
 
     if (!show) return null;
