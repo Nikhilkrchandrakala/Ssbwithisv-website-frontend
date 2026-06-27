@@ -1,33 +1,32 @@
 .cookie-banner {
     position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 600px;
-    background: rgba(18, 18, 18, 0.95);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(210, 161, 0, 0.4);
-    border-radius: 16px;
-    padding: 22px 26px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-    z-index: 1000000; /* Higher than floating docks (99999) */
-    color: #eae9d4;
-    transition: all 0.3s ease;
+    bottom: 0px;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 16px 24px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.7);
+    z-index: 1000000;
+    color: #dcdcdc;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 12px;
 }
 
 .cookie-text {
     font-size: 13.5px;
-    line-height: 1.6;
-    margin-bottom: 18px;
+    line-height: 1.5;
+    margin-bottom: 0;
     color: #eae9d4;
 }
 
 .cookie-link {
     color: #f4c430;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .cookie-link:hover {
@@ -38,44 +37,39 @@
 .cookie-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    justify-content: flex-end;
+    gap: 10px;
+    align-items: center;
 }
 
 .cookie-actions .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 8px 18px;
+    border-radius: 6px;
     font-size: 13px;
-    font-weight: 600;
     cursor: pointer;
-    border: 1px solid transparent;
+    border: none;
     white-space: nowrap;
+    font-weight: 600;
     transition: all 0.25s ease;
 }
 
 .cookie-actions .accept {
     background: #f4c430;
     color: #000;
-    border: 1px solid #f4c430;
 }
 
 .cookie-actions .accept:hover {
     background: #fff;
-    border-color: #fff;
-    color: #000;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(244, 196, 48, 0.4);
 }
 
 .cookie-actions .reject {
-    background: rgba(255, 255, 255, 0.08);
-    color: #eae9d4;
+    background: #333;
+    color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .cookie-actions .reject:hover {
     background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
     color: #fff;
     transform: translateY(-2px);
 }
@@ -92,14 +86,14 @@
     color: #fff;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 480px) {
     .cookie-banner {
-        bottom: 20px;
-        padding: 18px;
-        width: calc(100% - 30px);
+        padding: 14px 18px;
+        gap: 10px;
     }
 
     .cookie-actions {
+        width: 100%;
         flex-direction: column;
         gap: 8px;
     }

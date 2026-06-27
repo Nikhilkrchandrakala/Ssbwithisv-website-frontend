@@ -65,34 +65,36 @@ function Footer() {
                     </div>
                 )}
 
-                <div className="modern-floating-dock-right">
-                    <div className="dock-actions">
-                        <button
-                            onClick={openZohoChat}
-                            className="dock-icon-btn chat"
-                            title="Chat with us"
-                            aria-label="Chat with us"
-                        >
-                            <i className="fa fa-comments"></i>
-                        </button>
-                        <a
-                            href={`https://wa.me/91${whatsappNumRaw}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="dock-icon-btn whatsapp"
-                            aria-label="Chat on WhatsApp"
-                        >
-                            <i className="fa fa-whatsapp"></i>
-                        </a>
-                        <a
-                            href={`tel:+91${callNumRaw}`}
-                            className="dock-icon-btn call"
-                            aria-label="Call Us"
-                        >
-                            <i className="fa fa-phone"></i>
-                        </a>
+                {!hideJoinBtn && (
+                    <div className="modern-floating-dock-right">
+                        <div className="dock-actions">
+                            <button
+                                onClick={openZohoChat}
+                                className="dock-icon-btn chat"
+                                title="Chat with us"
+                                aria-label="Chat with us"
+                            >
+                                <i className="fa fa-comments"></i>
+                            </button>
+                            <a
+                                href={`https://wa.me/91${whatsappNumRaw}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="dock-icon-btn whatsapp"
+                                aria-label="Chat on WhatsApp"
+                            >
+                                <i className="fa fa-whatsapp"></i>
+                            </a>
+                            <a
+                                href={`tel:+91${callNumRaw}`}
+                                className="dock-icon-btn call"
+                                aria-label="Call Us"
+                            >
+                                <i className="fa fa-phone"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                )}
 
 
 
