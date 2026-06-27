@@ -62,6 +62,17 @@ export default function CookieBanner() {
                 <button className="btn accept" onClick={acceptAll}>
                     Accept All
                 </button>
+
+                <button className="btn reject" onClick={rejectNonEssential}>
+                    Reject Non-Essential
+                </button>
+
+                <button
+                    className="btn link"
+                    onClick={() => navigate("/PrivacyPolicy")}
+                >
+                    View Privacy Policy
+                </button>
             </div>
         </div>
     );

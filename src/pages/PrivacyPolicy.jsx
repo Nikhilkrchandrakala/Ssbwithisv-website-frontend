@@ -172,6 +172,7 @@ function PrivacyPolicy() {
             </section>
 
 
+            {/*
             <section className="privacy-root">
                 <div className="terms-container">
 
@@ -313,6 +314,7 @@ function PrivacyPolicy() {
                     </div>
                 </div>
             </section>
+            */}
 
             <Footer />
 
