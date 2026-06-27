@@ -7,9 +7,10 @@ import CustomButton from '../components/CustomButton'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { useGetAllMagazineQuery, useTrackDownloadMutation } from '../redux/api'
+import { useGetAllMagazineQuery, useTrackDownloadMutation, useUserProfileQuery } from '../redux/api'
 import toast from "react-hot-toast";
 import { RxCross1 } from "react-icons/rx";
+
 
 function Magnize() {
 
@@ -37,6 +38,18 @@ function Magnize() {
 
     const { data: allMagazineData = [], isSuccess } = useGetAllMagazineQuery();
     const [trackDownload] = useTrackDownloadMutation();
+
+    // ─── Fetch profile & sync zohoFormFilled status dynamically ───
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    const { data: profileData } = useUserProfileQuery(undefined, { skip: !token });
+
+    useEffect(() => {
+        if (profileData?.user) {
+            const filled = !!profileData.user.zohoFormFilled;
+            localStorage.setItem('zohoFormFilled', String(filled));
+        }
+    }, [profileData]);
+
 
     const filteredMagazines = isSuccess
         ? [...(selectedTag === "all"
@@ -72,11 +85,10 @@ function Magnize() {
 
     // console.log(magazines)
 
-    // import axios from "axios";
-
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+    // import axios from "generics";
 
     const navigate = useNavigate()
+
 
     // ─── Check if user has already filled the Zoho form ───
     const isZohoFormFilled = () => {
