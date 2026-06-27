@@ -1004,7 +1004,7 @@ function Form({ isModal = false }) {
             <Background />
             <div className="container">
                 <div className="sct-title">
-                    <h2>Enquire with us</h2>
+                    <h2>Contact Us</h2>
                 </div>
                 {formContent}
             </div>

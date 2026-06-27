@@ -265,7 +265,7 @@ export default function ContactUs({ open, setOpen }) {
                     {/* <Background /> */}
                     <div className="container">
                         <div className="sct-title">
-                            <h2>Enquire with us</h2>
+                            <h2>Contact Us</h2>
                         </div>
 
                         <form className="enquiry-form" onSubmit={handleSubmit} noValidate>

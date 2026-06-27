@@ -276,8 +276,12 @@ const Sidebar = ({ open, onClose }) => {
                             className={({ isActive }) =>
                                 isActive ? "text-blue-600 font-semibold" : ""
                             }
+                            style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "2px" }}
                         >
-                            Contact Us
+                            <span>Contact Us</span>
+                            <span style={{ fontSize: "11px", color: "#8a8978", textTransform: "none", fontWeight: "normal", lineHeight: "1.3" }}>
+                                (For Business Enquiries Only, Not for SSB Course Queries)
+                            </span>
                         </NavLink>
 
                         {/* Dialog */}
