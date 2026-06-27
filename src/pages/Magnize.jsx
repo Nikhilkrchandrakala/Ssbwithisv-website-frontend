@@ -155,14 +155,7 @@ function Magnize() {
             return;
         }
 
-        if (!isZohoFormFilled()) {
-            // Block download — show the Zoho form modal
-            setPendingDownload({ pdfPath, item });
-            setShowFormGate(true);
-            return;
-        }
-
-        // Form already filled — go straight to download
+        // Bypassing form gate check — direct download
         executePdfDownload(pdfPath, item);
     };
 
