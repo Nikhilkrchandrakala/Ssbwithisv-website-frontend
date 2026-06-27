@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import CustomHeader from '../components/CustomHeader'
 import From from './From'
+import MagazineGateForm from './MagazineGateForm'
 import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
 import axios from "axios";
@@ -8,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useGetAllMagazineQuery, useTrackDownloadMutation } from '../redux/api'
 import toast from "react-hot-toast";
+import { RxCross1 } from "react-icons/rx";
 
 function Magnize() {
 
@@ -29,6 +31,8 @@ function Magnize() {
     const [loading, setLoading] = useState(true);
     const [downloadBtn, setDownloadBtn] = useState(true);
     const [selectedTag, setSelectedTag] = useState("all");
+    const [showFormGate, setShowFormGate] = useState(false);   // Zoho form modal
+    const [pendingDownload, setPendingDownload] = useState(null); // Item to download after form fills
 
 
     const { data: allMagazineData = [], isSuccess } = useGetAllMagazineQuery();
@@ -71,62 +75,83 @@ function Magnize() {
     // import axios from "axios";
 
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-    // console.log(token)
 
     const navigate = useNavigate()
 
-    const downloadPdf = async (pdfPath, item) => {
-        console.log(item?.pdfTitle)
-        if (!token) {
-            navigate('/SignIn')
+    // ─── Check if user has already filled the Zoho form ───
+    const isZohoFormFilled = () => {
+        return localStorage.getItem('zohoFormFilled') === 'true';
+    };
 
-        } else {
-
-            setDownloadBtn(false)
-            const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-                ? "http://localhost:5001"
-                : "https://api.ssbwithisv.in";
-            const url = `${baseUrl}/${pdfPath}`;
-
-            let res;
-            try {
-                res = await axios.get(url, {
-                    responseType: "blob",
-                });
-            } catch (err) {
-                if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-                    try {
-                        const fallbackUrl = `https://api.ssbwithisv.in/${pdfPath}`;
-                        res = await axios.get(fallbackUrl, {
-                            responseType: "blob",
-                        });
-                    } catch (fallbackErr) {
-                        console.error("Failed to download PDF from local and fallback server", fallbackErr);
-                    }
-                } else {
-                    console.error("Failed to download PDF", err);
-                }
+    // Listen for zohoFormFilled event so the gate closes & download fires without a reload
+    useEffect(() => {
+        const checkAndDownload = () => {
+            if (pendingDownload && isZohoFormFilled()) {
+                const { pdfPath, item } = pendingDownload;
+                setPendingDownload(null);
+                setShowFormGate(false);
+                executePdfDownload(pdfPath, item);
             }
+        };
+        const interval = setInterval(checkAndDownload, 800);
+        return () => clearInterval(interval);
+    }, [pendingDownload]);
 
-            if (res) {
-                setDownloadBtn(true)
-                const blob = new Blob([res.data], { type: "application/pdf" });
-                const link = document.createElement("a");
-                link.href = window.URL.createObjectURL(blob);
-                link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
-                link.click();
+    // ─── Actual PDF download (no gate check) ───
+    const executePdfDownload = async (pdfPath, item) => {
+        setDownloadBtn(false);
+        const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+            ? "http://localhost:5001"
+            : "https://api.ssbwithisv.in";
+        const url = `${baseUrl}/${pdfPath}`;
 
-                // Silently track this download against the user's account
-                if (item?._id) {
-                    trackDownload({ magazineId: item._id }).catch(() => {
-                        // Tracking failure is non-critical — don't disrupt download
-                    });
+        let res;
+        try {
+            res = await axios.get(url, { responseType: "blob" });
+        } catch (err) {
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                try {
+                    res = await axios.get(`https://api.ssbwithisv.in/${pdfPath}`, { responseType: "blob" });
+                } catch (fallbackErr) {
+                    console.error("Failed to download PDF from local and fallback server", fallbackErr);
                 }
             } else {
-                setDownloadBtn(true);
-                toast.error("Failed to download PDF.");
+                console.error("Failed to download PDF", err);
             }
         }
+
+        if (res) {
+            setDownloadBtn(true);
+            const blob = new Blob([res.data], { type: "application/pdf" });
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
+            link.click();
+            if (item?._id) {
+                trackDownload({ magazineId: item._id }).catch(() => {});
+            }
+        } else {
+            setDownloadBtn(true);
+            toast.error("Failed to download PDF.");
+        }
+    };
+
+    // ─── Download with Zoho form gate ───
+    const downloadPdf = async (pdfPath, item) => {
+        if (!token) {
+            navigate('/SignIn');
+            return;
+        }
+
+        if (!isZohoFormFilled()) {
+            // Block download — show the Zoho form modal
+            setPendingDownload({ pdfPath, item });
+            setShowFormGate(true);
+            return;
+        }
+
+        // Form already filled — go straight to download
+        executePdfDownload(pdfPath, item);
     };
 
     // const filteredMagazines =
@@ -140,6 +165,96 @@ function Magnize() {
 
     return (
         <>
+            {/* ─── Zoho Form Gate Modal ─── */}
+            {showFormGate && (
+                <div
+                    className="mgf-overlay"
+                    style={{
+                        position: 'fixed', inset: 0, zIndex: 99999,
+                        background: 'rgba(0,0,0,0.85)',
+                        backdropFilter: 'blur(6px)',
+                        WebkitBackdropFilter: 'blur(6px)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        padding: '20px',
+                        overflowY: 'auto',
+                        animation: 'mgf-overlayIn 0.25s ease',
+                    }}
+                    onClick={(e) => { if (e.target === e.currentTarget) setShowFormGate(false); }}
+                >
+                    <style>{`
+                        @keyframes mgf-overlayIn { from { opacity:0 } to { opacity:1 } }
+                        @keyframes mgf-slideUp { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:translateY(0) } }
+                    `}</style>
+                    <div style={{
+                        background: 'linear-gradient(160deg, #18181f 0%, #1e1c16 100%)',
+                        borderRadius: '20px',
+                        maxWidth: '680px',
+                        width: '100%',
+                        maxHeight: '92vh',
+                        overflowY: 'auto',
+                        position: 'relative',
+                        border: '1px solid rgba(244,196,48,0.25)',
+                        boxShadow: '0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+                        animation: 'mgf-slideUp 0.3s ease',
+                        scrollbarWidth: 'thin',
+                        scrollbarColor: 'rgba(244,196,48,0.3) transparent',
+                    }}>
+                        {/* Header bar */}
+                        <div style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                            padding: '22px 28px 18px',
+                            borderBottom: '1px solid rgba(255,255,255,0.07)',
+                            background: 'rgba(244,196,48,0.04)',
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div style={{
+                                    width: '40px', height: '40px', borderRadius: '10px',
+                                    background: 'rgba(244,196,48,0.15)',
+                                    border: '1px solid rgba(244,196,48,0.3)',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '20px',
+                                }}>📥</div>
+                                <div>
+                                    <p style={{ color: '#f4c430', fontSize: '17px', fontWeight: 700, margin: 0, lineHeight: 1.2 }}>
+                                        One quick step before your download
+                                    </p>
+                                    <p style={{ color: '#6a6660', fontSize: '12px', margin: '3px 0 0', lineHeight: 1 }}>
+                                        Your download starts automatically after submission
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setShowFormGate(false)}
+                                style={{
+                                    background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                                    color: '#8a8680', fontSize: '16px', cursor: 'pointer',
+                                    width: '34px', height: '34px', borderRadius: '8px',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    flexShrink: 0, transition: 'background 0.2s, color 0.2s',
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.background='rgba(255,255,255,0.12)'; e.currentTarget.style.color='#f4c430'; }}
+                                onMouseLeave={e => { e.currentTarget.style.background='rgba(255,255,255,0.06)'; e.currentTarget.style.color='#8a8680'; }}
+                                aria-label="Close"
+                            >
+                                <RxCross1 />
+                            </button>
+                        </div>
+
+                        {/* The new magazine-specific Zoho form */}
+                        <MagazineGateForm
+                            onSuccess={() => {
+                                setShowFormGate(false);
+                                if (pendingDownload) {
+                                    const { pdfPath, item } = pendingDownload;
+                                    setPendingDownload(null);
+                                    executePdfDownload(pdfPath, item);
+                                }
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
+
             <Helmet >
                 <title>
                     {/* Best online SSB Coaching in India with over 50% recommendation rate */}

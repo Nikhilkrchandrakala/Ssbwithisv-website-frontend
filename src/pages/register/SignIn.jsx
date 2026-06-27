@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { BiArrowBack } from 'react-icons/bi'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 import { useLoginMutation } from '../../redux/api'
+import SocialLoginButtons from '../../components/SocialLoginButtons'
 
 function SignIn() {
     const navigate = useNavigate()
@@ -188,7 +189,7 @@ function SignIn() {
     const isDisabled = isLoginLoading || lockoutTimer > 0;
 
     return (
-        <div className="thm-content-layer">
+        <div className="thm-content-layer signin-compact">
             <div className="thm-content-bg"></div>
             <div onClick={() => navigate(-1)} className='arrow_button'>
                 <BiArrowBack />
@@ -271,6 +272,11 @@ function SignIn() {
                                 style={{ cursor: isDisabled ? 'not-allowed' : 'pointer', opacity: isDisabled ? 0.6 : 1 }}>
                                 Create a new account.
                             </div>
+                        </div>
+
+                        {/* Social Login */}
+                        <div className="col-12">
+                            <SocialLoginButtons />
                         </div>
                     </div>
                 </div>

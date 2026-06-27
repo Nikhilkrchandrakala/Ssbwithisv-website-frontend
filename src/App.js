@@ -29,6 +29,8 @@ import SignIn from './pages/register/SignIn';
 import SignUp from './pages/register/SignUp';
 import AccountRecovery from './pages/register/AccountRecovery';
 import Successful from './pages/register/Successful';
+import AuthCallback from './pages/register/AuthCallback';
+import OAuthPhoneVerify from './pages/register/OAuthPhoneVerify';
 import AuthRoute from './components/AuthRoute';
 import NotFound from './components/NotFound';
 import ProfilePage from './pages/profile/ProfilePage';
@@ -90,6 +92,10 @@ function App() {
         
 
 
+
+        {/* OAuth callback routes — must be public (part of login flow) */}
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route path="/auth/phone-verify" element={<OAuthPhoneVerify />} />
 
         <Route element={<AuthRoute />}>
           <Route path="/SignIn" element={<SignIn />} />

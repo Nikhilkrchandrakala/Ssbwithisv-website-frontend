@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import '../../style/custom-theme.css'
 import { useNavigate } from 'react-router-dom'
 import CustomButton from '../../components/CustomButton'
+import SocialLoginButtons from '../../components/SocialLoginButtons'
 import { BiArrowBack } from "react-icons/bi";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import {
@@ -286,7 +287,7 @@ function SignUp() {
     // ─── Render ───
     return (
         <>
-            <div className="thm-content-layer">
+            <div className="thm-content-layer signup-compact">
                 <div className="thm-content-bg"></div>
                 <div onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)} className='arrow_button'>
                     <BiArrowBack />
@@ -439,6 +440,11 @@ function SignUp() {
                                     <div onClick={() => navigate('/SignIn')} className="thm-account-link" style={{ cursor: 'pointer' }}>
                                         I already have an account.
                                     </div>
+                                </div>
+
+                                {/* Social Login */}
+                                <div className="col-12">
+                                    <SocialLoginButtons />
                                 </div>
                             </div>
                         )}

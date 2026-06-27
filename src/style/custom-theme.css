@@ -888,3 +888,265 @@ input::-ms-reveal,
 input::-ms-clear {
     display: none !important;
 }
+
+/* ══════════════════════════════════════════════════
+   Sign In — Compact Layout (everything in one view)
+══════════════════════════════════════════════════ */
+.signin-compact {
+    padding: 20px 10px 20px 10px;
+    min-height: 100vh;
+    align-items: center;
+}
+
+.signin-compact .thm-big-title {
+    font-size: 44px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.signin-compact .thm-input {
+    padding: 8px 16px;
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+.signin-compact .password-wrapper .thm-input {
+    margin-bottom: 0;
+}
+
+.signin-compact .password-toggle {
+    top: 38%;
+}
+
+.signin-compact .field-error {
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+
+/* Override Bootstrap gap classes */
+.signin-compact .g-4 {
+    --bs-gutter-y: 0.5rem !important;
+    --bs-gutter-x: 0.5rem !important;
+}
+
+.signin-compact .mt-3 {
+    margin-top: 0.4rem !important;
+}
+
+.signin-compact .mt-4 {
+    margin-top: 0.6rem !important;
+}
+
+.signin-compact .mt-5 {
+    margin-top: 0.75rem !important;
+}
+
+/* Shrink the "Remember me" + "Forgot password" row */
+.signin-compact .thm-checkbox {
+    font-size: 14px;
+}
+
+.signin-compact .thm-account-link {
+    font-size: 14px;
+}
+
+/* Social login divider — tighten */
+.signin-compact .social-login-wrapper {
+    margin-top: 12px;
+}
+
+.signin-compact .social-divider {
+    margin-bottom: 12px;
+}
+
+.signin-compact .social-btn {
+    width: 44px;
+    height: 44px;
+}
+
+/* Responsive: tablets */
+@media (max-width: 992px) {
+    .signin-compact .thm-big-title {
+        font-size: 36px;
+    }
+    .signin-compact {
+        padding: 16px 10px;
+    }
+}
+
+/* Responsive: mobile */
+@media (max-width: 768px) {
+    .signin-compact .thm-big-title {
+        font-size: 30px;
+        margin-bottom: 10px;
+    }
+    .signin-compact {
+        padding: 10px 10px;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   Sign Up — Compact Layout (everything in one view)
+══════════════════════════════════════════════════ */
+.signup-compact {
+    padding: 24px 10px 24px 10px;
+    min-height: 100vh;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.signup-compact .thm-big-title {
+    font-size: 48px;
+    line-height: 1.15;
+    margin-bottom: 14px;
+}
+
+/* Step indicator */
+.signup-compact .step-indicator {
+    margin-bottom: 18px;
+    gap: 6px;
+}
+
+.signup-compact .step-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+}
+
+.signup-compact .step-label {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.signup-compact .step-line {
+    max-width: 80px;
+    margin: 0 4px;
+    margin-bottom: 22px;
+}
+
+/* Inputs */
+.signup-compact .thm-input {
+    padding: 9px 16px;
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+.signup-compact .password-wrapper .thm-input {
+    margin-bottom: 0;
+}
+
+.signup-compact .password-toggle {
+    top: 37%;
+    font-size: 18px;
+}
+
+/* Grid gaps */
+.signup-compact .g-4 {
+    --bs-gutter-y: 0.55rem !important;
+    --bs-gutter-x: 0.55rem !important;
+}
+
+.signup-compact .mt-3 {
+    margin-top: 0.5rem !important;
+}
+
+.signup-compact .mt-4 {
+    margin-top: 0.65rem !important;
+}
+
+.signup-compact .mt-5 {
+    margin-top: 0.9rem !important;
+}
+
+/* Consent text */
+.signup-compact .consent-wrapper {
+    margin-top: 0 !important;
+}
+
+.signup-compact .consent-item {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 5px;
+}
+
+.signup-compact .consent-item span {
+    font-size: 13px;
+}
+
+.signup-compact .policy-link {
+    font-size: 13px;
+}
+
+/* Password strength section */
+.signup-compact .password-strength-section {
+    margin-top: 5px;
+}
+
+.signup-compact .password-strength-bar {
+    height: 4px;
+}
+
+.signup-compact .password-strength-label {
+    font-size: 12px;
+}
+
+.signup-compact .password-rules {
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 10px;
+    margin-top: 5px;
+}
+
+.signup-compact .password-rule {
+    font-size: 12px;
+}
+
+/* field-error */
+.signup-compact .field-error {
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+
+/* Account link */
+.signup-compact .thm-account-link {
+    font-size: 15px;
+}
+
+/* Social */
+.signup-compact .social-login-wrapper {
+    margin-top: 12px;
+}
+
+.signup-compact .social-divider {
+    margin-bottom: 10px;
+}
+
+.signup-compact .social-divider-text {
+    font-size: 10px;
+}
+
+.signup-compact .social-btn {
+    width: 46px;
+    height: 46px;
+}
+
+.signup-compact .social-btn-group {
+    gap: 14px;
+}
+
+/* Responsive: mobile */
+@media (max-width: 768px) {
+    .signup-compact .thm-big-title {
+        font-size: 32px;
+    }
+    .signup-compact {
+        padding: 14px 8px;
+    }
+    .signup-compact .consent-item,
+    .signup-compact .consent-item span {
+        font-size: 11px;
+    }
+}
+
+

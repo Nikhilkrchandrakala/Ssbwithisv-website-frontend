@@ -386,10 +386,32 @@ function Form({ isModal = false }) {
                     submitBtn.removeAttribute('disabled');
                 }
 
+                // ─── Mark Zoho form as filled in backend + localStorage ───
+                try {
+                    const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+                    const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                        ? 'http://localhost:5001'
+                        : 'https://api.ssbwithisv.in';
+
+                    if (authToken) {
+                        fetch(`${baseUrl}/api/user/zoho-form-filled`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'token': authToken,
+                            },
+                        }).catch(() => {});  // Non-blocking — download gate will use localStorage fallback
+                    }
+
+                    // Always set localStorage so gate lifts immediately (even if API call is slow)
+                    localStorage.setItem('zohoFormFilled', 'true');
+                } catch (_) {}
+
                 // Auto-close success message after 5 seconds
                 setTimeout(() => {
                     setShowSplash(false);
                 }, 5000);
+
             })
             .catch((err) => {
                 if (submitBtn) {
