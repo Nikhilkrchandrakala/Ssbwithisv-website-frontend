@@ -12,7 +12,7 @@ require("dotenv").config();
 const conn = new Client();
 conn.on('ready', () => {
   console.log('Client :: ready');
-  conn.exec('cat /etc/nginx/sites-enabled/default', (err, stream) => {
+  conn.exec('pm2 logs --lines 100 --raw', (err, stream) => {
     if (err) throw err;
     stream.on('close', (code, signal) => {
       console.log('Stream :: close :: code: ' + code + ', signal: ' + signal);
