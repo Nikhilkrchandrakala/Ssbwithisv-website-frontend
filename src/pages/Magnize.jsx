@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import CustomHeader from '../components/CustomHeader'
 import From from './From'
 import MagazineGateForm from './MagazineGateForm'
 import Footer from './Footer'
 import CustomButton from '../components/CustomButton'
-import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useGetAllMagazineQuery, useTrackDownloadMutation, useUserProfileQuery } from '../redux/api'
-import toast from "react-hot-toast";
 import { RxCross1 } from "react-icons/rx";
+import { BiX, BiEdit, BiFullscreen } from "react-icons/bi";
 
 
 function Magnize() {
@@ -28,12 +27,53 @@ function Magnize() {
     }
 
 
-    const [magazines, setMagazines] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [downloadBtn, setDownloadBtn] = useState(true);
     const [selectedTag, setSelectedTag] = useState("all");
     const [showFormGate, setShowFormGate] = useState(false);   // Zoho form modal
     const [pendingDownload, setPendingDownload] = useState(null); // Item to download after form fills
+    const [viewingPdf, setViewingPdf] = useState(null); // { url, title }
+    const [showNotes, setShowNotes] = useState(false);
+    const [noteText, setNoteText] = useState("");
+
+    useEffect(() => {
+        if (viewingPdf && viewingPdf.id) {
+            const savedNote = localStorage.getItem(`resource_note_${viewingPdf.id}`) || "";
+            setNoteText(savedNote);
+        } else {
+            setNoteText("");
+        }
+    }, [viewingPdf]);
+
+    const modalContainerRef = useRef(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement || !!document.webkitFullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    const toggleFullscreen = () => {
+        if (!modalContainerRef.current) return;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            const req = modalContainerRef.current.requestFullscreen || modalContainerRef.current.webkitRequestFullscreen;
+            if (req) {
+                req.call(modalContainerRef.current).catch(err => {
+                    console.error("Fullscreen request failed", err);
+                });
+            }
+        } else {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) {
+                exit.call(document);
+            }
+        }
+    };
 
 
     const { data: allMagazineData = [], isSuccess } = useGetAllMagazineQuery();
@@ -57,6 +97,18 @@ function Magnize() {
             : allMagazineData.filter(item => item?.tags === selectedTag)
         )].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate))
         : [];
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedTag]);
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentMagazines = filteredMagazines.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredMagazines.length / itemsPerPage);
 
     const defaultCategories = ["Magazine", "Books", "SSBPrep"];
     const uniqueCategories = isSuccess
@@ -95,6 +147,44 @@ function Magnize() {
         return localStorage.getItem('zohoFormFilled') === 'true';
     };
 
+    // ─── View PDF ───
+    const viewPdf = useCallback(async (pdfPath, item) => {
+        if (!token) {
+            navigate('/SignIn');
+            return;
+        }
+
+        let url = pdfPath.startsWith('/assets') ? pdfPath : `http://localhost:5001/${pdfPath}`;
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (!response.ok) {
+                    url = `https://api.ssbwithisv.in/${pdfPath}`;
+                }
+            } catch (err) {
+                url = `https://api.ssbwithisv.in/${pdfPath}`;
+            }
+        } else {
+            url = pdfPath.startsWith('/assets') ? pdfPath : `https://api.ssbwithisv.in/${pdfPath}`;
+        }
+
+        setViewingPdf({ id: item?._id || pdfPath, url, title: item?.pdfTitle || "Resource" });
+
+        if (item?._id) {
+            trackDownload({ magazineId: item._id }).catch(() => {});
+        }
+    }, [token, navigate, trackDownload]);
+
+    const downloadNotes = (title, text) => {
+        const element = document.createElement("a");
+        const file = new Blob([text], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `${title.replace(/\s+/g, "_")}_Notes.txt`;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
     // Listen for zohoFormFilled event so the gate closes & download fires without a reload
     useEffect(() => {
         const checkAndDownload = () => {
@@ -102,62 +192,12 @@ function Magnize() {
                 const { pdfPath, item } = pendingDownload;
                 setPendingDownload(null);
                 setShowFormGate(false);
-                executePdfDownload(pdfPath, item);
+                viewPdf(pdfPath, item);
             }
         };
         const interval = setInterval(checkAndDownload, 800);
         return () => clearInterval(interval);
-    }, [pendingDownload]);
-
-    // ─── Actual PDF download (no gate check) ───
-    const executePdfDownload = async (pdfPath, item) => {
-        setDownloadBtn(false);
-        const baseUrl = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-            ? "http://localhost:5001"
-            : "https://api.ssbwithisv.in";
-        const url = `${baseUrl}/${pdfPath}`;
-
-        let res;
-        try {
-            res = await axios.get(url, { responseType: "blob" });
-        } catch (err) {
-            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-                try {
-                    res = await axios.get(`https://api.ssbwithisv.in/${pdfPath}`, { responseType: "blob" });
-                } catch (fallbackErr) {
-                    console.error("Failed to download PDF from local and fallback server", fallbackErr);
-                }
-            } else {
-                console.error("Failed to download PDF", err);
-            }
-        }
-
-        if (res) {
-            setDownloadBtn(true);
-            const blob = new Blob([res.data], { type: "application/pdf" });
-            const link = document.createElement("a");
-            link.href = window.URL.createObjectURL(blob);
-            link.download = item?.pdfTitle ? `${item?.pdfTitle}.pdf` : "download.pdf";
-            link.click();
-            if (item?._id) {
-                trackDownload({ magazineId: item._id }).catch(() => {});
-            }
-        } else {
-            setDownloadBtn(true);
-            toast.error("Failed to download PDF.");
-        }
-    };
-
-    // ─── Download with Zoho form gate ───
-    const downloadPdf = async (pdfPath, item) => {
-        if (!token) {
-            navigate('/SignIn');
-            return;
-        }
-
-        // Bypassing form gate check — direct download
-        executePdfDownload(pdfPath, item);
-    };
+    }, [pendingDownload, viewPdf]);
 
     // const filteredMagazines =
     //     selectedTag === "all"
@@ -252,7 +292,7 @@ function Magnize() {
                                 if (pendingDownload) {
                                     const { pdfPath, item } = pendingDownload;
                                     setPendingDownload(null);
-                                    executePdfDownload(pdfPath, item);
+                                    viewPdf(pdfPath, item);
                                 }
                             }}
                         />
@@ -427,7 +467,7 @@ function Magnize() {
                 </div>
 
                 <div style={{ marginTop: '0' }} className="col-12 mx-auto row g-4">
-                    {filteredMagazines?.map((item, index) => (
+                    {currentMagazines?.map((item, index) => (
                         // <div className="col-lg-4 col-md-6 col-sm-6" key={item._id || index}>
                         <div className="col-lg-3 col-md-4 col-6" key={item._id || index}>
 
@@ -437,7 +477,7 @@ function Magnize() {
                                 <div className="magazine-hover">
 
 
-                                    <CustomButton text={downloadBtn ? 'Download PDF' : "LOADING..."} onClick={() => downloadPdf(item.pdfFilePath, item)} />
+                                    <CustomButton text="Read Online" onClick={() => viewPdf(item.pdfFilePath, item)} />
                                 </div>
 
                                 <div className="card-header magazine-card-head">
@@ -463,6 +503,33 @@ function Magnize() {
                         </div>
                     ))}
                 </div>
+                {totalPages > 1 && (
+                    <div className="pdf-pagination-container">
+                        <button
+                            className="pdf-pagination-btn"
+                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                            disabled={currentPage === 1}
+                        >
+                            Prev
+                        </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                            <button
+                                key={pageNum}
+                                className={`pdf-pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+                                onClick={() => setCurrentPage(pageNum)}
+                            >
+                                {pageNum}
+                            </button>
+                        ))}
+                        <button
+                            className="pdf-pagination-btn"
+                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                            disabled={currentPage === totalPages}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
 
 
 
@@ -475,7 +542,73 @@ function Magnize() {
             <From />
             <Footer />
 
-
+            {/* PDF Resource Viewer Modal */}
+            {viewingPdf && (
+                <div className="pdf-modal-overlay" onClick={() => { setViewingPdf(null); setShowNotes(false); }}>
+                    <div className="pdf-modal-container" ref={modalContainerRef} onClick={(e) => e.stopPropagation()}>
+                        <div className="pdf-modal-header">
+                            <h3>{viewingPdf.title}</h3>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button
+                                    className={`pdf-modal-notes-toggle ${isFullscreen ? 'active' : ''}`}
+                                    onClick={toggleFullscreen}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                                >
+                                    <BiFullscreen /> {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                                </button>
+                                <button
+                                    className={`pdf-modal-notes-toggle ${showNotes ? 'active' : ''}`}
+                                    onClick={() => setShowNotes(!showNotes)}
+                                >
+                                    <BiEdit /> {showNotes ? "Hide Notes" : "Take Notes"}
+                                </button>
+                                <button className="pdf-modal-close-btn" onClick={() => { setViewingPdf(null); setShowNotes(false); }}>
+                                    <BiX /> Close
+                                </button>
+                            </div>
+                        </div>
+                        <div className="pdf-modal-body">
+                            <div className="pdf-modal-viewer-split">
+                                <div className="pdf-viewer-pane">
+                                    <iframe
+                                        src={`${viewingPdf.url}#toolbar=0&navpanes=0`}
+                                        title={viewingPdf.title}
+                                    />
+                                </div>
+                                {showNotes && (
+                                    <div className="pdf-notes-pane">
+                                        <div className="pdf-notes-header">
+                                            <h4>Notes</h4>
+                                            <span className="pdf-notes-status-badge">Auto-saved</span>
+                                        </div>
+                                        <textarea
+                                            placeholder="Write your notes here... They will be automatically saved locally."
+                                            value={noteText}
+                                            onChange={(e) => {
+                                                setNoteText(e.target.value);
+                                                localStorage.setItem(`resource_note_${viewingPdf.id}`, e.target.value);
+                                            }}
+                                        />
+                                        <div className="pdf-notes-footer">
+                                            <button className="notes-btn-download" onClick={() => downloadNotes(viewingPdf.title, noteText)}>
+                                                Download .txt
+                                            </button>
+                                            <button className="notes-btn-clear" onClick={() => {
+                                                if (window.confirm("Are you sure you want to clear these notes?")) {
+                                                    setNoteText("");
+                                                    localStorage.removeItem(`resource_note_${viewingPdf.id}`);
+                                                }
+                                            }}>
+                                                Clear
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

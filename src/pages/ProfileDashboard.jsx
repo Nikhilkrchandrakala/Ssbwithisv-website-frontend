@@ -17,7 +17,8 @@ import {
     BiTime,
     BiDollar,
     BiDownload,
-    BiBrain
+    BiBrain,
+    BiFullscreen
 } from "react-icons/bi";
 import {
     FaCamera,
@@ -32,7 +33,7 @@ import {
     useUserProfileQuery,
     useUserCoursesQuery,
     useGetAllMagazineQuery,
-    useGetMyDownloadsQuery
+    useTrackDownloadMutation
 } from "../redux/api";
 import toast from "react-hot-toast";
 import ImageUploadPopup from "../components/ImageUploadPopup";
@@ -122,7 +123,110 @@ const ProfileDashboard = () => {
     const { data: profileData, isLoading: isProfileLoading } = useUserProfileQuery();
     const { data: batchesData, isLoading: batchesLoading } = useUserCoursesQuery();
     const { data: magazines, isLoading: isMagazinesLoading } = useGetAllMagazineQuery();
-    const { data: myDownloads = [], isLoading: isMyDownloadsLoading } = useGetMyDownloadsQuery();
+    const [trackDownload] = useTrackDownloadMutation();
+    const [viewingPdf, setViewingPdf] = useState(null);
+    const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+    const lastScrollY = useRef(0);
+    const [showNotes, setShowNotes] = useState(false);
+    const [noteText, setNoteText] = useState("");
+
+    useEffect(() => {
+        const threshold = 10;
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY <= 50) {
+                setIsNavbarVisible(true);
+                lastScrollY.current = currentScrollY;
+                return;
+            }
+
+            const diff = Math.abs(currentScrollY - lastScrollY.current);
+            if (diff < threshold) {
+                return;
+            }
+
+            if (currentScrollY > lastScrollY.current) {
+                setIsNavbarVisible(false);
+            } else {
+                setIsNavbarVisible(true);
+            }
+            lastScrollY.current = currentScrollY;
+        };
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    useEffect(() => {
+        if (viewingPdf && viewingPdf.id) {
+            const savedNote = localStorage.getItem(`resource_note_${viewingPdf.id}`) || "";
+            setNoteText(savedNote);
+        } else {
+            setNoteText("");
+        }
+    }, [viewingPdf]);
+
+    const modalContainerRef = useRef(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement || !!document.webkitFullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+        };
+    }, []);
+
+    const toggleFullscreen = () => {
+        if (!modalContainerRef.current) return;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            const req = modalContainerRef.current.requestFullscreen || modalContainerRef.current.webkitRequestFullscreen;
+            if (req) {
+                req.call(modalContainerRef.current).catch(err => {
+                    console.error("Fullscreen request failed", err);
+                });
+            }
+        } else {
+            const exit = document.exitFullscreen || document.webkitExitFullscreen;
+            if (exit) {
+                exit.call(document);
+            }
+        }
+    };
+
+    const handleViewPdf = async (pdfPath, title, id) => {
+        let url = pdfPath.startsWith('/assets') ? pdfPath : `http://localhost:5001/${pdfPath}`;
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            try {
+                const response = await fetch(url, { method: 'HEAD' });
+                if (!response.ok) {
+                    url = `https://api.ssbwithisv.in/${pdfPath}`;
+                }
+            } catch (err) {
+                url = `https://api.ssbwithisv.in/${pdfPath}`;
+            }
+        } else {
+            url = pdfPath.startsWith('/assets') ? pdfPath : `https://api.ssbwithisv.in/${pdfPath}`;
+        }
+        setViewingPdf({ id: id || pdfPath, url, title: title || "Resource" });
+        if (id) {
+            trackDownload({ magazineId: id }).catch(() => {});
+        }
+    };
+
+    const downloadNotes = (title, text) => {
+        const element = document.createElement("a");
+        const file = new Blob([text], {type: 'text/plain'});
+        element.href = URL.createObjectURL(file);
+        element.download = `${title.replace(/\s+/g, "_")}_Notes.txt`;
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
     const [selectedTag, setSelectedTag] = useState("all");
 
     const [updateProfile] = useUpdateUserProfileMutation();
@@ -143,14 +247,28 @@ const ProfileDashboard = () => {
     const isGTOOnly = hasGTO && !hasInterview && !hasFullOrPsych;
     const isIOOnly = hasInterview && !hasFullOrPsych;
 
-    // Filter user's personal downloads by selected tag (sorted by downloadedAt from API)
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedTag]);
+
+    // Filter resources from all magazines by selected tag (sorted by uploadDate from API)
+    const magazinesList = magazines || [];
+    const sortedMagazines = [...magazinesList].sort((a, b) => new Date(b?.uploadDate) - new Date(a?.uploadDate));
     const filteredMagazines = selectedTag === "all"
-        ? myDownloads
-        : myDownloads.filter(item => item?.tags === selectedTag);
+        ? sortedMagazines
+        : sortedMagazines.filter(item => item?.tags === selectedTag);
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentMagazines = filteredMagazines.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredMagazines.length / itemsPerPage);
 
     const defaultCategories = ["Magazine", "Books", "SSBPrep"];
-    const uniqueCategories = myDownloads.length > 0
-        ? Array.from(new Set([...defaultCategories, ...myDownloads.map(item => item?.tags).filter(Boolean)]))
+    const uniqueCategories = magazinesList.length > 0
+        ? Array.from(new Set([...defaultCategories, ...magazinesList.map(item => item?.tags).filter(Boolean)]))
         : defaultCategories;
 
     // Handle click outside popup
@@ -796,104 +914,113 @@ const ProfileDashboard = () => {
     return (
         <>
             <section className={NavStyles.heroSection}>
-                <div className={NavStyles.topBar}>
-                    <div onClick={() => navigate(-1)} className="arrow_button_two">
-                        <BiArrowBack />
+                {/* Navbar rendered on top, above the arrow button and content */}
+                <div
+                    ref={sidebarRef}
+                    className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''} ${!isNavbarVisible ? styles.navbarHidden : ''}`}
+                >
+                    <div className={styles.logoSection}>
+                        <img src="/assets/logo/ISV.webp" alt="SSB with ISV" className={styles.logo} />
+                    </div>
+
+                    <nav className={styles.navTabs}>
+                        <button
+                            className={`${styles.navTab} ${activeTab === 'profile' ? styles.active : ''}`}
+                            onClick={() => {
+                                  setActiveTab('profile');
+                                  setIsMobileMenuOpen(false);
+                            }}
+                        >
+                            <BiUser />
+                            <span>Profile</span>
+                            <BiChevronRight className={styles.chevron} />
+                        </button>
+                        <button
+                            className={`${styles.navTab} ${activeTab === 'batches' ? styles.active : ''}`}
+                            onClick={() => {
+                                  setActiveTab('batches');
+                                  setIsMobileMenuOpen(false);
+                            }}
+                        >
+                            <BiBook />
+                            <span>My Batches</span>
+                            <BiChevronRight className={styles.chevron} />
+                        </button>
+                        <button
+                            className={`${styles.navTab} ${activeTab === 'resources' ? styles.active : ''}`}
+                            onClick={() => {
+                                  setActiveTab('resources');
+                                  setIsMobileMenuOpen(false);
+                            }}
+                        >
+                            <BiBook />
+                            <span>My Resources</span>
+                            <BiChevronRight className={styles.chevron} />
+                        </button>
+                        <button
+                            className={`${styles.navTab} ${activeTab === 'psycheTest' ? styles.active : ''}`}
+                            onClick={() => {
+                                  setActiveTab('psycheTest');
+                                  setIsMobileMenuOpen(false);
+                            }}
+                        >
+                            <BiBrain />
+                            <span>Candidate Evaluation</span>
+                            <BiChevronRight className={styles.chevron} />
+                        </button>
+                    </nav>
+
+                    <div className={styles.rightActions}>
+                        <div className={styles.profileSummary}>
+                            <div className={styles.profileHeader}>
+                                <div
+                                    className={styles.avatarWrapper}
+                                    onClick={openImagePopup}
+                                    style={{ cursor: 'pointer' }}
+                                >
+                                    <img
+                                        src={previewData?.profileImage || '/assets/profileImage.png'}
+                                        alt="profile"
+                                    />
+                                    <div className={styles.onlineIndicator}></div>
+                                    <div className={styles.avatarOverlay}>
+                                        <FaCamera />
+                                        <span>Change Photo</span>
+                                    </div>
+                                </div>
+
+                                <div className={styles.profileTitle}>
+                                    <h3>{previewData?.name}</h3>
+                                    <p>{previewData?.email}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button className={styles.logoutBtn} onClick={handleLogout}>
+                            <BiLogOut /> Logout
+                        </button>
                     </div>
                 </div>
 
                 <div className="">
                     <div className="container position-relative z-1">
-                        <button
-                            className={styles.mobileMenuToggle}
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        >
-                            <BiUser style={{ color: 'white' }} />
-                            <span>Menu</span>
-                        </button>
-
-                        <div className={styles.dashboardContainer}>
-                            {/* Sidebar */}
-                            <div
-                                ref={sidebarRef}
-                                className={`${styles.sidebar} ${isMobileMenuOpen ? styles.mobileOpen : ''}`}
-                            >
-                                <div className={styles.profileSummary}>
-                                    <div className={styles.profileHeader}>
-                                        <div
-                                            className={styles.avatarWrapper}
-                                            onClick={openImagePopup}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <img
-                                                src={previewData?.profileImage || '/assets/profileImage.png'}
-                                                alt="profile"
-                                            />
-                                            <div className={styles.avatarOverlay}>
-                                                <FaCamera />
-                                                <span>Change Photo</span>
-                                            </div>
-                                        </div>
-
-                                        <div className={styles.profileTitle}>
-                                            <h3>{previewData?.name}</h3>
-                                            <p>{previewData?.email}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <nav className={styles.navTabs}>
-                                    <button
-                                        className={`${styles.navTab} ${activeTab === 'profile' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('profile');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiUser />
-                                        <span>Profile</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button>
-                                    <button
-                                        className={`${styles.navTab} ${activeTab === 'batches' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('batches');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiBook />
-                                        <span>My Batches</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button>
-                                    <button
-                                        className={`${styles.navTab} ${activeTab === 'downloads' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('downloads');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiDownload />
-                                        <span>My Downloads</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button>
-                                    <button
-                                        className={`${styles.navTab} ${activeTab === 'psycheTest' ? styles.active : ''}`}
-                                        onClick={() => {
-                                            setActiveTab('psycheTest');
-                                            setIsMobileMenuOpen(false);
-                                        }}
-                                    >
-                                        <BiBrain />
-                                        <span>Candidate Evaluation</span>
-                                        <BiChevronRight className={styles.chevron} />
-                                    </button>
-                                </nav>
-
-                                <button className={styles.logoutBtn} onClick={handleLogout}>
-                                    <BiLogOut /> Logout
-                                </button>
+                        {/* Header bar sitting below the Navbar: houses the back arrow and the mobile menu toggle */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px', marginBottom: '20px' }}>
+                            <div onClick={() => navigate(-1)} className="arrow_button_two" style={{ cursor: 'pointer' }}>
+                                <BiArrowBack />
                             </div>
 
+                            <button
+                                className={styles.mobileMenuToggle}
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                style={{ position: 'static' }}
+                            >
+                                <BiUser style={{ color: 'white' }} />
+                                <span>Menu</span>
+                            </button>
+                        </div>
+
+                        <div className={styles.dashboardContainer}>
                             {/* Main Content Area */}
                             <div className={styles.mainContent}>
                                 {/* Profile Tab */}
@@ -1148,13 +1275,13 @@ const ProfileDashboard = () => {
                                     </div>
                                 )}
 
-                                {/* Downloads Tab */}
-                                {activeTab === 'downloads' && (
+                                {/* Resources Tab */}
+                                {activeTab === 'resources' && (
                                     <div className={styles.tabContent}>
                                         <div className={styles.tabHeader} style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <h2>
-                                                <BiDownload className={styles.tabIcon} />
-                                                My Downloads
+                                                <BiBook className={styles.tabIcon} />
+                                                My Resources
                                             </h2>
                                             <div className="form-group" style={{ margin: 0, minWidth: '200px' }}>
                                                 <select
@@ -1177,55 +1304,74 @@ const ProfileDashboard = () => {
                                             </div>
                                         </div>
 
-                                        {isMyDownloadsLoading || isProfileLoading ? (
+                                        {isMagazinesLoading || isProfileLoading ? (
                                             <div className={styles.loadingState}>
                                                 <div className="spinner-border text-warning" role="status">
                                                     <span className="visually-hidden">Loading...</span>
                                                 </div>
                                             </div>
                                         ) : filteredMagazines && filteredMagazines.length > 0 ? (
-                                            <div className={styles.downloadsGrid}>
-                                                {filteredMagazines.map((mag) => (
-                                                    <div key={mag._id} className={styles.downloadCard}>
-                                                        <div className={styles.magImage}>
-                                                            <img
-                                                                src={mag.magazineFrontImage.startsWith('/assets') ? mag.magazineFrontImage : `https://api.ssbwithisv.in/${mag.magazineFrontImage}`}
-                                                                alt={mag.pdfTitle}
-                                                                onError={(e) => e.target.src = 'https://via.placeholder.com/150x200?text=No+Image'}
-                                                            />
+                                            <>
+                                                <div className={styles.downloadsGrid}>
+                                                    {currentMagazines.map((mag) => (
+                                                        <div key={mag._id} className={styles.downloadCard}>
+                                                            <div className={styles.magImage}>
+                                                                <img
+                                                                    src={mag.magazineFrontImage.startsWith('/assets') ? mag.magazineFrontImage : `https://api.ssbwithisv.in/${mag.magazineFrontImage}`}
+                                                                    alt={mag.pdfTitle}
+                                                                    onError={(e) => {
+                                                                        e.target.onerror = null;
+                                                                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="200"><rect width="100%" height="100%" fill="%231a1a1f"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23d2a100" font-family="sans-serif" font-size="14">No Image</text></svg>';
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className={styles.magInfo}>
+                                                                <h4>{mag.pdfTitle}</h4>
+                                                                <p className={styles.magTags}>{mag.tags}</p>
+                                                                <button
+                                                                    onClick={() => handleViewPdf(mag.pdfFilePath, mag.pdfTitle, mag._id)}
+                                                                    className={styles.downloadLink}
+                                                                    style={{ border: 'none', cursor: 'pointer' }}
+                                                                >
+                                                                    <BiBook /> Read Online
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div className={styles.magInfo}>
-                                                            <h4>{mag.pdfTitle}</h4>
-                                                            <p className={styles.magTags}>{mag.tags}</p>
-                                                            {mag.downloadedAt && (
-                                                                <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)', marginBottom: '8px' }}>
-                                                                    Downloaded on {new Date(mag.downloadedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                                                </p>
-                                                            )}
-                                                            <a
-                                                                href={mag.pdfFilePath.startsWith('/assets') ? mag.pdfFilePath : `https://api.ssbwithisv.in/${mag.pdfFilePath}`}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className={styles.downloadLink}
-                                                                download
+                                                    ))}
+                                                </div>
+                                                {totalPages > 1 && (
+                                                    <div className="pdf-pagination-container">
+                                                        <button
+                                                            className="pdf-pagination-btn"
+                                                            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                                            disabled={currentPage === 1}
+                                                        >
+                                                            Prev
+                                                        </button>
+                                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                                                            <button
+                                                                key={pageNum}
+                                                                className={`pdf-pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+                                                                onClick={() => setCurrentPage(pageNum)}
                                                             >
-                                                                <BiDownload /> Download Again
-                                                            </a>
-                                                        </div>
+                                                                {pageNum}
+                                                            </button>
+                                                        ))}
+                                                        <button
+                                                            className="pdf-pagination-btn"
+                                                            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                                            disabled={currentPage === totalPages}
+                                                        >
+                                                            Next
+                                                        </button>
                                                     </div>
-                                                ))}
-                                            </div>
+                                                )}
+                                            </>
                                         ) : (
                                             <div className={styles.emptyState}>
-                                                <BiDownload className={styles.emptyIcon} />
-                                                <h3>No Downloads Yet</h3>
-                                                <p>You haven't downloaded any resources yet.</p>
-                                                <button
-                                                    className={styles.browseCoursesBtn}
-                                                    onClick={() => navigate('/magazine')}
-                                                >
-                                                    Browse Our Monthly Magazine
-                                                </button>
+                                                <BiBook className={styles.emptyIcon} style={{ fontSize: '3rem', color: 'rgba(210, 161, 0, 0.4)', marginBottom: '15px' }} />
+                                                <h3>No Resources Found</h3>
+                                                <p>There are no resources available at the moment.</p>
                                             </div>
                                         )}
                                     </div>
@@ -2342,6 +2488,74 @@ const ProfileDashboard = () => {
                     </div>
                 </div>
             </section>
+
+            {/* PDF Resource Viewer Modal */}
+            {viewingPdf && (
+                <div className="pdf-modal-overlay" onClick={() => { setViewingPdf(null); setShowNotes(false); }}>
+                    <div className="pdf-modal-container" ref={modalContainerRef} onClick={(e) => e.stopPropagation()}>
+                        <div className="pdf-modal-header">
+                            <h3>{viewingPdf.title}</h3>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button
+                                    className={`pdf-modal-notes-toggle ${isFullscreen ? 'active' : ''}`}
+                                    onClick={toggleFullscreen}
+                                    style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                                >
+                                    <BiFullscreen /> {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                                </button>
+                                <button
+                                    className={`pdf-modal-notes-toggle ${showNotes ? 'active' : ''}`}
+                                    onClick={() => setShowNotes(!showNotes)}
+                                >
+                                    <BiEdit /> {showNotes ? "Hide Notes" : "Take Notes"}
+                                </button>
+                                <button className="pdf-modal-close-btn" onClick={() => { setViewingPdf(null); setShowNotes(false); }}>
+                                    <BiX /> Close
+                                </button>
+                            </div>
+                        </div>
+                        <div className="pdf-modal-body">
+                            <div className="pdf-modal-viewer-split">
+                                <div className="pdf-viewer-pane">
+                                    <iframe
+                                        src={`${viewingPdf.url}#toolbar=0&navpanes=0`}
+                                        title={viewingPdf.title}
+                                    />
+                                </div>
+                                {showNotes && (
+                                    <div className="pdf-notes-pane">
+                                        <div className="pdf-notes-header">
+                                            <h4>Notes</h4>
+                                            <span className="pdf-notes-status-badge">Auto-saved</span>
+                                        </div>
+                                        <textarea
+                                            placeholder="Write your notes here... They will be automatically saved locally."
+                                            value={noteText}
+                                            onChange={(e) => {
+                                                setNoteText(e.target.value);
+                                                localStorage.setItem(`resource_note_${viewingPdf.id}`, e.target.value);
+                                            }}
+                                        />
+                                        <div className="pdf-notes-footer">
+                                            <button className="notes-btn-download" onClick={() => downloadNotes(viewingPdf.title, noteText)}>
+                                                Download .txt
+                                            </button>
+                                            <button className="notes-btn-clear" onClick={() => {
+                                                if (window.confirm("Are you sure you want to clear these notes?")) {
+                                                    setNoteText("");
+                                                    localStorage.removeItem(`resource_note_${viewingPdf.id}`);
+                                                }
+                                            }}>
+                                                Clear
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
