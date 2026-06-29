@@ -4531,4 +4531,15 @@ p {
 .pdf-pagination-btn:disabled {
     opacity: 0.35 !important;
     cursor: not-allowed !important;
+}
+
+/* Make native browser calendar picker indicator white and visible on dark backgrounds */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+    opacity: 0.85;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
 }

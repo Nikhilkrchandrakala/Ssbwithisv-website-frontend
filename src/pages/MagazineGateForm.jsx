@@ -7,17 +7,28 @@ import '../style/MagazineGateForm.css';
 // ─── Zoho Form 2 credentials (Magazine Download Gate) ───
 const ZOHO_FORM_ID   = 'webform736128000000824346';
 const ZOHO_FORM_NAME = 'WebToLeads736128000000824346';
-const ZOHO_xnQsjsdp  = '720f9139cb02224d64cc5aeff73db9005f465ab2730e39da353431dcb1023430';
-const ZOHO_xmIwtLD   = '65e6b28d5296b04427701a1d7ca42502817609b9ddfb9fb3f6e06ce37fe146c8d00d862d54130301661ddbc145eb18dc';
+const ZOHO_xnQsjsdp  = '17f7beb86cba0f52d3349a49260b4bf700943d7d26f8f959906790a7b4ffbc97';
+const ZOHO_xmIwtLD   = 'bbe5f52ab10b4cacf51e2036ef0a87548ee68373afa1033a615d92d10f5819081b3162e0fefbd1805a57d342fe6db9dc';
 const ZOHO_ENDPOINT  = 'https://crm.zoho.in/crm/WebToLeadForm';
 
 const BOARD_OPTIONS = [
-    '1 AFSB', '2 AFSB', '3 AFSB', '4 AFSB', '5 AFSB',
-    '33 SSB Bhopal (Navy)', 'NSB Vizag (Navy)', '12 SSB Bangalore (Navy)',
-    'SSB (Kolkata) (Navy)', '31 | 32 SSB Selection Center North (Kapurthala)',
-    '11 | 14 | 18 | 19 | 34 SSB Selection Center East Prayagraj',
-    '20 | 21 | 22 SSB Bhopal', '17 | 24 SSB Bangalore',
-    'Not allotted yet', 'Not known right now', 'CGSB (NOIDA)', 'NOT IN THIS LIST'
+    "1 AFSB Dehradun",
+    "2 AFSB Mysuru",
+    "3 AFSB Gandhinagar",
+    "4 AFSB Varanasi",
+    "5 AFSB Guwahati",
+    "33 SSB Bhopal (Navy)",
+    "NSB Vizag (Navy)",
+    "12 SSB Bangalore (Navy)",
+    "SSB (Kolkata) (Navy)",
+    "31 | 32 SSB Selection Center North (Jalandhar)",
+    "11 | 14 | 18 | 19 | 34 SSB Selection Center East (Prayagraj)",
+    "20 | 21 | 22 SSB Selection Center Central (Bhopal)",
+    "17 | 24 SSB Selection Center South (Bangalore)",
+    "CGSB (NOIDA)",
+    "Not allotted yet",
+    "Not known right now",
+    "NOT IN THIS LIST"
 ];
 
 const ENTRY_OPTIONS = [
@@ -29,6 +40,14 @@ const ENTRY_OPTIONS = [
     'Territorial Army', 'TGC'
 ];
 
+const formatDateToZoho = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '';
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+};
+
 const STEPS = [
     { label: 'Basic Info',  Icon: FaRegUser },
     { label: 'SSB Profile', Icon: GiStarMedal },
@@ -39,7 +58,7 @@ function MagazineGateForm({ onSuccess }) {
     const [step, setStep] = useState(1);
     const [submitting, setSubmitting] = useState(false);
     const [data, setData] = useState({
-        firstName: '', lastName: '', email: '', phone: '', dob: '',
+        firstName: '', lastName: '', email: '', phone: '', countryCode: '+91', dob: '',
         aspirant: '-None-', serving: '-None-', vtx: '-None-',
         youtube: '-None-', podcast: '-None-', experience: '-None-',
         nextSsb: '', boards: [], entries: [], city: '', state: '',
@@ -182,15 +201,15 @@ function MagazineGateForm({ onSuccess }) {
                 <input type="text" name="First Name"    value={data.firstName}         readOnly />
                 <input type="text" name="Last Name"     value={data.lastName}          readOnly />
                 <input type="text" name="Email"         value={data.email}             readOnly />
-                <input type="text" name="Phone"         value={data.phone}             readOnly />
-                <input type="text" name="LEADCF53"      value={data.dob}               readOnly />
+                <input type="text" name="Mobile"        value={`${data.countryCode}${data.phone}`} readOnly />
+                <input type="text" name="LEADCF53"      value={formatDateToZoho(data.dob)} readOnly />
                 <input type="text" name="LEADCF25"      value={data.aspirant}          readOnly />
                 <input type="text" name="LEADCF1"       value={data.serving}           readOnly />
                 <input type="text" name="LEADCF5"       value={data.vtx}               readOnly />
                 <input type="text" name="LEADCF8"       value={data.youtube}           readOnly />
                 <input type="text" name="LEADCF7"       value={data.podcast}           readOnly />
                 <input type="text" name="LEADCF9"       value={data.experience}        readOnly />
-                <input type="text" name="LEADCF51"      value={data.nextSsb}           readOnly />
+                <input type="text" name="LEADCF51"      value={formatDateToZoho(data.nextSsb)} readOnly />
                 <input type="text" name="LEADCF17"      value={data.boards.join(';')}  readOnly />
                 <input type="text" name="LEADCF15"      value={data.entries.join(';')} readOnly />
                 <input type="text" name="City"          value={data.city}              readOnly />
@@ -258,10 +277,32 @@ function MagazineGateForm({ onSuccess }) {
                     <div className="mgf-row-2">
                         <div className="mgf-field">
                             <label className="mgf-label">Phone <span className="mgf-required">*</span></label>
-                            <input className={`mgf-input ${errors.phone ? 'mgf-input-error' : ''}`}
-                                placeholder="9876543210" inputMode="numeric"
-                                value={data.phone}
-                                onChange={e => { const v = e.target.value.replace(/\D/g,''); if (v.length <= 15) set('phone', v); }} />
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                <select
+                                    className="mgf-select"
+                                    value={data.countryCode}
+                                    onChange={e => set('countryCode', e.target.value)}
+                                    style={{ width: '115px', flexShrink: 0, padding: '11px 8px', background: '#0b0b0b' }}
+                                >
+                                    <option value="+91">+91 (IN)</option>
+                                    <option value="+1">+1 (US)</option>
+                                    <option value="+44">+44 (UK)</option>
+                                    <option value="+61">+61 (AU)</option>
+                                    <option value="+971">+971 (AE)</option>
+                                    <option value="+966">+966 (SA)</option>
+                                    <option value="+65">+65 (SG)</option>
+                                    <option value="+977">+977 (NP)</option>
+                                    <option value="+880">+880 (BD)</option>
+                                    <option value="+94">+94 (LK)</option>
+                                    <option value="+49">+49 (DE)</option>
+                                    <option value="+33">+33 (FR)</option>
+                                </select>
+                                <input className={`mgf-input ${errors.phone ? 'mgf-input-error' : ''}`}
+                                    placeholder="9876543210" inputMode="numeric"
+                                    value={data.phone}
+                                    onChange={e => { const v = e.target.value.replace(/\D/g,''); if (v.length <= 15) set('phone', v); }}
+                                    style={{ flexGrow: 1 }} />
+                            </div>
                             {err('phone')}
                         </div>
                         <div className="mgf-field">

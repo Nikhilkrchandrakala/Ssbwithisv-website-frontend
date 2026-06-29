@@ -44,7 +44,7 @@ function Contact() {
                 </script>
                 <link rel="canonical" href="https://ssbwithisv.in/Contactus" />
             </Helmet>
-            <CustomHeader heading={'Contact us'} text={`At CS Joint Services Academy, we believe every aspirant deserves personal guidance and clarity.
+            <CustomHeader heading={'Enquire with us'} text={`At CS Joint Services Academy, we believe every aspirant deserves personal guidance and clarity.
                 Reach out to us for course details, counselling, or any queries related to SSB preparation.
                 Our team is always ready to assist you on your journey to becoming an officer in the Indian Armed Forces.
                 `}

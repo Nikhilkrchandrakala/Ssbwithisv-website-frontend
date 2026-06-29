@@ -5,22 +5,22 @@ import toast from 'react-hot-toast';
 import { RxCross1 } from "react-icons/rx";
 
 const BOARD_OPTIONS = [
-    "1 AFSB",
-    "2 AFSB",
-    "3 AFSB",
-    "4 AFSB",
-    "5 AFSB",
+    "1 AFSB Dehradun",
+    "2 AFSB Mysuru",
+    "3 AFSB Gandhinagar",
+    "4 AFSB Varanasi",
+    "5 AFSB Guwahati",
     "33 SSB Bhopal (Navy)",
     "NSB Vizag (Navy)",
     "12 SSB Bangalore (Navy)",
     "SSB (Kolkata) (Navy)",
-    "31 | 32 SSB Selection Center North (Kapurthala)",
-    "11 | 14 | 18 | 19 | 34 SSB Selection Center East Prayagraj",
-    "20 | 21 | 22 SSB Bhopal",
-    "17 | 24 SSB Bangalore",
+    "31 | 32 SSB Selection Center North (Jalandhar)",
+    "11 | 14 | 18 | 19 | 34 SSB Selection Center East (Prayagraj)",
+    "20 | 21 | 22 SSB Selection Center Central (Bhopal)",
+    "17 | 24 SSB Selection Center South (Bangalore)",
+    "CGSB (NOIDA)",
     "Not allotted yet",
     "Not known right now",
-    "CGSB (NOIDA)",
     "NOT IN THIS LIST"
 ];
 
@@ -59,6 +59,7 @@ function Form({ isModal = false }) {
         lastName: '',
         email: '',
         phone: '',
+        countryCode: '+91',
         dob: '',
         aspirant: '-None-',
         vtx: '-None-',
@@ -70,7 +71,8 @@ function Form({ isModal = false }) {
         ssbEntries: [],
         serving: '-None-',
         city: '',
-        state: ''
+        state: '',
+        comments: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -433,6 +435,7 @@ function Form({ isModal = false }) {
             lastName: '',
             email: '',
             phone: '',
+            countryCode: '+91',
             dob: '',
             aspirant: '-None-',
             vtx: '-None-',
@@ -444,7 +447,8 @@ function Form({ isModal = false }) {
             ssbEntries: [],
             serving: '-None-',
             city: '',
-            state: ''
+            state: '',
+            comments: ''
         });
         setErrors({});
         setCurrentStep(1);
@@ -492,11 +496,12 @@ function Form({ isModal = false }) {
                 className="enquiry-form"
             >
                 {/* Zoho Hidden Configurations */}
-                <input type="hidden" name="xnQsjsdp" value="8c28bcc09b520842fc0aa0d49b454af041ef7e37e48cb4552cfe19010da7a14b" />
+                <input type="hidden" name="xnQsjsdp" value="59a079d57b7b3ba45f3e669634efd281e4b7a16ff519bffee62aee08c43304d7" />
                 <input type="hidden" name="zc_gad" id="zc_gad" value="" />
-                <input type="hidden" name="xmIwtLD" value="5a86dfbd0d3b720ee3c25c96e259eba2ebfb3dc84195e873b6ede0e2677835eb006ea6ef495d4c78a5e009c7e7e824bd" />
+                <input type="hidden" name="xmIwtLD" value="2ce07fb9bee45f4dedd9ca9cd83096ec7ef9430e0535ffabcb2432f607a3e441bd87a431265a78274c49b0c6bc60e73f" />
                 <input type="hidden" name="actionType" value="TGVhZHM=" />
                 <input type="hidden" name="returnURL" value="null" />
+                <input type="hidden" name="Lead Source" value="Webform" />
                 
                 {/* Required Zoho Code Fields */}
                 <input type="hidden" id="ldeskuid" name="ldeskuid" />
@@ -613,30 +618,53 @@ function Form({ isModal = false }) {
                                         {/* Phone (Required) */}
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                <label className="form-label-custom" htmlFor="Phone">
+                                                <label className="form-label-custom" htmlFor="Mobile">
                                                     Phone <span style={{ color: 'red' }}>*</span>
                                                 </label>
-                                                <input
-                                                    type="tel"
-                                                    id="Phone"
-                                                    name="Phone"
-                                                    placeholder="Enter your phone number"
-                                                    value={formData.phone}
-                                                    onChange={(e) => {
-                                                        setFormData(prev => ({ ...prev, phone: e.target.value }));
-                                                        if (errors.phone) {
-                                                            setErrors(prev => {
-                                                                const updated = { ...prev };
-                                                                delete updated.phone;
-                                                                return updated;
-                                                            });
-                                                        }
-                                                    }}
-                                                    onBlur={() => handleBlur('phone')}
-                                                    className={hasError('phone') ? 'error' : ''}
-                                                    maxLength="30"
-                                                    required
-                                                />
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <select
+                                                        id="countryCode"
+                                                        value={formData.countryCode}
+                                                        onChange={(e) => setFormData(prev => ({ ...prev, countryCode: e.target.value }))}
+                                                        style={{ width: '115px', flexShrink: 0, padding: '14px 8px', background: '#0b0b0b' }}
+                                                    >
+                                                        <option value="+91">+91 (IN)</option>
+                                                        <option value="+1">+1 (US)</option>
+                                                        <option value="+44">+44 (UK)</option>
+                                                        <option value="+61">+61 (AU)</option>
+                                                        <option value="+971">+971 (AE)</option>
+                                                        <option value="+966">+966 (SA)</option>
+                                                        <option value="+65">+65 (SG)</option>
+                                                        <option value="+977">+977 (NP)</option>
+                                                        <option value="+880">+880 (BD)</option>
+                                                        <option value="+94">+94 (LK)</option>
+                                                        <option value="+49">+49 (DE)</option>
+                                                        <option value="+33">+33 (FR)</option>
+                                                    </select>
+                                                    <input
+                                                        type="tel"
+                                                        id="Mobile"
+                                                        placeholder="Enter your mobile number"
+                                                        value={formData.phone}
+                                                        onChange={(e) => {
+                                                            const val = e.target.value.replace(/\D/g, '');
+                                                            setFormData(prev => ({ ...prev, phone: val }));
+                                                            if (errors.phone) {
+                                                                setErrors(prev => {
+                                                                    const updated = { ...prev };
+                                                                    delete updated.phone;
+                                                                    return updated;
+                                                                });
+                                                            }
+                                                        }}
+                                                        onBlur={() => handleBlur('phone')}
+                                                        className={hasError('phone') ? 'error' : ''}
+                                                        maxLength="30"
+                                                        required
+                                                        style={{ flexGrow: 1 }}
+                                                    />
+                                                </div>
+                                                <input type="hidden" name="Mobile" value={`${formData.countryCode}${formData.phone}`} />
                                                 {hasError('phone') && (
                                                     <div className="error-message" style={{ color: '#ff4d4d', fontSize: '13px', marginTop: '5px' }}>
                                                         {errors.phone}
@@ -949,6 +977,20 @@ function Form({ isModal = false }) {
                                                 </a>
                                             </div>
                                         </div>
+
+                                        {/* Comments */}
+                                        <div className="col-12">
+                                            <div className="form-group">
+                                                <label className="form-label-custom" htmlFor="LEADCF16">Comments</label>
+                                                <textarea
+                                                    id="LEADCF16"
+                                                    name="LEADCF16"
+                                                    placeholder="Enter your comments or queries"
+                                                    value={formData.comments}
+                                                    onChange={(e) => setFormData(prev => ({ ...prev, comments: e.target.value }))}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1004,7 +1046,7 @@ function Form({ isModal = false }) {
             <Background />
             <div className="container">
                 <div className="sct-title">
-                    <h2>Contact Us</h2>
+                    <h2>Enquire With Us</h2>
                 </div>
                 {formContent}
             </div>

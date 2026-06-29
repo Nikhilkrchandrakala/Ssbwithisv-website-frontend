@@ -137,4 +137,64 @@ div {
   color: var(--theme-white);
 }
 
+/* Global Form Controls & Input Styling */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+textarea,
+select,
+.form-control,
+.form-select {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #e8e3d5 !important;
+  padding: 10px 18px !important;
+  font-size: 15px !important;
+  letter-spacing: 0.2px !important;
+  border-radius: 8px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  font-family: 'Inter', 'Segoe UI', sans-serif !important;
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="tel"]::placeholder,
+input[type="password"]::placeholder,
+input[type="number"]::placeholder,
+input[type="date"]::placeholder,
+textarea::placeholder {
+  color: #727278 !important;
+  opacity: 1 !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus,
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: var(--secondary-color, #f4c430) !important;
+  box-shadow: 0 0 10px rgba(227, 198, 7, 0.15) !important;
+  outline: none !important;
+  color: #ffffff !important;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled,
+.form-control:disabled,
+.form-select:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
 

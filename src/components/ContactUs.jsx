@@ -266,6 +266,9 @@ export default function ContactUs({ open, setOpen }) {
                     <div className="container">
                         <div className="sct-title">
                             <h2>Contact Us</h2>
+                            <span style={{ fontSize: "13px", color: "#8a8978", textTransform: "none", fontWeight: "normal", display: "block", marginTop: "5px" }}>
+                                [For business enquiries only, not for SSB course queries]
+                            </span>
                         </div>
 
                         <form className="enquiry-form" onSubmit={handleSubmit} noValidate>

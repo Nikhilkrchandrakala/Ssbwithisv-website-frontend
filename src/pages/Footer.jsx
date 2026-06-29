@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../style/Footer.module.css";
 import VisitorCounter from "../components/VisitorCounter";
@@ -9,6 +9,8 @@ import { useGetContactSettingsQuery } from "../redux/api";
 function Footer() {
     const navigate = useNavigate();
     const [hideJoinBtn, setHideJoinBtn] = useState(!localStorage.getItem("cookieConsent"));
+    const [isFooterVisible, setIsFooterVisible] = useState(false);
+    const footerRef = useRef(null);
 
     useEffect(() => {
         const handleConsentChange = () => {
@@ -16,6 +18,25 @@ function Footer() {
         };
         window.addEventListener("cookieConsentChanged", handleConsentChange);
         return () => window.removeEventListener("cookieConsentChanged", handleConsentChange);
+    }, []);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsFooterVisible(entry.isIntersecting);
+            },
+            { threshold: 0.05 }
+        );
+
+        if (footerRef.current) {
+            observer.observe(footerRef.current);
+        }
+
+        return () => {
+            if (footerRef.current) {
+                observer.unobserve(footerRef.current);
+            }
+        };
     }, []);
 
     const { data: contactSettings } = useGetContactSettingsQuery();
@@ -45,7 +66,7 @@ function Footer() {
     const year = date.getFullYear();
 
     return (
-        <footer className={styles.footer}>
+        <footer className={styles.footer} ref={footerRef}>
             <div className={styles.container}>
                 {/* LOGO SECTION */}
                 <div className={styles.logoBox}>
@@ -54,10 +75,48 @@ function Footer() {
                         alt="Joint Services Academy"
                         className={styles.logo}
                     />
+                    {/* SOCIAL MEDIA ICONS - Added here under logo */}
+                    <div className={styles.socials}>
+                        <a
+                            href="https://www.youtube.com/@ssbwithisv"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="YouTube"
+                        >
+                            <i className="fa fa-youtube-play"></i>
+                        </a>
+
+                        <a
+                            href="https://www.linkedin.com/company/ssbwithisv/posts"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="LinkedIn"
+                        >
+                            <i className="fa fa-linkedin-square"></i>
+                        </a>
+
+                        <a
+                            href="https://www.instagram.com/ssbwithisv/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Instagram"
+                        >
+                            <i className="fa fa-instagram"></i>
+                        </a>
+
+                        <a
+                            href="https://www.facebook.com/ssbwithisv/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Facebook"
+                        >
+                            <i className="fa fa-facebook"></i>
+                        </a>
+                    </div>
                 </div>
 
                 {/* Modern Floating Action Docks */}
-                {!hideJoinBtn && (
+                {!hideJoinBtn && !isFooterVisible && (
                     <div className="modern-floating-dock-left">
                         <button className="dock-join-btn" onClick={() => navigate('/Batches')}>
                             <span>Join SSB Batch</span>
@@ -65,7 +124,7 @@ function Footer() {
                     </div>
                 )}
 
-                {!hideJoinBtn && (
+                {!hideJoinBtn && !isFooterVisible && (
                     <div className="modern-floating-dock-right">
                         <div className="dock-actions">
                             <button
@@ -110,44 +169,6 @@ function Footer() {
                         <li onClick={() => navigate('/PrivacyPolicy')}>Privacy policy</li>
                     </ul>
 
-                    {/* SOCIAL MEDIA ICONS - Added here */}
-                    <div className={styles.socials}>
-                        <a
-                            href="https://www.youtube.com/@ssbwithisv"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="YouTube"
-                        >
-                            <i className="fa fa-youtube-play"></i>
-                        </a>
-
-                        <a
-                            href="https://www.linkedin.com/company/ssbwithisv/posts"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="LinkedIn"
-                        >
-                            <i className="fa fa-linkedin-square"></i>
-                        </a>
-
-                        <a
-                            href="https://www.instagram.com/ssbwithisv/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Instagram"
-                        >
-                            <i className="fa fa-instagram"></i>
-                        </a>
-
-                        <a
-                            href="https://www.facebook.com/ssbwithisv/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label="Facebook"
-                        >
-                            <i className="fa fa-facebook"></i>
-                        </a>
-                    </div>
                 </div>
 
                 {/* OUR SERVICES */}
@@ -209,6 +230,9 @@ function Footer() {
                 <span className={styles.copy}>
                     © Copyright 2021 – {year} SSB with ISV, CS Joint Services Academy Pvt. Ltd.
                 </span>
+            </div>
+            <div className={styles.watermarkText}>
+                SSB with ISV
             </div>
         </footer>
     );

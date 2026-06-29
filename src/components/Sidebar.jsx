@@ -91,8 +91,7 @@ const Sidebar = ({ open, onClose }) => {
 
                     {/* Header Row */}
                     <div className={styles.sidebarHeader}>
-                        <div className={styles.topRow}>
-                            <span className={styles.brandText}>Navigation</span>
+                        <div className={styles.topRow} style={{ justifyContent: "flex-end" }}>
                             <button className={styles.closeBtn} onClick={onClose} title="Close Menu">
                                 <BiX />
                             </button>
@@ -280,7 +279,7 @@ const Sidebar = ({ open, onClose }) => {
                         >
                             <span>Contact Us</span>
                             <span style={{ fontSize: "11px", color: "#8a8978", textTransform: "none", fontWeight: "normal", lineHeight: "1.3" }}>
-                                (For Business Enquiries Only, Not for SSB Course Queries)
+                                [For business enquiries only, not for SSB course queries]
                             </span>
                         </NavLink>
 
