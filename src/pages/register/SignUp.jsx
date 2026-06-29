@@ -16,6 +16,7 @@ import {
     useVerifySignupEmailOtpMutation,
     useSendSignupPhoneOtpMutation,
     useVerifySignupPhoneOtpMutation,
+    useGetAuthDisplaySettingsQuery,
 } from '../../redux/api'
 
 
@@ -57,6 +58,46 @@ const ENTRY_OPTIONS = [
 
 function SignUp() {
     const navigate = useNavigate()
+
+    // Auth Display Settings slideshow/ad logic
+    const { data: displaySettings } = useGetAuthDisplaySettingsQuery();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const getAuthImages = () => {
+        if (displaySettings) {
+            if (displaySettings.mode === "slideshow" && displaySettings.slideshowImages?.length > 0) {
+                return displaySettings.slideshowImages;
+            } else if (displaySettings.mode === "ad" && displaySettings.adImage) {
+                return [displaySettings.adImage];
+            }
+        }
+        return ["/assets/website/courses_banner.webp"];
+    };
+
+    const authImages = getAuthImages();
+
+    useEffect(() => {
+        if (!displaySettings || displaySettings.mode !== "slideshow") {
+            setCurrentImageIndex(0);
+            return;
+        }
+        const images = displaySettings.slideshowImages || [];
+        if (images.length === 0) {
+            setCurrentImageIndex(0);
+            return;
+        }
+
+        // Convert transition value to milliseconds
+        const value = displaySettings.transitionValue || 1;
+        const unit = displaySettings.transitionUnit || "days";
+        const msMap = { seconds: 1000, minutes: 60000, hours: 3600000, days: 86400000 };
+        const intervalMs = value * (msMap[unit] || 86400000);
+
+        // Calculate which image index based on current time divided by interval
+        const nowMs = Date.now() - new Date().getTimezoneOffset() * 60000;
+        const index = Math.floor(nowMs / intervalMs) % images.length;
+        setCurrentImageIndex(index);
+    }, [displaySettings, authImages.length]);
 
     // ─── Step state (1=Info, 2=Email OTP, 3=Phone OTP, 4=SSB Profile) ───
     const [step, setStep] = useState(1);
@@ -358,18 +399,43 @@ function SignUp() {
 
     // ─── Render ───
     return (
-        <>
-            <div className="thm-content-layer signup-compact">
-                <div className="thm-content-bg"></div>
-                <div onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)} className='arrow_button'>
+        <div className="auth-split-container">
+            <div className="auth-split-image-panel">
+                {displaySettings?.mode === "ad" && displaySettings?.adLink ? (
+                    <a href={displaySettings.adLink} target="_blank" rel="noopener noreferrer" className="auth-split-ad-link">
+                        <img
+                            key={currentImageIndex}
+                            src={authImages[currentImageIndex]}
+                            alt="Advertisement banner"
+                        />
+                    </a>
+                ) : (
+                    <img
+                        key={currentImageIndex}
+                        src={authImages[currentImageIndex]}
+                        alt="SSB preparation"
+                        className="auth-split-image"
+                    />
+                )}
+            </div>
+
+            <div className="auth-split-form-panel">
+                <div onClick={() => step > 1 ? setStep(step - 1) : navigate(-1)} className='auth-back-arrow'>
                     <BiArrowBack />
                 </div>
 
-                <div className="container position-relative">
-                    <h1 className="thm-big-title">Sign Up</h1>
+                <div className={`auth-card ${step === 4 ? 'auth-card-wide' : ''}`}>
+                    <div className="auth-logo-wrapper">
+                        <img
+                            src="/assets/logo/ISV.webp"
+                            alt="SSB with ISV Logo"
+                            className="auth-logo"
+                        />
+                    </div>
+                    <h1 className="auth-card-title">Sign Up</h1>
 
                     {/* ═══ Step Progress Indicator ═══ */}
-                    <div className="step-indicator" style={{ zIndex: '55556' }}>
+                    <div className="step-indicator mb-4">
                         {[
                             { num: 1, label: 'Your Info' },
                             { num: 2, label: 'Verify Email' },
@@ -388,392 +454,382 @@ function SignUp() {
                         ))}
                     </div>
 
-                    <div className="position-relative" style={{ zIndex: '55555' }}>
+                    {/* ═══════════════ STEP 1: BASIC INFO ═══════════════ */}
+                    {step === 1 && (
+                        <div className="row g-3 justify-content-center">
+                            {/* Name */}
+                            <div className="col-lg-12">
+                                <input type="text" className={`form-control thm-input ${fieldErrors.name ? 'is-invalid' : ''}`}
+                                    placeholder="Your Full Name" value={name} onChange={handleNameChange}
+                                    onBlur={() => validateField("name", name)} required />
+                                {fieldErrors.name && <div className="field-error">{fieldErrors.name}</div>}
+                            </div>
 
-                        {/* ═══════════════ STEP 1: BASIC INFO ═══════════════ */}
-                        {step === 1 && (
-                            <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
-                                {/* Name */}
-                                <div className="col-lg-12">
-                                    <input type="text" className={`form-control thm-input ${fieldErrors.name ? 'is-invalid' : ''}`}
-                                        placeholder="Your Full Name" value={name} onChange={handleNameChange}
-                                        onBlur={() => validateField("name", name)} required />
-                                    {fieldErrors.name && <div className="field-error">{fieldErrors.name}</div>}
+                            {/* Email */}
+                            <div className="col-lg-12">
+                                <input type="email" className={`form-control thm-input ${fieldErrors.email ? 'is-invalid' : ''}`}
+                                    placeholder="Your Email Address" value={email} onChange={handleEmailChange}
+                                    onBlur={() => validateField("email", email)} required />
+                                {fieldErrors.email && <div className="field-error">{fieldErrors.email}</div>}
+                            </div>
+
+                            {/* Phone */}
+                            <div className="col-lg-12">
+                                <input type="text" className={`form-control thm-input ${fieldErrors.phone ? 'is-invalid' : ''}`}
+                                    placeholder="Your 10-digit Phone Number" value={phone} onChange={handlePhoneChange}
+                                    onBlur={() => validateField("phone", phone)} maxLength={10} inputMode="numeric" required />
+                                {fieldErrors.phone && <div className="field-error">{fieldErrors.phone}</div>}
+                            </div>
+
+                            {/* Password */}
+                            <div className="col-lg-12">
+                                <div className="password-wrapper">
+                                    <input type={showPassword ? "text" : "password"}
+                                        className={`form-control thm-input password-input ${fieldErrors.password ? 'is-invalid' : ''}`}
+                                        placeholder="Create Password" value={password} onChange={handlePasswordChange}
+                                        onBlur={() => validateField("password", password)} required />
+                                    <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                    </span>
                                 </div>
 
-                                {/* Email */}
-                                <div className="col-lg-12">
-                                    <input type="email" className={`form-control thm-input ${fieldErrors.email ? 'is-invalid' : ''}`}
-                                        placeholder="Your Email Address" value={email} onChange={handleEmailChange}
-                                        onBlur={() => validateField("email", email)} required />
-                                    {fieldErrors.email && <div className="field-error">{fieldErrors.email}</div>}
-                                </div>
-
-                                {/* Phone */}
-                                <div className="col-lg-12">
-                                    <input type="text" className={`form-control thm-input ${fieldErrors.phone ? 'is-invalid' : ''}`}
-                                        placeholder="Your 10-digit Phone Number" value={phone} onChange={handlePhoneChange}
-                                        onBlur={() => validateField("phone", phone)} maxLength={10} inputMode="numeric" required />
-                                    {fieldErrors.phone && <div className="field-error">{fieldErrors.phone}</div>}
-                                </div>
-
-                                {/* Password */}
-                                <div className="col-lg-12">
-                                    <div className="password-wrapper">
-                                        <input type={showPassword ? "text" : "password"}
-                                            className={`form-control thm-input password-input ${fieldErrors.password ? 'is-invalid' : ''}`}
-                                            placeholder="Create Password" value={password} onChange={handlePasswordChange}
-                                            onBlur={() => validateField("password", password)} required />
-                                        <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-                                            {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-                                        </span>
-                                    </div>
-
-                                    {/* Password strength meter */}
-                                    {password && (
-                                        <div className="password-strength-section">
-                                            <div className="password-strength-bar">
-                                                <div className="password-strength-fill"
-                                                    style={{ width: `${(strength.score / 4) * 100}%`, background: strength.color }}></div>
-                                            </div>
-                                            <span className="password-strength-label" style={{ color: strength.color }}>
-                                                {strength.label}
-                                            </span>
-                                            <div className="password-rules">
-                                                {passwordRules.map(rule => (
-                                                    <div key={rule.key} className={`password-rule ${rule.test(password) ? 'passed' : 'failed'}`}>
-                                                        <span>{rule.test(password) ? '✓' : '✗'}</span> {rule.label}
-                                                    </div>
-                                                ))}
-                                            </div>
+                                {/* Password strength meter */}
+                                {password && (
+                                    <div className="password-strength-section">
+                                        <div className="password-strength-bar">
+                                            <div className="password-strength-fill"
+                                                style={{ width: `${(strength.score / 4) * 100}%`, background: strength.color }}></div>
                                         </div>
-                                    )}
-                                    {fieldErrors.password && !password && <div className="field-error">{fieldErrors.password}</div>}
-                                </div>
-
-                                {/* Confirm Password */}
-                                <div className="col-lg-12 mt-3">
-                                    <div className="password-wrapper">
-                                        <input type={showConfirmPassword ? "text" : "password"}
-                                            className={`form-control thm-input ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
-                                            placeholder="Repeat Password" value={confirmPassword} onChange={handleConfirmPasswordChange}
-                                            onBlur={() => validateField("confirmPassword", confirmPassword)} required />
-                                        <span className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                                            {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                        <span className="password-strength-label" style={{ color: strength.color }}>
+                                            {strength.label}
                                         </span>
-                                    </div>
-                                    {fieldErrors.confirmPassword && <div className="field-error">{fieldErrors.confirmPassword}</div>}
-                                </div>
-
-                                {/* Error Message */}
-                                {errorMsg && (
-                                    <div className="col-lg-12">
-                                        <p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p>
+                                        <div className="password-rules">
+                                            {passwordRules.map(rule => (
+                                                <div key={rule.key} className={`password-rule ${rule.test(password) ? 'passed' : 'failed'}`}>
+                                                    <span>{rule.test(password) ? '✓' : '✗'}</span> {rule.label}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
-
-                                {/* Consent */}
-                                <div className="col-lg-12 mt-4 consent-wrapper">
-                                    <label className="consent-item">
-                                        <span style={{ textAlign: 'center' }}>
-                                            By submitting this form I agree to receive calls, WhatsApp messages, emails, and updates
-                                            related to courses, mentoring programs, events, and relevant
-                                            information from <strong>SSB with ISV</strong>. I understand that I
-                                            may opt out of promotional communication at any time.
-                                        </span>
-                                    </label>
-                                    <label className="consent-item">
-                                        <input type="checkbox" checked={serviceConsent} onChange={handleConsentChange} required />
-                                        <span>
-                                            I hereby consent to <strong>SSB with ISV</strong> collecting, storing,
-                                            processing, and using my personal data in accordance with the{" "}
-                                            <span className="policy-link" onClick={() => navigate("/PrivacyPolicy")}
-                                                style={{ cursor: 'pointer', color: 'var(--secondary-color)' }}>
-                                                Privacy Policy
-                                            </span>,
-                                            for the purpose of counselling, mentoring, admissions,
-                                            communication, and related services. I understand that I may
-                                            withdraw my consent at any time by contacting the Grievance Officer.
-                                        </span>
-                                    </label>
-                                    {fieldErrors.serviceConsent && <div className="field-error">{fieldErrors.serviceConsent}</div>}
-                                </div>
-
-                                {/* Continue Button */}
-                                <div className="col-12 d-flex justify-content-center mt-5">
-                                    <CustomButton
-                                        text={loading ? "Checking..." : "CONTINUE"}
-                                        onClick={handleStep1Continue}
-                                        disabled={loading}
-                                    />
-                                </div>
-
-                                {/* Login Link */}
-                                <div className="col-12 text-center mt-5">
-                                    <div onClick={() => navigate('/SignIn')} className="thm-account-link" style={{ cursor: 'pointer' }}>
-                                        I already have an account.
-                                    </div>
-                                </div>
-
-                                {/* Social Login */}
-                                {/* <div className="col-12">
-                                    <SocialLoginButtons />
-                                </div> */}
+                                {fieldErrors.password && !password && <div className="field-error">{fieldErrors.password}</div>}
                             </div>
-                        )}
 
-                        {/* ═══════════════ STEP 2: EMAIL OTP ═══════════════ */}
-                        {step === 2 && (
-                            <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
-                                <div className="col-lg-12 text-center mb-3">
-                                    <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
-                                        We've sent a verification code to<br />
-                                        <strong style={{ color: '#f4c430' }}>{email}</strong>
-                                    </p>
+                            {/* Confirm Password */}
+                            <div className="col-lg-12 mt-3">
+                                <div className="password-wrapper">
+                                    <input type={showConfirmPassword ? "text" : "password"}
+                                        className={`form-control thm-input ${fieldErrors.confirmPassword ? 'is-invalid' : ''}`}
+                                        placeholder="Repeat Password" value={confirmPassword} onChange={handleConfirmPasswordChange}
+                                        onBlur={() => validateField("confirmPassword", confirmPassword)} required />
+                                    <span className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                                        {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                                    </span>
                                 </div>
+                                {fieldErrors.confirmPassword && <div className="field-error">{fieldErrors.confirmPassword}</div>}
+                            </div>
 
+                            {/* Error Message */}
+                            {errorMsg && (
                                 <div className="col-lg-12">
-                                    <input ref={otpInputRef} type="text"
-                                        className="form-control thm-input" placeholder="Enter OTP"
-                                        value={emailOtp} maxLength={6} inputMode="numeric"
-                                        onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); if (v.length <= 6) setEmailOtp(v); }}
-                                    />
+                                    <p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p>
                                 </div>
+                            )}
 
-                                {/* Timer / Resend */}
-                                <div className="col-lg-12 text-end">
-                                    {emailTimer > 0 ? (
-                                        <span className="thm-account-link" style={{ cursor: 'default' }}>
-                                            Resend in {formatTime(emailTimer)}
-                                        </span>
-                                    ) : (
-                                        <span className="thm-account-link" onClick={handleSendEmailOtp}
-                                            style={{ cursor: 'pointer', color: '#f4c430' }}>
-                                            Resend OTP
-                                        </span>
-                                    )}
-                                </div>
+                            {/* Consent */}
+                            <div className="col-lg-12 mt-4 consent-wrapper">
+                                <label className="consent-item">
+                                    <span style={{ textAlign: 'center' }}>
+                                        By submitting this form I agree to receive calls, WhatsApp messages, emails, and updates
+                                        related to courses, mentoring programs, events, and relevant
+                                        information from <strong>SSB with ISV</strong>. I understand that I
+                                        may opt out of promotional communication at any time.
+                                    </span>
+                                </label>
+                                <label className="consent-item">
+                                    <input type="checkbox" checked={serviceConsent} onChange={handleConsentChange} required />
+                                    <span>
+                                        I hereby consent to <strong>SSB with ISV</strong> collecting, storing,
+                                        processing, and using my personal data in accordance with the{" "}
+                                        <span className="policy-link" onClick={() => navigate("/PrivacyPolicy")}
+                                            style={{ cursor: 'pointer', color: 'var(--secondary-color)' }}>
+                                            Privacy Policy
+                                        </span>,
+                                        for the purpose of counselling, mentoring, admissions,
+                                        communication, and related services. I understand that I may
+                                        withdraw my consent at any time by contacting the Grievance Officer.
+                                    </span>
+                                </label>
+                                {fieldErrors.serviceConsent && <div className="field-error">{fieldErrors.serviceConsent}</div>}
+                            </div>
 
-                                {/* Messages */}
-                                {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center' }}>{successMsg}</p></div>}
-                                {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p></div>}
+                            {/* Continue Button */}
+                            <div className="col-12 d-flex justify-content-center mt-5">
+                                <CustomButton
+                                    text={loading ? "Checking..." : "CONTINUE"}
+                                    onClick={handleStep1Continue}
+                                    disabled={loading}
+                                />
+                            </div>
 
-                                {/* Verify Button */}
-                                <div className="col-12 d-flex justify-content-center mt-4">
-                                    <CustomButton
-                                        text={loading ? "Verifying..." : "VERIFY EMAIL"}
-                                        onClick={handleVerifyEmailOtp}
-                                        disabled={loading || emailOtp.length < 4 || emailOtp.length > 6}
-                                    />
-                                </div>
-
-                                {/* Back */}
-                                <div className="col-12 text-center mt-3">
-                                    <div className="thm-account-link" onClick={() => { setStep(1); setErrorMsg(""); setSuccessMsg(""); }}
-                                        style={{ cursor: 'pointer' }}>
-                                        ← Back to edit info
-                                    </div>
+                            {/* Login Link */}
+                            <div className="col-12 text-center mt-5">
+                                <div onClick={() => navigate('/SignIn')} className="thm-account-link" style={{ cursor: 'pointer' }}>
+                                    I already have an account.
                                 </div>
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* ═══════════════ STEP 3: PHONE OTP ═══════════════ */}
-                        {step === 3 && (
-                            <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center">
-                                <div className="col-lg-12 text-center mb-3">
-                                    <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
-                                        We've sent a verification code to<br />
-                                        <strong style={{ color: '#f4c430' }}>+91 {phone}</strong>
-                                    </p>
-                                </div>
+                    {/* ═══════════════ STEP 2: EMAIL OTP ═══════════════ */}
+                    {step === 2 && (
+                        <div className="row g-3 justify-content-center">
+                            <div className="col-lg-12 text-center mb-3">
+                                <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
+                                    We've sent a verification code to<br />
+                                    <strong style={{ color: '#f4c430' }}>{email}</strong>
+                                </p>
+                            </div>
 
-                                <div className="col-lg-12">
-                                    <input ref={otpInputRef} type="text"
-                                        className="form-control thm-input" placeholder="Enter OTP"
-                                        value={phoneOtp} maxLength={6} inputMode="numeric"
-                                        onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); if (v.length <= 6) setPhoneOtp(v); }}
-                                    />
-                                </div>
+                            <div className="col-lg-12">
+                                <input ref={otpInputRef} type="text"
+                                    className="form-control thm-input" placeholder="Enter OTP"
+                                    value={emailOtp} maxLength={6} inputMode="numeric"
+                                    onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); if (v.length <= 6) setEmailOtp(v); }}
+                                />
+                            </div>
 
-                                {/* Timer / Resend */}
-                                <div className="col-lg-12 text-end">
-                                    {phoneTimer > 0 ? (
-                                        <span className="thm-account-link" style={{ cursor: 'default' }}>
-                                            Resend in {formatTime(phoneTimer)}
-                                        </span>
-                                    ) : (
-                                        <span className="thm-account-link" onClick={handleSendPhoneOtp}
-                                            style={{ cursor: 'pointer', color: '#f4c430' }}>
-                                            Resend OTP
-                                        </span>
-                                    )}
-                                </div>
+                            {/* Timer / Resend */}
+                            <div className="col-lg-12 text-end">
+                                {emailTimer > 0 ? (
+                                    <span className="thm-account-link" style={{ cursor: 'default' }}>
+                                        Resend in {formatTime(emailTimer)}
+                                    </span>
+                                ) : (
+                                    <span className="thm-account-link" onClick={handleSendEmailOtp}
+                                        style={{ cursor: 'pointer', color: '#f4c430' }}>
+                                        Resend OTP
+                                    </span>
+                                )}
+                            </div>
 
-                                {/* Messages */}
-                                {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center' }}>{successMsg}</p></div>}
-                                {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p></div>}
+                            {/* Messages */}
+                            {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center' }}>{successMsg}</p></div>}
+                            {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p></div>}
 
-                                {/* Register Button */}
-                                <div className="col-12 d-flex justify-content-center mt-4">
-                                    <CustomButton
-                                        text={loading ? "Verifying..." : "VERIFY & CONTINUE"}
-                                        onClick={handleVerifyPhoneAndRegister}
-                                        disabled={loading || phoneOtp.length < 4 || phoneOtp.length > 6}
-                                    />
-                                </div>
- 
-                                {/* Back */}
-                                <div className="col-12 text-center mt-3">
-                                    <div className="thm-account-link" onClick={() => { setStep(2); setErrorMsg(""); setSuccessMsg(""); }}
-                                        style={{ cursor: 'pointer' }}>
-                                        ← Back to email verification
-                                    </div>
+                            {/* Verify Button */}
+                            <div className="col-12 d-flex justify-content-center mt-4">
+                                <CustomButton
+                                    text={loading ? "Verifying..." : "VERIFY EMAIL"}
+                                    onClick={handleVerifyEmailOtp}
+                                    disabled={loading || emailOtp.length < 4 || emailOtp.length > 6}
+                                />
+                            </div>
+
+                            {/* Back */}
+                            <div className="col-12 text-center mt-3">
+                                <div className="thm-account-link" onClick={() => { setStep(1); setErrorMsg(""); setSuccessMsg(""); }}
+                                    style={{ cursor: 'pointer' }}>
+                                    ← Back to edit info
                                 </div>
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {/* ═══════════════ STEP 4: SSB PROFILE ═══════════════ */}
-                        {step === 4 && (
-                            <div className="row col-xl-9 g-3 col-lg-10 mx-auto justify-content-center mgf-wrapper" style={{ border: 'none', background: 'transparent', padding: 0 }}>
-                                <div className="col-lg-12 text-center mb-2">
-                                    <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
-                                        Complete your <strong style={{ color: '#f4c430' }}>SSB Profile</strong> to finish setup.
-                                    </p>
-                                </div>
+                    {/* ═══════════════ STEP 3: PHONE OTP ═══════════════ */}
+                    {step === 3 && (
+                        <div className="row g-3 justify-content-center">
+                            <div className="col-lg-12 text-center mb-3">
+                                <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
+                                    We've sent a verification code to<br />
+                                    <strong style={{ color: '#f4c430' }}>+91 {phone}</strong>
+                                </p>
+                            </div>
 
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Date of Birth</label>
-                                    <input className="mgf-input" type="date"
-                                        value={dob}
-                                        onChange={e => setDob(e.target.value)} />
-                                </div>
+                            <div className="col-lg-12">
+                                <input ref={otpInputRef} type="text"
+                                    className="form-control thm-input" placeholder="Enter OTP"
+                                    value={phoneOtp} maxLength={6} inputMode="numeric"
+                                    onChange={(e) => { const v = e.target.value.replace(/\D/g, ""); if (v.length <= 6) setPhoneOtp(v); }}
+                                />
+                            </div>
 
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Are you an SSB Aspirant? <span className="mgf-required">*</span></label>
-                                    <select className="mgf-select"
-                                        value={ssbAspirant} onChange={e => setSsbAspirant(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
+                            {/* Timer / Resend */}
+                            <div className="col-lg-12 text-end">
+                                {phoneTimer > 0 ? (
+                                    <span className="thm-account-link" style={{ cursor: 'default' }}>
+                                        Resend in {formatTime(phoneTimer)}
+                                    </span>
+                                ) : (
+                                    <span className="thm-account-link" onClick={handleSendPhoneOtp}
+                                        style={{ cursor: 'pointer', color: '#f4c430' }}>
+                                        Resend OTP
+                                    </span>
+                                )}
+                            </div>
 
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Serving candidate? <span className="mgf-required">*</span></label>
-                                    <select className="mgf-select"
-                                        value={servingCandidate} onChange={e => setServingCandidate(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
+                            {/* Messages */}
+                            {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center' }}>{successMsg}</p></div>}
+                            {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px' }}>{errorMsg}</p></div>}
 
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">SSB Experience</label>
-                                    <select className="mgf-select" value={ssbExperience} onChange={e => setSsbExperience(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Fresher">Fresher</option>
-                                        <option value="Screen Out">Screen Out</option>
-                                        <option value="Conference Out">Conference Out</option>
-                                    </select>
-                                </div>
+                            {/* Register Button */}
+                            <div className="col-12 d-flex justify-content-center mt-4">
+                                <CustomButton
+                                    text={loading ? "Verifying..." : "VERIFY & CONTINUE"}
+                                    onClick={handleVerifyPhoneAndRegister}
+                                    disabled={loading || phoneOtp.length < 4 || phoneOtp.length > 6}
+                                />
+                            </div>
 
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Heard about VTX™?</label>
-                                    <select className="mgf-select" value={vtxHeard} onChange={e => setVtxHeard(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Subscribed to YouTube?</label>
-                                    <select className="mgf-select" value={youtubeSubscribed} onChange={e => setYoutubeSubscribed(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Subscribed to Podcast?</label>
-                                    <select className="mgf-select" value={podcastSubscribed} onChange={e => setPodcastSubscribed(e.target.value)}>
-                                        <option value="-None-">Select…</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">Next SSB Date</label>
-                                    <input className="mgf-input" type="date"
-                                        value={nextSsbDate} onChange={e => setNextSsbDate(e.target.value)} />
-                                </div>
-
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">City</label>
-                                    <input className="mgf-input" placeholder="New Delhi"
-                                        value={city} onChange={e => setCity(e.target.value)} />
-                                </div>
-
-                                <div className="col-lg-6 mgf-field">
-                                    <label className="mgf-label">State</label>
-                                    <input className="mgf-input" placeholder="Delhi"
-                                        value={state} onChange={e => setState(e.target.value)} />
-                                </div>
-
-                                <div className="col-lg-12 mgf-field mt-3">
-                                    <label className="mgf-label">SSB Board / Centre (Select all that apply)</label>
-                                    <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
-                                        {BOARD_OPTIONS.map(opt => (
-                                            <label key={opt} className="mgf-checkbox-item">
-                                                <input type="checkbox"
-                                                    checked={ssbBoards.includes(opt)}
-                                                    onChange={() => {
-                                                        setSsbBoards(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
-                                                    }} />
-                                                <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="col-lg-12 mgf-field mt-3">
-                                    <label className="mgf-label">SSB Entry (Select all that apply)</label>
-                                    <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
-                                        {ENTRY_OPTIONS.map(opt => (
-                                            <label key={opt} className="mgf-checkbox-item">
-                                                <input type="checkbox"
-                                                    checked={ssbEntries.includes(opt)}
-                                                    onChange={() => {
-                                                        setSsbEntries(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
-                                                    }} />
-                                                <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Messages */}
-                                {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center', margin: 0 }}>{successMsg}</p></div>}
-                                {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px', margin: 0 }}>{errorMsg}</p></div>}
-
-                                <div className="col-12 d-flex justify-content-center mt-4">
-                                    <CustomButton
-                                        text={loading ? "COMPLETING REGISTRATION..." : "FINISH & REGISTER"}
-                                        onClick={handleSSBSubmitAndRegister}
-                                        disabled={loading}
-                                    />
+                            {/* Back */}
+                            <div className="col-12 text-center mt-3">
+                                <div className="thm-account-link" onClick={() => { setStep(2); setErrorMsg(""); setSuccessMsg(""); }}
+                                    style={{ cursor: 'pointer' }}>
+                                    ← Back to email verification
                                 </div>
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
-                    <span style={{ zIndex: '654' }} className="thm-glow"></span>
+                    {/* ═══════════════ STEP 4: SSB PROFILE ═══════════════ */}
+                    {step === 4 && (
+                        <div className="row g-3 justify-content-center mgf-wrapper" style={{ border: 'none', background: 'transparent', padding: 0 }}>
+                            <div className="col-lg-12 text-center mb-2">
+                                <p style={{ color: '#c6c5af', fontSize: '18px', lineHeight: '1.6' }}>
+                                    Complete your <strong style={{ color: '#f4c430' }}>SSB Profile</strong> to finish setup.
+                                </p>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Date of Birth</label>
+                                <input className="mgf-input" type="date"
+                                    value={dob}
+                                    onChange={e => setDob(e.target.value)} />
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Are you an SSB Aspirant? <span className="mgf-required">*</span></label>
+                                <select className="mgf-select"
+                                    value={ssbAspirant} onChange={e => setSsbAspirant(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Serving candidate? <span className="mgf-required">*</span></label>
+                                <select className="mgf-select"
+                                    value={servingCandidate} onChange={e => setServingCandidate(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">SSB Experience</label>
+                                <select className="mgf-select" value={ssbExperience} onChange={e => setSsbExperience(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Fresher">Fresher</option>
+                                    <option value="Screen Out">Screen Out</option>
+                                    <option value="Conference Out">Conference Out</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Heard about VTX™?</label>
+                                <select className="mgf-select" value={vtxHeard} onChange={e => setVtxHeard(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Subscribed to YouTube?</label>
+                                <select className="mgf-select" value={youtubeSubscribed} onChange={e => setYoutubeSubscribed(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Subscribed to Podcast?</label>
+                                <select className="mgf-select" value={podcastSubscribed} onChange={e => setPodcastSubscribed(e.target.value)}>
+                                    <option value="-None-">Select…</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">Next SSB Date</label>
+                                <input className="mgf-input" type="date"
+                                    value={nextSsbDate} onChange={e => setNextSsbDate(e.target.value)} />
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">City</label>
+                                <input className="mgf-input" placeholder="New Delhi"
+                                    value={city} onChange={e => setCity(e.target.value)} />
+                            </div>
+
+                            <div className="col-lg-6 mgf-field">
+                                <label className="mgf-label">State</label>
+                                <input className="mgf-input" placeholder="Delhi"
+                                    value={state} onChange={e => setState(e.target.value)} />
+                            </div>
+
+                            <div className="col-lg-12 mgf-field mt-3">
+                                <label className="mgf-label">SSB Board / Centre (Select all that apply)</label>
+                                <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
+                                    {BOARD_OPTIONS.map(opt => (
+                                        <label key={opt} className="mgf-checkbox-item">
+                                            <input type="checkbox"
+                                                checked={ssbBoards.includes(opt)}
+                                                onChange={() => {
+                                                    setSsbBoards(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                                                }} />
+                                            <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="col-lg-12 mgf-field mt-3">
+                                <label className="mgf-label">SSB Entry (Select all that apply)</label>
+                                <div className="mgf-checkbox-grid" style={{ maxHeight: '160px', overflowY: 'auto', background: 'rgba(0,0,0,0.2)', padding: '10px', borderRadius: '6px' }}>
+                                    {ENTRY_OPTIONS.map(opt => (
+                                        <label key={opt} className="mgf-checkbox-item">
+                                            <input type="checkbox"
+                                                checked={ssbEntries.includes(opt)}
+                                                onChange={() => {
+                                                    setSsbEntries(prev => prev.includes(opt) ? prev.filter(x => x !== opt) : [...prev, opt]);
+                                                }} />
+                                            <span style={{ fontSize: '13px', color: '#eae9d4' }}>{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Messages */}
+                            {successMsg && <div className="col-lg-12"><p style={{ color: '#22c55e', textAlign: 'center', margin: 0 }}>{successMsg}</p></div>}
+                            {errorMsg && <div className="col-lg-12"><p className="field-error text-center" style={{ fontSize: '16px', margin: 0 }}>{errorMsg}</p></div>}
+
+                            <div className="col-12 d-flex justify-content-center mt-4">
+                                <CustomButton
+                                    text={loading ? "COMPLETING REGISTRATION..." : "FINISH & REGISTER"}
+                                    onClick={handleSSBSubmitAndRegister}
+                                    disabled={loading}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

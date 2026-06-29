@@ -5,7 +5,7 @@ import CustomButton from '../../components/CustomButton'
 import toast from 'react-hot-toast'
 import { BiArrowBack } from 'react-icons/bi'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import { useLoginMutation } from '../../redux/api'
+import { useLoginMutation, useGetAuthDisplaySettingsQuery } from '../../redux/api'
 import SocialLoginButtons from '../../components/SocialLoginButtons'
 
 function SignIn() {
@@ -36,6 +36,46 @@ function SignIn() {
     const [lockoutTimer, setLockoutTimer] = useState(0);
 
     const [login, { isLoading: isLoginLoading }] = useLoginMutation()
+    
+    // Auth Display Settings slideshow/ad logic
+    const { data: displaySettings } = useGetAuthDisplaySettingsQuery();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const getAuthImages = () => {
+        if (displaySettings) {
+            if (displaySettings.mode === "slideshow" && displaySettings.slideshowImages?.length > 0) {
+                return displaySettings.slideshowImages;
+            } else if (displaySettings.mode === "ad" && displaySettings.adImage) {
+                return [displaySettings.adImage];
+            }
+        }
+        return ["/assets/website/courses_banner.webp"];
+    };
+
+    const authImages = getAuthImages();
+
+    React.useEffect(() => {
+        if (!displaySettings || displaySettings.mode !== "slideshow") {
+            setCurrentImageIndex(0);
+            return;
+        }
+        const images = displaySettings.slideshowImages || [];
+        if (images.length === 0) {
+            setCurrentImageIndex(0);
+            return;
+        }
+
+        // Convert transition value to milliseconds
+        const value = displaySettings.transitionValue || 1;
+        const unit = displaySettings.transitionUnit || "days";
+        const msMap = { seconds: 1000, minutes: 60000, hours: 3600000, days: 86400000 };
+        const intervalMs = value * (msMap[unit] || 86400000);
+
+        // Calculate which image index based on current time divided by interval
+        const nowMs = Date.now() - new Date().getTimezoneOffset() * 60000;
+        const index = Math.floor(nowMs / intervalMs) % images.length;
+        setCurrentImageIndex(index);
+    }, [displaySettings, authImages.length]);
 
     // Lockout timer
     React.useEffect(() => {
@@ -189,19 +229,42 @@ function SignIn() {
     const isDisabled = isLoginLoading || lockoutTimer > 0;
 
     return (
-        <div className="thm-content-layer signin-compact">
-            <div className="thm-content-bg"></div>
-            <div onClick={() => navigate(-1)} className='arrow_button'>
-                <BiArrowBack />
+        <div className="auth-split-container">
+            <div className="auth-split-image-panel">
+                {displaySettings?.mode === "ad" && displaySettings?.adLink ? (
+                    <a href={displaySettings.adLink} target="_blank" rel="noopener noreferrer" className="auth-split-ad-link">
+                        <img
+                            key={currentImageIndex}
+                            src={authImages[currentImageIndex]}
+                            alt="Advertisement banner"
+                        />
+                    </a>
+                ) : (
+                    <img
+                        key={currentImageIndex}
+                        src={authImages[currentImageIndex]}
+                        alt="SSB preparation"
+                        className="auth-split-image"
+                    />
+                )}
             </div>
 
-            <div className="container position-relative">
-                <h1 className="thm-big-title">Sign In</h1>
+            <div className="auth-split-form-panel">
+                <div onClick={() => navigate(-1)} className='auth-back-arrow'>
+                    <BiArrowBack />
+                </div>
 
-                <div className="position-relative" style={{ zIndex: '55555' }}>
-                    <div className="row col-xl-7 g-4 g-md-2 col-lg-9 mx-auto justify-content-center"
-                        onKeyDown={handleKeyDown}>
+                <div className="auth-card">
+                    <div className="auth-logo-wrapper">
+                        <img
+                            src="/assets/logo/ISV.webp"
+                            alt="SSB with ISV Logo"
+                            className="auth-logo"
+                        />
+                    </div>
+                    <h1 className="auth-card-title">Sign In</h1>
 
+                    <div className="row g-3 justify-content-center" onKeyDown={handleKeyDown}>
                         {/* Login ID */}
                         <div className="col-lg-12">
                             <input type="text" name="loginId"
@@ -241,7 +304,7 @@ function SignIn() {
                             </label>
                         </div>
 
-                        <div style={{ zIndex: '999999' }} onClick={() => !isDisabled && navigate('/AccountRecovery')}
+                        <div onClick={() => !isDisabled && navigate('/AccountRecovery')}
                             className="col-6 mt-4 text-end">
                             <div className="thm-account-link"
                                 style={{ cursor: isDisabled ? 'not-allowed' : 'pointer', opacity: isDisabled ? 0.6 : 1 }}>
@@ -273,15 +336,8 @@ function SignIn() {
                                 Create a new account.
                             </div>
                         </div>
-
-                        {/* Social Login */}
-                        {/* <div className="col-12">
-                            <SocialLoginButtons />
-                        </div> */}
                     </div>
                 </div>
-
-                <span style={{ zIndex: '567' }} className="thm-glow"></span>
             </div>
         </div>
     )

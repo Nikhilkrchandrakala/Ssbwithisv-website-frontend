@@ -194,6 +194,11 @@ export const api = createApi({
             providesTags: ["Profile"],
         }),
 
+        getAuthDisplaySettings: builder.query({
+            query: () => "authDisplaySettings",
+            providesTags: ["Profile"],
+        }),
+
 
         checkPurchase: builder.query({
             query: (id) => `checkPurchase/:${id}`,
@@ -299,6 +304,7 @@ export const {
     useVerifyPaymentMutation,
     useGetAllNumberMonitorsQuery,
     useGetContactSettingsQuery,
+    useGetAuthDisplaySettingsQuery,
 
     useApplyCouponMutation,
     useCheckPurchaseQuery,
