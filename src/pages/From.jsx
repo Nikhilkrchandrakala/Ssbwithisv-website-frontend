@@ -320,6 +320,11 @@ function Form({ isModal = false }) {
         const formElement = (e && e.target) || document.getElementById('webform736128000000759294');
         const bodyFormData = new FormData(formElement);
 
+        // Explicitly set Mobile from React state — React-controlled hidden inputs may not
+        // flush their value to the real DOM before FormData reads it, causing the phone
+        // number to be missing in the CRM submission.
+        bodyFormData.set('Mobile', `${formData.countryCode}${formData.phone}`);
+
         // Handle service query parameter if present
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('service') && urlParams.get('service') === 'smarturl') {
