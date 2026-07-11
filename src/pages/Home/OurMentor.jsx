@@ -52,15 +52,16 @@ const Mentors = () => {
 
                                 }
 
-                                {/* Phone Call */}
-                                <a
-                                    href={mentor.linkedin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className='bottom-contact-box'
-                                >
-                                    <i className="fa fa-linkedin"></i>
-                                </a>
+                                {mentor.linkedin &&
+                                    <a
+                                        href={mentor.linkedin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className='bottom-contact-box'
+                                    >
+                                        <i className="fa fa-linkedin"></i>
+                                    </a>
+                                }
                             </div>
 
                         </div>

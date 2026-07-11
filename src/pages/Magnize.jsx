@@ -9,6 +9,7 @@ import { Helmet } from 'react-helmet-async'
 import { useGetAllMagazineQuery, useTrackDownloadMutation, useUserProfileQuery } from '../redux/api'
 import { RxCross1 } from "react-icons/rx";
 import { BiX, BiEdit, BiFullscreen } from "react-icons/bi";
+import PdfViewer from '../components/PdfViewer'
 
 
 function Magnize() {
@@ -570,8 +571,8 @@ function Magnize() {
                         <div className="pdf-modal-body">
                             <div className="pdf-modal-viewer-split">
                                 <div className="pdf-viewer-pane">
-                                    <iframe
-                                        src={`${viewingPdf.url}#toolbar=0&navpanes=0`}
+                                    <PdfViewer
+                                        url={viewingPdf.url}
                                         title={viewingPdf.title}
                                     />
                                 </div>

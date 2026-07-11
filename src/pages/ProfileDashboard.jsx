@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import PdfViewer from "../components/PdfViewer";
 import {
     BiUser,
     BiLogOut,
@@ -2517,8 +2518,8 @@ const ProfileDashboard = () => {
                         <div className="pdf-modal-body">
                             <div className="pdf-modal-viewer-split">
                                 <div className="pdf-viewer-pane">
-                                    <iframe
-                                        src={`${viewingPdf.url}#toolbar=0&navpanes=0`}
+                                    <PdfViewer
+                                        url={viewingPdf.url}
                                         title={viewingPdf.title}
                                     />
                                 </div>

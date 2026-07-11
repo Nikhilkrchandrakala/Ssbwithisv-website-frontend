@@ -41,6 +41,19 @@ export const mentorsData = [
 
         ],
     },
+    {
+        id: 3,
+        image: "/assets/lalit_kumar.jpg",
+        role: "Psychologist",
+        name: "Lt. Commander Lalit Kumar (Retd.)",
+        instagram: "",
+        linkedin: "",
+        description: [
+            "Ex Technical Officer (Psychologist), NSB Vizag & 12 SSB Bangalore",
+            "Electrical Officer onboard various frontline warships",
+            "20000+ candidates assessed"
+        ],
+    },
 ];
 
 
@@ -1171,27 +1184,27 @@ export const scheduleData = {
 
     // 🌅 MORNING SCHEDULE
     morning: [
-        { day: 1, time: "7:30 - 11:00 AM", topic: "Introduction to SSB, OIR & PPDT", by: "GTO" },
+        { day: 1, time: "7:30 - 11:00 AM", topic: "Introduction to SSB, OIR & PPDT & CSSS", by: "GTO" },
         { day: 1, time: "5:00 - 8:00 PM", topic: "Psych Theory Session - 1", by: "Psychologist" },
 
-        { day: 2, time: "7:30 - 11:00 AM", topic: "OLQs & Correlation, Equation for Recommendation", by: "GTO" },
+        { day: 2, time: "7:30 - 11:00 AM", topic: "OLQs & Correlation, Equation for Recommendation & OPAM", by: "GTO" },
         { day: 2, time: "5:00 - 8:00 PM", topic: "Psych Theory Session - 2", by: "Psychologist" },
 
         { day: 3, time: "7:30 - 11:00 AM", topic: "Introduction to Group Testing, Group Discussion, Mock GDs", by: "GTO" },
-        { day: 3, time: "5:00 - 8:00 PM", topic: "How to fill PIQ form & Interview Theory", by: "IO" },
+        { day: 3, time: "5:00 - 8:00 PM", topic: "How to fill PIQ from & Interview Theory", by: "IO" },
 
         { day: 4, time: "7:30 - 11:00 AM", topic: "Group Planning Exercise, Mock GPE practice", by: "GTO" },
         { day: 4, time: "7:00 - 8:00 PM", topic: "Current Affairs, An Officer and A Gentleman - Session 1", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 5, time: "7:30 - 11:00 AM", topic: "Progressive Group Task Theory", by: "GTO" },
 
-        { day: 6, time: "7:30 - 11:00 AM", topic: "Group Obstacle Race, Mock PGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 6, time: "7:30 - 11:00 AM", topic: "Group Obstacle Race, Mock PGT practice on VTX - Virtual Training Xperience", by: "GTO" },
 
-        { day: 7, time: "7:30 - 11:00 AM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task", by: "GTO" },
+        { day: 7, time: "7:30 - 11:00 AM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task Theory", by: "GTO" },
 
-        { day: 8, time: "7:30 - 11:00 AM", topic: "Mock HGT & FGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 8, time: "7:30 - 11:00 AM", topic: "Mock HGT & FGT practice on VTX - Virtual Training Xperience", by: "GTO" },
 
-        { day: 9, time: "7:30 - 11:00 AM", topic: "Command Task practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 9, time: "7:30 - 11:00 AM", topic: "Command Task practice on VTX - Virtual Training Xperience", by: "GTO" },
         { day: 9, time: "7:00 - 8:00 PM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 10, time: "7:30 - 11:00 AM", topic: "Feedback by GTO", by: "GTO" }
@@ -1199,41 +1212,41 @@ export const scheduleData = {
 
     // 🌙 EVENING SCHEDULE
     evening: [
-        { day: 1, time: "7:30 - 11:00 PM", topic: "Introduction to SSB, OIR & PPDT", by: "GTO" },
-        { day: 1, time: "5:00 - 8:00 AM", topic: "Psych Theory Session - 1", by: "Psychologist" },
+        { day: 1, time: "7:30 - 11:00 PM", topic: "Introduction to SSB, OIR & PPDT & CSSS", by: "GTO" },
+        { day: 2, time: "5:00 - 8:00 AM", topic: "Psych Theory Session - 1", by: "Psychologist" },
 
-        { day: 2, time: "7:30 - 11:00 PM", topic: "OLQs & Correlation, Equation for Recommendation", by: "GTO" },
-        { day: 2, time: "5:00 - 8:00 AM", topic: "Psych Theory Session - 2", by: "Psychologist" },
+        { day: 2, time: "7:30 - 11:00 PM", topic: "OLQs & Correlation, Equation for Recommendation & OPAM", by: "GTO" },
+        { day: 3, time: "5:00 - 8:00 AM", topic: "Psych Theory Session - 2", by: "Psychologist" },
 
         { day: 3, time: "7:30 - 11:00 PM", topic: "Introduction to Group Testing, Group Discussion, Mock GDs", by: "GTO" },
-        { day: 3, time: "7:00 - 8:00 AM", topic: "How to fill PIQ form & Interview Theory", by: "IO" },
+        { day: 4, time: "7:00 - 8:00 AM", topic: "How to fill PIQ from & Interview Theory", by: "IO" },
 
         { day: 4, time: "7:30 - 11:00 PM", topic: "Group Planning Exercise, Mock GPE practice", by: "GTO" },
-        { day: 4, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 1", by: "Mentor-in-Residence & Principal Insights Officer" },
+        { day: 5, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 1", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 5, time: "7:30 - 11:00 PM", topic: "Progressive Group Task Theory", by: "GTO" },
 
-        { day: 6, time: "7:30 - 11:00 PM", topic: "Group Obstacle Race, Mock PGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 6, time: "7:30 - 11:00 PM", topic: "Group Obstacle Race, Mock PGT practice on VTX - Virtual Training Xperience", by: "GTO" },
 
-        { day: 7, time: "7:30 - 11:00 PM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task", by: "GTO" },
+        { day: 7, time: "7:30 - 11:00 PM", topic: "Half Group Task, Lecturette, Individual Obstacles, Command Task, Final Group Task Theory", by: "GTO" },
 
-        { day: 8, time: "7:30 - 11:00 PM", topic: "Mock HGT & FGT practice on VTX™ - Virtual Training Experience", by: "GTO" },
+        { day: 8, time: "7:30 - 11:00 PM", topic: "Mock HGT & FGT practice on VTX - Virtual Training Xperience", by: "GTO" },
 
-        { day: 9, time: "7:30 - 11:00 PM", topic: "Command Task practice on VTX™ - Virtual Training Experience", by: "GTO" },
-        { day: 9, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights Officer" },
+        { day: 9, time: "7:30 - 11:00 PM", topic: "Command Task practice on VTX - Virtual Training Xperience", by: "GTO" },
+        { day: 10, time: "7:00 - 8:00 AM", topic: "Current Affairs, An Officer and A Gentleman - Session 2", by: "Mentor-in-Residence & Principal Insights Officer" },
 
         { day: 10, time: "7:30 - 11:00 PM", topic: "Feedback by GTO", by: "GTO" }
     ],
     notes: [
         "Story writing practice and evaluation will be done daily.",
 
-        "All GTO theory sessions and practices will be conducted on VTX™ (Virtual Training Experience) - India's first Virtual GTO Ground with ~250 structures of different difficulty levels. VTX™ is a proprietary asset of CS Joint Services Academy Private Limited, All Rights Reserved.",
+        "All GTO theory sessions and practices will be conducted on VTX™ (Virtual Training Xperience) - India's first Virtual GTO Ground with ~250 structures of different difficulty levels. VTX™ is a proprietary asset of CS Joint Services Academy Private Limited, All Rights Reserved.",
 
         "Mock interview is conducted on the date mutually convenient for the Interviewing Officer and the student.",
 
-        "The mock Psych test is a timed test that can be undertaken online at your own will. Link for the same will be available on your SSB with ISV account. Upon attempting the test, you are required to upload your dossier on the portal. The Psych will give a firm date and time for 1:1 feedback after dossier assessment. The student needs to be present positively as per the sPMe. Please note that the students have to attempt the test within the 10 days of course completion so that the feedback can be scheduled at the earliest possible.",
+        "The mock Psych test is a timed test that can be undertaken online at your own will. Link for the sPMe will be available on your SSB with ISV account. Upon attempting the test, you are required to upload your dossier on the portal. The Psych will give a firm date and time for 1:1 feedback after dossier assessment. The student needs to be present positively as per the sPMe. Please note that the students have to attempt the test within the 10 days of course completion so that the feedback can be scheduled at the earliest possible.",
 
-        "We do consider requests to shift psych and IO sessions at times. This is strictly subject to the availability of the IO and the Psych."
+        "The Psych and IO theory sessions are subject to the availability of the assessors. At times, the theory sessions are shifted to different days within the course duration."
     ]
 };
 
