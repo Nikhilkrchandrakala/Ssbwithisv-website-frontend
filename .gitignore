@@ -27,4 +27,8 @@ yarn-error.log*
 .env*
 vps_deploy_key
 vps_deploy_key.pub
+github_deploy_key*
+*.key
+*.pub
+scratch/
 

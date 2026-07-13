@@ -23,7 +23,8 @@ const Sidebar = ({ open, onClose }) => {
 
 
 
-    const { data: blogs } = useUserProfileQuery()
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    const { data: blogs, isLoading, error, isError } = useUserProfileQuery(undefined, { skip: !token });
     const { data: contactSettings } = useGetContactSettingsQuery();
 
     const whatsappNumRaw = contactSettings?.whatsappNumber || "8420422821";
@@ -68,6 +69,12 @@ const Sidebar = ({ open, onClose }) => {
         if (onClose) onClose();
     };
 
+    useEffect(() => {
+        if (isError && (error?.status === 401 || error?.status === 403)) {
+            handleLogout();
+        }
+    }, [isError, error]);
+
 
 
 
@@ -97,7 +104,14 @@ const Sidebar = ({ open, onClose }) => {
                             </button>
                         </div>
 
-                        {blogs?.user?.name ? (
+                        {token && isLoading ? (
+                            <div className={styles.welcomeCard}>
+                                <div className={styles.welcomeInfo}>
+                                    <span className={styles.welcomeTitle}>Welcome</span>
+                                    <span className={styles.welcomeSubtitle}>Checking session...</span>
+                                </div>
+                            </div>
+                        ) : blogs?.user?.name ? (
                             <div className={styles.profileCard}>
                                 <div className={styles.avatar}>
                                     {blogs.user.profileImage ? (

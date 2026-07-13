@@ -12,7 +12,8 @@ function CircleBox() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const { data: user } = useUserProfileQuery()
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    useUserProfileQuery(undefined, { skip: !token });
 
     const fetchNumberMonitors = async () => {
         try {
@@ -138,7 +139,7 @@ function CircleBox() {
 
 
                     <div style={{ marginTop: '30px' }} className='d-flex gap-4'>
-                        {!user &&
+                        {!token &&
                             (
                                 <CustomButton text="Sign Up Now" onClick={handelLogin} />
                             )

@@ -555,16 +555,16 @@ function Magnize() {
                                     onClick={toggleFullscreen}
                                     style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
                                 >
-                                    <BiFullscreen /> {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                                    <BiFullscreen /> <span>{isFullscreen ? "Exit Fullscreen" : "Fullscreen"}</span>
                                 </button>
                                 <button
                                     className={`pdf-modal-notes-toggle ${showNotes ? 'active' : ''}`}
                                     onClick={() => setShowNotes(!showNotes)}
                                 >
-                                    <BiEdit /> {showNotes ? "Hide Notes" : "Take Notes"}
+                                    <BiEdit /> <span>{showNotes ? "Hide Notes" : "Take Notes"}</span>
                                 </button>
                                 <button className="pdf-modal-close-btn" onClick={() => { setViewingPdf(null); setShowNotes(false); }}>
-                                    <BiX /> Close
+                                    <BiX /> <span>Close</span>
                                 </button>
                             </div>
                         </div>

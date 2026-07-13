@@ -191,7 +191,7 @@ function SignIn() {
                 if (pendingBatch) {
                     navigate('/batches');
                 } else {
-                    navigate('/');
+                    navigate('/ProfileDashboard');
                 }
                 toast.success('Logged in successfully!')
             }

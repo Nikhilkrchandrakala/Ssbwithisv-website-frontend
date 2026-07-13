@@ -29,7 +29,7 @@ function AuthRoute() {
         const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
 
         if (token && !isTokenExpired(token)) {
-            navigate("/", { replace: true });
+            navigate("/ProfileDashboard", { replace: true });
         } else {
             if (token) {
                 // Clear stale/expired session keys

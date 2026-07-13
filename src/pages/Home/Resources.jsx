@@ -24,7 +24,8 @@ const Resources = () => {
     // const [error, setError] = useState(null)
 
 
-    const { data } = useUserProfileQuery()
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    useUserProfileQuery(undefined, { skip: !token });
 
 
     return (
@@ -86,7 +87,7 @@ const Resources = () => {
             </div>
 
             {/* <div> */}
-            {data ? "" : (<p className='downloadYour'>
+            {token ? "" : (<p className='downloadYour'>
                 <span onClick={() => navigate('/SignUp')}>Sign up</span> to download your free magazine.
             </p>)}
             {/* </div> */}
