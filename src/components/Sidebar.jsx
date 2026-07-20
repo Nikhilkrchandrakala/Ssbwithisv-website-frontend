@@ -306,29 +306,17 @@ const Sidebar = ({ open, onClose }) => {
                                 href={`https://wa.me/917483617249`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.contactCard}
+                                className={styles.contactItem}
                             >
-                                <div className={styles.contactIconWrapper} style={{ color: "#4CAF50" }}>
-                                    <i className="fa fa-whatsapp"></i>
-                                </div>
-                                <div className={styles.contactTextWrapper}>
-                                    <span className={styles.contactTitle}>Whatsapp only</span>
-                                    <span className={styles.contactNumber}>+91 7483617249</span>
-                                </div>
+                                <i className="fa fa-whatsapp"></i> Whatsapp only +91 7483617249
                             </a>
 
                             {/* Phone Call */}
                             <a
                                 href={`tel:+918420422821`}
-                                className={styles.contactCard}
+                                className={styles.contactItem}
                             >
-                                <div className={styles.contactIconWrapper} style={{ color: "#d2a100" }}>
-                                    <i className="fa fa-phone"></i>
-                                </div>
-                                <div className={styles.contactTextWrapper}>
-                                    <span className={styles.contactTitle}>Call only</span>
-                                    <span className={styles.contactNumber}>+91 8420422821, +91 9024667319</span>
-                                </div>
+                                <i className="fa fa-phone"></i> Call only +91 8420422821, +91 9024667319
                             </a>
                         </div>
                     </div>
