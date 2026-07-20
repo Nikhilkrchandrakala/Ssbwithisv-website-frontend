@@ -3,7 +3,7 @@ import styles from "../style/Sidebar.module.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CustomButton from "./CustomButton";
-import { useUserProfileQuery, useGetContactSettingsQuery } from "../redux/api";
+import { useUserProfileQuery } from "../redux/api";
 import ContactUs from "./ContactUs";
 import { BiX, BiLogOut } from "react-icons/bi";
 
@@ -25,20 +25,6 @@ const Sidebar = ({ open, onClose }) => {
 
     const token = localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
     const { data: blogs, isLoading, error, isError } = useUserProfileQuery(undefined, { skip: !token });
-    const { data: contactSettings } = useGetContactSettingsQuery();
-
-    const whatsappNumRaw = contactSettings?.whatsappNumber || "8420422821";
-    const callNumRaw = contactSettings?.callNumber || "7483617249";
-
-    const formatPhoneNumber = (num) => {
-        if (num && num.length === 10) {
-            return `${num.substring(0, 5)} ${num.substring(5)}`;
-        }
-        return num;
-    };
-
-    const whatsappNumFormatted = formatPhoneNumber(whatsappNumRaw);
-    const callNumFormatted = formatPhoneNumber(callNumRaw);
 
 
 
@@ -317,20 +303,32 @@ const Sidebar = ({ open, onClose }) => {
                         <div className={styles.contact}>
                             {/* WhatsApp */}
                             <a
-                                href={`https://wa.me/91${whatsappNumRaw}`}
+                                href={`https://wa.me/917483617249`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={styles.contactItem}
+                                className={styles.contactCard}
                             >
-                                <i className="fa fa-whatsapp"></i> +91 {whatsappNumFormatted}
+                                <div className={styles.contactIconWrapper} style={{ color: "#4CAF50" }}>
+                                    <i className="fa fa-whatsapp"></i>
+                                </div>
+                                <div className={styles.contactTextWrapper}>
+                                    <span className={styles.contactTitle}>Whatsapp only</span>
+                                    <span className={styles.contactNumber}>+91 7483617249</span>
+                                </div>
                             </a>
 
                             {/* Phone Call */}
                             <a
-                                href={`tel:+91${callNumRaw}`}
-                                className={styles.contactItem}
+                                href={`tel:+918420422821`}
+                                className={styles.contactCard}
                             >
-                                <i className="fa fa-phone"></i> +91 {callNumFormatted}
+                                <div className={styles.contactIconWrapper} style={{ color: "#d2a100" }}>
+                                    <i className="fa fa-phone"></i>
+                                </div>
+                                <div className={styles.contactTextWrapper}>
+                                    <span className={styles.contactTitle}>Call only</span>
+                                    <span className={styles.contactNumber}>+91 8420422821, +91 9024667319</span>
+                                </div>
                             </a>
                         </div>
                     </div>

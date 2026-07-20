@@ -144,13 +144,6 @@ function Footer() {
                             >
                                 <i className="fa fa-whatsapp"></i>
                             </a>
-                            <a
-                                href={`tel:+91${callNumRaw}`}
-                                className="dock-icon-btn call"
-                                aria-label="Call Us"
-                            >
-                                <i className="fa fa-phone"></i>
-                            </a>
                         </div>
                     </div>
                 )}
